@@ -23,8 +23,8 @@ class Event
 {
   id;
   name;
-  Datetime startTime;
-  Datetime endTime;
+  Date startTime;
+  Date endTime;
   * -- 1 Student;
 }
 

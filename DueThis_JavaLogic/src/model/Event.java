@@ -1,11 +1,12 @@
-package model; 
+package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
+import java.sql.Date;
 
 // line 23 "model.ump"
-// line 65 "model.ump"
+// line 63 "model.ump"
 public class Event
 {
 
@@ -16,8 +17,8 @@ public class Event
   //Event Attributes
   private String id;
   private String name;
-  private Datetime startTime;
-  private Datetime endTime;
+  private Date startTime;
+  private Date endTime;
 
   //Event Associations
   private Student student;
@@ -26,7 +27,7 @@ public class Event
   // CONSTRUCTOR
   //------------------------
 
-  public Event(String aId, String aName, Datetime aStartTime, Datetime aEndTime, Student aStudent)
+  public Event(String aId, String aName, Date aStartTime, Date aEndTime, Student aStudent)
   {
     id = aId;
     name = aName;
@@ -59,7 +60,7 @@ public class Event
     return wasSet;
   }
 
-  public boolean setStartTime(Datetime aStartTime)
+  public boolean setStartTime(Date aStartTime)
   {
     boolean wasSet = false;
     startTime = aStartTime;
@@ -67,7 +68,7 @@ public class Event
     return wasSet;
   }
 
-  public boolean setEndTime(Datetime aEndTime)
+  public boolean setEndTime(Date aEndTime)
   {
     boolean wasSet = false;
     endTime = aEndTime;
@@ -85,12 +86,12 @@ public class Event
     return name;
   }
 
-  public Datetime getStartTime()
+  public Date getStartTime()
   {
     return startTime;
   }
 
-  public Datetime getEndTime()
+  public Date getEndTime()
   {
     return endTime;
   }

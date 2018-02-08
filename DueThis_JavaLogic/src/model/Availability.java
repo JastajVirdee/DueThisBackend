@@ -1,11 +1,11 @@
-package model; 
+package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
 
 // line 46 "model.ump"
-// line 86 "model.ump"
+// line 83 "model.ump"
 public class Availability
 {
 

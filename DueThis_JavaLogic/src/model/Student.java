@@ -1,4 +1,4 @@
-package model; 
+package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
@@ -8,7 +8,7 @@ import java.sql.Date;
 import java.time.Duration;
 
 // line 16 "model.ump"
-// line 59 "model.ump"
+// line 58 "model.ump"
 public class Student
 {
 
@@ -307,7 +307,7 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Event addEvent(String aId, String aName, Datetime aStartTime, Datetime aEndTime)
+  public Event addEvent(String aId, String aName, Date aStartTime, Date aEndTime)
   {
     return new Event(aId, aName, aStartTime, aEndTime, this);
   }
