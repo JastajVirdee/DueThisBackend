@@ -1,14 +1,11 @@
-package model;
-
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3781.8b4a64e modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
 import java.sql.Date;
-import java.sql.Time;
 
 // line 5 "model.ump"
-// line 55 "model.ump"
+// line 53 "model.ump"
 public class Assignment
 {
 
@@ -22,7 +19,7 @@ public class Assignment
   private String course;
   private Date dueDate;
   private float gradeWeight;
-  private Time completitionTime;
+  private Duration completitionTime;
 
   //Assignment Associations
   private Student student;
@@ -31,7 +28,7 @@ public class Assignment
   // CONSTRUCTOR
   //------------------------
 
-  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Time aCompletitionTime, Student aStudent)
+  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletitionTime, Student aStudent)
   {
     id = aId;
     name = aName;
@@ -90,7 +87,7 @@ public class Assignment
     return wasSet;
   }
 
-  public boolean setCompletitionTime(Time aCompletitionTime)
+  public boolean setCompletitionTime(Duration aCompletitionTime)
   {
     boolean wasSet = false;
     completitionTime = aCompletitionTime;
@@ -123,7 +120,7 @@ public class Assignment
     return gradeWeight;
   }
 
-  public Time getCompletitionTime()
+  public Duration getCompletitionTime()
   {
     return completitionTime;
   }

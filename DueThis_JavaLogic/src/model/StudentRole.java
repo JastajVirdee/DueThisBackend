@@ -1,12 +1,10 @@
-package model;
-
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3781.8b4a64e modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
 
 // line 32 "model.ump"
-// line 73 "model.ump"
+// line 71 "model.ump"
 public class StudentRole
 {
 

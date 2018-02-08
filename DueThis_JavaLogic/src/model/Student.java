@@ -1,15 +1,12 @@
-package model;
-
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3781.8b4a64e modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
 import java.util.*;
 import java.sql.Date;
-import java.sql.Time;
 
 // line 16 "model.ump"
-// line 61 "model.ump"
+// line 59 "model.ump"
 public class Student
 {
 
@@ -236,7 +233,7 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Time aCompletitionTime)
+  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletitionTime)
   {
     return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aCompletitionTime, this);
   }
@@ -308,9 +305,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Event addEvent(String aId, String aName, Date aDate, Time aDuration)
+  public Event addEvent(String aId, String aName, Datetime aStartTime, Datetime aEndTime)
   {
-    return new Event(aId, aName, aDate, aDuration, this);
+    return new Event(aId, aName, aStartTime, aEndTime, this);
   }
 
   public boolean addEvent(Event aEvent)

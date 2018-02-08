@@ -1,14 +1,10 @@
-package model;
-
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3781.8b4a64e modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
-import java.sql.Date;
-import java.sql.Time;
 
 // line 23 "model.ump"
-// line 67 "model.ump"
+// line 65 "model.ump"
 public class Event
 {
 
@@ -19,8 +15,8 @@ public class Event
   //Event Attributes
   private String id;
   private String name;
-  private Date date;
-  private Time duration;
+  private Datetime startTime;
+  private Datetime endTime;
 
   //Event Associations
   private Student student;
@@ -29,12 +25,12 @@ public class Event
   // CONSTRUCTOR
   //------------------------
 
-  public Event(String aId, String aName, Date aDate, Time aDuration, Student aStudent)
+  public Event(String aId, String aName, Datetime aStartTime, Datetime aEndTime, Student aStudent)
   {
     id = aId;
     name = aName;
-    date = aDate;
-    duration = aDuration;
+    startTime = aStartTime;
+    endTime = aEndTime;
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
@@ -62,18 +58,18 @@ public class Event
     return wasSet;
   }
 
-  public boolean setDate(Date aDate)
+  public boolean setStartTime(Datetime aStartTime)
   {
     boolean wasSet = false;
-    date = aDate;
+    startTime = aStartTime;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setDuration(Time aDuration)
+  public boolean setEndTime(Datetime aEndTime)
   {
     boolean wasSet = false;
-    duration = aDuration;
+    endTime = aEndTime;
     wasSet = true;
     return wasSet;
   }
@@ -88,14 +84,14 @@ public class Event
     return name;
   }
 
-  public Date getDate()
+  public Datetime getStartTime()
   {
-    return date;
+    return startTime;
   }
 
-  public Time getDuration()
+  public Datetime getEndTime()
   {
-    return duration;
+    return endTime;
   }
   /* Code from template association_GetOne */
   public Student getStudent()
@@ -138,8 +134,8 @@ public class Event
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "duration" + "=" + (getDuration() != null ? !getDuration().equals(this)  ? getDuration().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null");
   }
 }
