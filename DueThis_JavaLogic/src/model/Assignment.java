@@ -19,7 +19,7 @@ public class Assignment
   private String course;
   private Date dueDate;
   private float gradeWeight;
-  private Duration completitionTime;
+  private Duration completionTime;
 
   //Assignment Associations
   private Student student;
@@ -28,14 +28,14 @@ public class Assignment
   // CONSTRUCTOR
   //------------------------
 
-  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletitionTime, Student aStudent)
+  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletionTime, Student aStudent)
   {
     id = aId;
     name = aName;
     course = aCourse;
     dueDate = aDueDate;
     gradeWeight = aGradeWeight;
-    completitionTime = aCompletitionTime;
+    completionTime = aCompletionTime;
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
@@ -87,10 +87,10 @@ public class Assignment
     return wasSet;
   }
 
-  public boolean setCompletitionTime(Duration aCompletitionTime)
+  public boolean setCompletionTime(Duration aCompletionTime)
   {
     boolean wasSet = false;
-    completitionTime = aCompletitionTime;
+    completionTime = aCompletionTime;
     wasSet = true;
     return wasSet;
   }
@@ -120,9 +120,9 @@ public class Assignment
     return gradeWeight;
   }
 
-  public Duration getCompletitionTime()
+  public Duration getCompletionTime()
   {
-    return completitionTime;
+    return completionTime;
   }
   /* Code from template association_GetOne */
   public Student getStudent()
@@ -168,7 +168,7 @@ public class Assignment
             "course" + ":" + getCourse()+ "," +
             "gradeWeight" + ":" + getGradeWeight()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "dueDate" + "=" + (getDueDate() != null ? !getDueDate().equals(this)  ? getDueDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "completitionTime" + "=" + (getCompletitionTime() != null ? !getCompletitionTime().equals(this)  ? getCompletitionTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "completionTime" + "=" + (getCompletionTime() != null ? !getCompletionTime().equals(this)  ? getCompletionTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null");
   }
 }

@@ -233,9 +233,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletitionTime)
+  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletionTime)
   {
-    return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aCompletitionTime, this);
+    return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aCompletionTime, this);
   }
 
   public boolean addAssignment(Assignment aAssignment)
