@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -25,7 +26,7 @@ public class TestDueThisController
 	float gradeWeight = (float) 0.4;
 
 	// Temporary value until the model has been updated
-	Time compTime = Time.valueOf(LocalTime.now());
+	Duration compTime = Duration.ofHours(5);
 
 	// This is suppressed since it is easier to create a specific date
 	@SuppressWarnings("deprecation")
@@ -89,7 +90,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals("1", s.getAssignment(0).getId());
-		assertEquals(compTime, s.getAssignment(0).getCompletitionTime());
+		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
 		s.delete();
 	}
 
@@ -239,7 +240,26 @@ public class TestDueThisController
 			error = e.getMessage();
 		}
 
-		assertEquals("Please enter a positive time amount! ", error);
+		assertEquals("Please enter an estimated completion time! ", error);
+	}
+	
+	@Test
+	public void testCreateAssignmentExperiencedStudentNegCompTime()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createExperiencedStudent();
+
+		try
+		{
+			dtc.createAssignment(name, course, dueDate, 0, compTime.negated(), s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a positive estimated completion time! ", error);
 	}
 
 	private Student createNoviceStudent()

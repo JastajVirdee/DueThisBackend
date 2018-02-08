@@ -1,9 +1,11 @@
+package model; 
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
 
 import java.util.*;
 import java.sql.Date;
+import java.time.Duration;
 
 // line 16 "model.ump"
 // line 59 "model.ump"

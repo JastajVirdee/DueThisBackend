@@ -3,6 +3,7 @@ package controller;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.Duration;
 
 import model.Assignment;
 import model.Student;
@@ -10,7 +11,7 @@ import model.Student;
 public class DueThisController
 {
 
-	public void createAssignment(String name, String course, Date dueDate, float gradeWeight, Time compTime,
+	public void createAssignment(String name, String course, Date dueDate, float gradeWeight, Duration compTime,
 			Student aStudent) throws InvalidInputException
 	{
 		java.util.Calendar cal = Calendar.getInstance();
@@ -39,10 +40,10 @@ public class DueThisController
 
 		} else
 		{
-			// Currently have no way to check if the value is positive. Issue
-			// opened on the repo.
 			if (compTime == null)
-				error += "Please enter a positive time amount! ";
+				error += "Please enter an estimated completion time! ";
+			else if(compTime.isNegative())
+				error += "Please enter a positive estimated completion time! ";
 		}
 		if (error.trim().length() > 0)
 			throw new InvalidInputException(error);
