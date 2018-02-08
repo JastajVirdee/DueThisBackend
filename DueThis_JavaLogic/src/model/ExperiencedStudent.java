@@ -1,3 +1,5 @@
+package model;
+
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
 
@@ -5,7 +7,7 @@
 import java.util.*;
 
 // line 41 "model.ump"
-// line 81 "model.ump"
+// line 78 "model.ump"
 public class ExperiencedStudent extends StudentRole
 {
 
