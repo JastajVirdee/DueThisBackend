@@ -10,8 +10,8 @@ import model.Student;
 public class DueThisController
 {
 
-	public void createAssignment(String name, String course, Date dueDate, float gradeWeight, Time compTime, Student aStudent)
-			throws InvalidInputException
+	public void createAssignment(String name, String course, Date dueDate, float gradeWeight, Time compTime,
+			Student aStudent) throws InvalidInputException
 	{
 		java.util.Calendar cal = Calendar.getInstance();
 		java.util.Date utilDate = new java.util.Date();
@@ -19,9 +19,11 @@ public class DueThisController
 		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime());
 
 		String error = "";
-
 		if (aStudent == null)
+		{
 			error += "No student is associated to this assignment! ";
+			throw new InvalidInputException(error);
+		}
 		if (name == null || name.trim().length() == 0)
 			error += "Please enter a valid assignment name! ";
 		if (course == null || course.trim().length() == 0)
@@ -34,27 +36,25 @@ public class DueThisController
 		{
 			if (gradeWeight <= 0)
 				error += "Please enter a positive grade weight! ";
-		}
-		else
+
+		} else
 		{
-			//Currently have no way to check if the value is positive. Issue opened on the repo.
+			// Currently have no way to check if the value is positive. Issue
+			// opened on the repo.
 			if (compTime == null)
 				error += "Please enter a positive time amount! ";
 		}
-		
 		if (error.trim().length() > 0)
 			throw new InvalidInputException(error);
-		
-		String id = "random";
-		
+
+		String id = Integer.toString(aStudent.getAssignments().size() + 1);
 		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
 		{
 			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, null, aStudent);
 			aStudent.addAssignment(a);
-		}
-		else
+		} else
 		{
-			//Cannot put null for the grade weight. Will leave as a 0 for now.
+			// Cannot put null for the grade weight. Will leave as a 0 for now.
 			Assignment a = new Assignment(id, name, course, dueDate, 0, compTime, aStudent);
 			aStudent.addAssignment(a);
 		}
