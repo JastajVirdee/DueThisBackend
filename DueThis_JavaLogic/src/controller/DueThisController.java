@@ -67,5 +67,17 @@ public class DueThisController
 			return false;
 		}
 	}
+	
+	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException {
+		boolean wasRemoved = aStudent.removeAssignment(anAssignment);
+		
+		String error = "";
+		if (!wasRemoved) {
+			error += "This assignment is not associated to this student! ";
+			throw new InvalidInputException(error);
+		}
+		
+		return wasRemoved;
+	}
 
 }
