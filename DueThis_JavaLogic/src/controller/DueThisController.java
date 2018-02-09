@@ -54,13 +54,11 @@ public class DueThisController
 		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
 		{
 			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, null, aStudent);
-			aStudent.addAssignment(a);
 			return true;
 		} else if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)
 		{
 			// Cannot put null for the grade weight. Will leave as a 0 for now.
 			Assignment a = new Assignment(id, name, course, dueDate, 0, compTime, aStudent);
-			aStudent.addAssignment(a);
 			return true;
 		} else
 		{
