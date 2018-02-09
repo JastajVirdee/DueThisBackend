@@ -64,8 +64,11 @@ public class TestDueThisController
 		assertEquals(name, s.getAssignment(0).getName());
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
-		assertEquals("1", s.getAssignment(0).getId());
 		assertEquals(gradeWeight, s.getAssignment(0).getGradeWeight(), 0.0f);
+		if(s.getAssignment(0).getId() == null)
+		{
+			fail();
+		}
 		s.delete();
 	}
 
@@ -89,8 +92,11 @@ public class TestDueThisController
 		assertEquals(name, s.getAssignment(0).getName());
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
-		assertEquals("1", s.getAssignment(0).getId());
 		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
+		if(s.getAssignment(0).getId() == null)
+		{
+			fail();
+		}
 		s.delete();
 	}
 

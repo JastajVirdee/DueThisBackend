@@ -48,7 +48,7 @@ public class DueThisController
 		if (error.trim().length() > 0)
 			throw new InvalidInputException(error);
 
-		String id = Integer.toString(aStudent.getAssignments().size() + 1);
+		String id = UUID.randomUUID().toString();
 		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
 		{
 			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, null, aStudent);
