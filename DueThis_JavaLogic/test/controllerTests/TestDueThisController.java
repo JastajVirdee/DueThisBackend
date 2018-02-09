@@ -65,7 +65,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(gradeWeight, s.getAssignment(0).getGradeWeight(), 0.0f);
-		if(s.getAssignment(0).getId() == null)
+		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
 		}
@@ -93,7 +93,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
-		if(s.getAssignment(0).getId() == null)
+		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
 		}
@@ -231,6 +231,27 @@ public class TestDueThisController
 	}
 
 	@Test
+	public void testCreateAssignmentNoStudentRole()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = new Student("testId", "Richard Potato");
+		boolean result = true;
+
+		try
+		{
+			result = dtc.createAssignment(name, course, dueDate, -gradeWeight, null, s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+
+		assertEquals("Student must have a role! ", error);
+		s.delete();
+	}
+
+	@Test
 	public void testCreateAssignmentExperiencedStudentNoCompTime()
 	{
 		DueThisController dtc = new DueThisController();
@@ -247,8 +268,9 @@ public class TestDueThisController
 		}
 
 		assertEquals("Please enter an estimated completion time! ", error);
+		s.delete();
 	}
-	
+
 	@Test
 	public void testCreateAssignmentExperiencedStudentNegCompTime()
 	{
@@ -264,8 +286,9 @@ public class TestDueThisController
 		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals("Please enter a positive estimated completion time! ", error);
+		s.delete();
 	}
 
 	private Student createNoviceStudent()

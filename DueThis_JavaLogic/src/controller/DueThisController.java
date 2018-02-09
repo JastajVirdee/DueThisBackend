@@ -11,7 +11,7 @@ import model.Student;
 public class DueThisController
 {
 
-	public void createAssignment(String name, String course, Date dueDate, float gradeWeight, Duration compTime,
+	public boolean createAssignment(String name, String course, Date dueDate, float gradeWeight, Duration compTime,
 			Student aStudent) throws InvalidInputException
 	{
 		java.util.Calendar cal = Calendar.getInstance();
@@ -33,7 +33,9 @@ public class DueThisController
 			error += "Due data cannot be empty! ";
 		else if (dueDate.before(sqlDate) == true)
 			error += "Due date must be in the future! ";
-		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
+		if (aStudent.getStudentRoles().size() == 0)
+			error += "Student must have a role! ";
+		else if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
 		{
 			if (gradeWeight <= 0)
 				error += "Please enter a positive grade weight! ";
@@ -42,7 +44,7 @@ public class DueThisController
 		{
 			if (compTime == null)
 				error += "Please enter an estimated completion time! ";
-			else if(compTime.isNegative())
+			else if (compTime.isNegative())
 				error += "Please enter a positive estimated completion time! ";
 		}
 		if (error.trim().length() > 0)
@@ -53,11 +55,16 @@ public class DueThisController
 		{
 			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, null, aStudent);
 			aStudent.addAssignment(a);
-		} else
+			return true;
+		} else if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)
 		{
 			// Cannot put null for the grade weight. Will leave as a 0 for now.
 			Assignment a = new Assignment(id, name, course, dueDate, 0, compTime, aStudent);
 			aStudent.addAssignment(a);
+			return true;
+		} else
+		{
+			return false;
 		}
 	}
 
