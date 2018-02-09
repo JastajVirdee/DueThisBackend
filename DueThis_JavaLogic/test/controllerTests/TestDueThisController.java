@@ -291,6 +291,35 @@ public class TestDueThisController
 		s.delete();
 	}
 	
+	@Test
+	public void testRemoveAssignment() {
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());
+		
+		Assignment a1 = createAssignment(ns);
+		Assignment a2 = createAssignment(es);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
+		
+		DueThisController dtc = new DueThisController();
+		
+		try {
+			dtc.removeAssignment(ns, a1);
+			dtc.removeAssignment(es, a2);
+			
+		} catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());
+		
+	}
+	
 
 
 	private Student createNoviceStudent()
@@ -307,9 +336,8 @@ public class TestDueThisController
 		return s;
 	}
 	
-
-	
-
-	
+	private Assignment createAssignment(Student s) {
+		return new Assignment("testId", name, course, dueDate, gradeWeight, compTime, s);
+	}
 	
 }
