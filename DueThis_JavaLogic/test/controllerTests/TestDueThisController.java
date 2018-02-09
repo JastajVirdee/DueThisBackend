@@ -316,7 +316,39 @@ public class TestDueThisController
 		}
 		
 		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());	
+	}
+	
+	@Test
+	public void testRemoveUnownedAssignment() {
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		
+		assertEquals(0, ns.numberOfAssignments());
 		assertEquals(0, es.numberOfAssignments());
+		
+		Assignment a1 = createAssignment(ns);
+		Assignment a2 = createAssignment(es);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
+		
+		DueThisController dtc = new DueThisController();
+		
+		try {
+			dtc.removeAssignment(ns, a2);
+		} catch (InvalidInputException e) {
+			assertEquals("This assignment does not belong to this student! ", e.getMessage());
+		}
+		
+		try {
+			dtc.removeAssignment(es, a1);
+		} catch (InvalidInputException e) {
+			assertEquals("This assignment does not belong to this student! ", e.getMessage());
+		}
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
 		
 	}
 	
