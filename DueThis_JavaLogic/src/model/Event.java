@@ -1,12 +1,12 @@
 package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 
 
 import java.sql.Date;
 
-// line 23 "model.ump"
-// line 63 "model.ump"
+// line 24 "model.ump"
+// line 65 "model.ump"
 public class Event
 {
 

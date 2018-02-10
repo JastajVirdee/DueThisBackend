@@ -1,14 +1,14 @@
 package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 
 
 import java.util.*;
 import java.sql.Date;
 import java.time.Duration;
 
-// line 16 "model.ump"
-// line 58 "model.ump"
+// line 17 "model.ump"
+// line 59 "model.ump"
 public class Student
 {
 
@@ -235,9 +235,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletionTime)
+  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, boolean aIsCompleted, Duration aCompletionTime)
   {
-    return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aCompletionTime, this);
+    return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aIsCompleted, aCompletionTime, this);
   }
 
   public boolean addAssignment(Assignment aAssignment)
