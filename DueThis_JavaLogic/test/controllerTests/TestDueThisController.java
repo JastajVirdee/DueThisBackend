@@ -65,6 +65,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(gradeWeight, s.getAssignment(0).getGradeWeight(), 0.0f);
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
@@ -93,6 +94,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
