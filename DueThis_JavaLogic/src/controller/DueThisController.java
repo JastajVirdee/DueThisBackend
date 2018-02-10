@@ -54,18 +54,34 @@ public class DueThisController
 		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
 		{
 			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, null, aStudent);
-			aStudent.addAssignment(a);
 			return true;
 		} else if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)
 		{
 			// Cannot put null for the grade weight. Will leave as a 0 for now.
 			Assignment a = new Assignment(id, name, course, dueDate, 0, compTime, aStudent);
-			aStudent.addAssignment(a);
 			return true;
 		} else
 		{
 			return false;
 		}
+	}
+	
+	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException {
+		
+		//Verify that the assignment belongs to the student
+		boolean legalRemove = aStudent.equals(anAssignment.getStudent());
+		
+		String error = "";
+		
+		if (legalRemove) {
+			anAssignment.delete();
+		}
+		else {
+			error += "This assignment does not belong to this student! ";
+			throw new InvalidInputException(error);
+		}
+		
+		return legalRemove;
 	}
 
 }
