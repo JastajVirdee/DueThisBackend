@@ -1,5 +1,4 @@
 package model;
-
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 

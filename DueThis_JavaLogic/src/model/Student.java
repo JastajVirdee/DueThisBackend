@@ -5,7 +5,7 @@ package model;
 
 import java.util.*;
 import java.sql.Date;
-import java.time.Duration;
+import java.sql.Time;
 
 // line 17 "model.ump"
 // line 59 "model.ump"
@@ -307,9 +307,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Event addEvent(String aId, String aName, Date aStartTime, Date aEndTime)
+  public Event addEvent(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly)
   {
-    return new Event(aId, aName, aStartTime, aEndTime, this);
+    return new Event(aId, aName, aDate, aStartTime, aEndTime, aRepeatedWeekly, this);
   }
 
   public boolean addEvent(Event aEvent)

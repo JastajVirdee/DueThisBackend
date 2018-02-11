@@ -7,6 +7,8 @@ import java.util.*;
 
 import model.Availability.Day;
 
+// line 43 "model.ump"
+// line 82 "model.ump"
 public class ExperiencedStudent extends StudentRole
 {
 
