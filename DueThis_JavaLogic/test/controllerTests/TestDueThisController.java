@@ -65,6 +65,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(gradeWeight, s.getAssignment(0).getGradeWeight(), 0.0f);
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
@@ -93,6 +94,7 @@ public class TestDueThisController
 		assertEquals(course, s.getAssignment(0).getCourse());
 		assertEquals(dueDate, s.getAssignment(0).getDueDate());
 		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		if (s.getAssignment(0).getId() == null)
 		{
 			fail();
@@ -290,6 +292,69 @@ public class TestDueThisController
 		assertEquals("Please enter a positive estimated completion time! ", error);
 		s.delete();
 	}
+	
+	@Test
+	public void testRemoveAssignment() {
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());
+		
+		Assignment a1 = createAssignment(ns);
+		Assignment a2 = createAssignment(es);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
+		
+		DueThisController dtc = new DueThisController();
+		
+		try {
+			dtc.removeAssignment(ns, a1);
+			dtc.removeAssignment(es, a2);
+			
+		} catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());	
+	}
+	
+	@Test
+	public void testRemoveUnownedAssignment() {
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());
+		
+		Assignment a1 = createAssignment(ns);
+		Assignment a2 = createAssignment(es);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
+		
+		DueThisController dtc = new DueThisController();
+		
+		try {
+			dtc.removeAssignment(ns, a2);
+		} catch (InvalidInputException e) {
+			assertEquals("This assignment does not belong to this student! ", e.getMessage());
+		}
+		
+		try {
+			dtc.removeAssignment(es, a1);
+		} catch (InvalidInputException e) {
+			assertEquals("This assignment does not belong to this student! ", e.getMessage());
+		}
+		
+		assertEquals(1, ns.numberOfAssignments());
+		assertEquals(1, es.numberOfAssignments());
+		
+	}
+	
+
 
 	private Student createNoviceStudent()
 	{
@@ -304,4 +369,9 @@ public class TestDueThisController
 		new ExperiencedStudent(s);
 		return s;
 	}
+	
+	private Assignment createAssignment(Student s) {
+		return new Assignment("testId", name, course, dueDate, gradeWeight, compTime, s);
+	}
+	
 }
