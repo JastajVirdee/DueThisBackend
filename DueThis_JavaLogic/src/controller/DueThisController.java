@@ -67,5 +67,23 @@ public class DueThisController
 			return false;
 		}
 	}
+	
+	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException {
+		
+		//Verify that the assignment belongs to the student
+		boolean legalRemove = aStudent.equals(anAssignment.getStudent());
+		
+		String error = "";
+		
+		if (legalRemove) {
+			anAssignment.delete();
+		}
+		else {
+			error += "This assignment does not belong to this student! ";
+			throw new InvalidInputException(error);
+		}
+		
+		return legalRemove;
+	}
 
 }
