@@ -1,12 +1,13 @@
 package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 
 
 import java.sql.Date;
+import java.sql.Time;
 
-// line 23 "model.ump"
-// line 63 "model.ump"
+// line 24 "model.ump"
+// line 65 "model.ump"
 public class Event
 {
 
@@ -17,8 +18,10 @@ public class Event
   //Event Attributes
   private String id;
   private String name;
-  private Date startTime;
-  private Date endTime;
+  private Date date;
+  private Time startTime;
+  private Time endTime;
+  private boolean repeatedWeekly;
 
   //Event Associations
   private Student student;
@@ -27,12 +30,14 @@ public class Event
   // CONSTRUCTOR
   //------------------------
 
-  public Event(String aId, String aName, Date aStartTime, Date aEndTime, Student aStudent)
+  public Event(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly, Student aStudent)
   {
     id = aId;
     name = aName;
+    date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
+    repeatedWeekly = aRepeatedWeekly;
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
@@ -60,7 +65,15 @@ public class Event
     return wasSet;
   }
 
-  public boolean setStartTime(Date aStartTime)
+  public boolean setDate(Date aDate)
+  {
+    boolean wasSet = false;
+    date = aDate;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setStartTime(Time aStartTime)
   {
     boolean wasSet = false;
     startTime = aStartTime;
@@ -68,10 +81,18 @@ public class Event
     return wasSet;
   }
 
-  public boolean setEndTime(Date aEndTime)
+  public boolean setEndTime(Time aEndTime)
   {
     boolean wasSet = false;
     endTime = aEndTime;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRepeatedWeekly(boolean aRepeatedWeekly)
+  {
+    boolean wasSet = false;
+    repeatedWeekly = aRepeatedWeekly;
     wasSet = true;
     return wasSet;
   }
@@ -86,14 +107,29 @@ public class Event
     return name;
   }
 
-  public Date getStartTime()
+  public Date getDate()
+  {
+    return date;
+  }
+
+  public Time getStartTime()
   {
     return startTime;
   }
 
-  public Date getEndTime()
+  public Time getEndTime()
   {
     return endTime;
+  }
+
+  public boolean getRepeatedWeekly()
+  {
+    return repeatedWeekly;
+  }
+  /* Code from template attribute_IsBoolean */
+  public boolean isRepeatedWeekly()
+  {
+    return repeatedWeekly;
   }
   /* Code from template association_GetOne */
   public Student getStudent()
@@ -135,7 +171,9 @@ public class Event
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "name" + ":" + getName()+ "," +
+            "repeatedWeekly" + ":" + getRepeatedWeekly()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null");

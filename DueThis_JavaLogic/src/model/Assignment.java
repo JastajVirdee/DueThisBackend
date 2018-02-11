@@ -1,13 +1,13 @@
-package model; 
+package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3785.4f7512d modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 
 
 import java.sql.Date;
 import java.time.Duration;
 
 // line 5 "model.ump"
-// line 53 "model.ump"
+// line 54 "model.ump"
 public class Assignment
 {
 
@@ -21,6 +21,7 @@ public class Assignment
   private String course;
   private Date dueDate;
   private float gradeWeight;
+  private boolean isCompleted;
   private Duration completionTime;
 
   //Assignment Associations
@@ -30,13 +31,14 @@ public class Assignment
   // CONSTRUCTOR
   //------------------------
 
-  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, Duration aCompletionTime, Student aStudent)
+  public Assignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, boolean aIsCompleted, Duration aCompletionTime, Student aStudent)
   {
     id = aId;
     name = aName;
     course = aCourse;
     dueDate = aDueDate;
     gradeWeight = aGradeWeight;
+    isCompleted = aIsCompleted;
     completionTime = aCompletionTime;
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
@@ -89,6 +91,14 @@ public class Assignment
     return wasSet;
   }
 
+  public boolean setIsCompleted(boolean aIsCompleted)
+  {
+    boolean wasSet = false;
+    isCompleted = aIsCompleted;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setCompletionTime(Duration aCompletionTime)
   {
     boolean wasSet = false;
@@ -122,9 +132,19 @@ public class Assignment
     return gradeWeight;
   }
 
+  public boolean getIsCompleted()
+  {
+    return isCompleted;
+  }
+
   public Duration getCompletionTime()
   {
     return completionTime;
+  }
+  /* Code from template attribute_IsBoolean */
+  public boolean isIsCompleted()
+  {
+    return isCompleted;
   }
   /* Code from template association_GetOne */
   public Student getStudent()
@@ -168,7 +188,8 @@ public class Assignment
             "id" + ":" + getId()+ "," +
             "name" + ":" + getName()+ "," +
             "course" + ":" + getCourse()+ "," +
-            "gradeWeight" + ":" + getGradeWeight()+ "]" + System.getProperties().getProperty("line.separator") +
+            "gradeWeight" + ":" + getGradeWeight()+ "," +
+            "isCompleted" + ":" + getIsCompleted()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "dueDate" + "=" + (getDueDate() != null ? !getDueDate().equals(this)  ? getDueDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "completionTime" + "=" + (getCompletionTime() != null ? !getCompletionTime().equals(this)  ? getCompletionTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null");
