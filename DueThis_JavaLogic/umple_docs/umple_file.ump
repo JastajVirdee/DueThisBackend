@@ -23,8 +23,10 @@ class Event
 {
   id;
   name;
-  Date startTime;
-  Date endTime;
+  Date date;
+  Time startTime;
+  Time endTime;
+  Boolean repeatedWeekly;
   * -- 1 Student;
 }
 
