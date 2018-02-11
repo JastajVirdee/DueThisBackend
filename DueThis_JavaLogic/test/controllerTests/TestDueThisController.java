@@ -31,6 +31,8 @@ public class TestDueThisController
 	// This is suppressed since it is easier to create a specific date
 	@SuppressWarnings("deprecation")
 	Date dueDate = new Date(118, 4, 30);
+	
+	boolean isCompleted = false;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
@@ -371,7 +373,7 @@ public class TestDueThisController
 	}
 	
 	private Assignment createAssignment(Student s) {
-		return new Assignment("testId", name, course, dueDate, gradeWeight, compTime, s);
+		return new Assignment("testId", name, course, dueDate, gradeWeight, isCompleted, compTime, s);
 	}
 	
 }
