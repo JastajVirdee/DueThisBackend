@@ -89,10 +89,26 @@ public class DueThisController
 	
 	public boolean editEvent(Event event, String name, Date date, Time startTime, Time endTime, boolean repeatWeekly) throws InvalidInputException {		
 		
+		java.util.Calendar cal = Calendar.getInstance();
+		java.util.Date utilDate = new java.util.Date();
+		cal.setTime(utilDate);
+		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime());
+		
 		// Check for input errors
 		String error = "";
 		if (name == null || name.trim().length() == 0) {
 			error += "Please enter a valid name! ";
+		}
+		if (date == null) {
+			error += "Date cannot be empty! ";
+		}
+		else if (date.before(sqlDate) == true)
+			error += "Date must be in the future! ";
+		if (startTime == null) {
+			error += "Start time cannot be empty! ";
+		}
+		if (endTime == null) {
+			error += "End time cannot be empty! ";
 		}
 		if (endTime.before(startTime) == true) {
 			error += "Start time must be before end time! ";

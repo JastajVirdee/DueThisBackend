@@ -426,6 +426,23 @@ public class TestDueThisController
 		
 		assertEquals("Please enter a valid name! ", error);
 	}
+	
+	@Test
+	public void testEditEventNullStartTime() {
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		String error ="";
+		try {
+			dtc.editEvent(event, name, dueDate, null, endTime, repeatedWeekly);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Start time cannot be empty! ", error);
+	}
 
 	private Student createNoviceStudent()
 	{
