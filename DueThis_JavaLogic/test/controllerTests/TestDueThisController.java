@@ -645,7 +645,7 @@ public class TestDueThisController
 	private Student createExperiencedStudent()
 	{
 		Student s = new Student("testId", "Richard Potato");
-		new ExperiencedStudent(s);
+		new ExperiencedStudent(s, 0, 0, 0, 0, 0, 0, 0);
 		return s;
 	}
 	

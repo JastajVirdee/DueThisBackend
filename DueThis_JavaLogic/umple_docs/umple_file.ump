@@ -1,12 +1,10 @@
-enum Day { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
-
-
 class Assignment
 {
   id;
   name;
    course;
   Date dueDate;
+  Boolean isCompleted;
   Float gradeWeight;
   Duration completionTime;
   * -- 1 Student;
@@ -42,11 +40,12 @@ class NoviceStudent
 class ExperiencedStudent
 {
   isA StudentRole;
-}
 
-class Availability
-{
-  Day day;
-  Integer hoursAvailable;
-  7 -- 1 ExperiencedStudent;
+  int sundayAvailability;
+  int mondayAvailability;
+  int tuesdayAvailability;
+  int wednesdayAvailability;
+  int thursdayAvailability;
+  int fridayAvailability;
+  int saturdayAvailability;
 }
