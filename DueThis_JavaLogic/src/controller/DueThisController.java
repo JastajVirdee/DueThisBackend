@@ -8,6 +8,7 @@ import java.time.Duration;
 import model.Assignment;
 import model.Event;
 import model.Student;
+import model.ExperiencedStudent;
 
 public class DueThisController
 {
@@ -171,6 +172,28 @@ public class DueThisController
 		event.setRepeatedWeekly(repeatWeekly);
 		
 		return true; // MAKE SURE THIS IS RIGHT
+	}
+	
+	
+	public boolean updateAvailabilities(ExperiencedStudent experiencedStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ //when you click the save button on the availabilities page it runs this
+		
+		// add legal remove check (if student is experienced student)
+		
+		// make sure hours between 0 and 24 inclusive, and not null
+		
+		//set the availabilities
+		experiencedStudent.setSundayAvailability(sunday);
+		experiencedStudent.setMondayAvailability(monday);
+		experiencedStudent.setTuesdayAvailability(tuesday);
+		experiencedStudent.setWednesdayAvailability(wednesday);
+		experiencedStudent.setThursdayAvailability(thursday);
+		experiencedStudent.setFridayAvailability(friday);
+		experiencedStudent.setSaturdayAvailability(saturday);
+		
+		
+		
+		
+		return true;
 	}
 
 }
