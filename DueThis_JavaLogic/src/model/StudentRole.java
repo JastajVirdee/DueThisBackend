@@ -4,8 +4,8 @@ package model;
 
 
 
-// line 33 "model.ump"
-// line 71 "model.ump"
+// line 32 "model.ump"
+// line 69 "model.ump"
 public class StudentRole
 {
 

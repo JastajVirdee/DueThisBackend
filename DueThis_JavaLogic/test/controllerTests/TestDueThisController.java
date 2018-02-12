@@ -366,12 +366,12 @@ public class TestDueThisController
 	private Student createExperiencedStudent()
 	{
 		Student s = new Student("testId", "Richard Potato");
-		new ExperiencedStudent(s);
+		new ExperiencedStudent(s, 0, 0, 0, 0, 0, 0, 0);
 		return s;
 	}
 	
 	private Assignment createAssignment(Student s) {
-		return new Assignment("testId", name, course, dueDate, gradeWeight, compTime, s);
+		return new Assignment("testId", name, course, dueDate, gradeWeight, false, compTime, s);
 	}
 	
 }

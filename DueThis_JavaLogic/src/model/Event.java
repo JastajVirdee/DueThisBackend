@@ -6,8 +6,8 @@ package model;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 24 "model.ump"
-// line 65 "model.ump"
+// line 21 "model.ump"
+// line 64 "model.ump"
 public class Event
 {
 

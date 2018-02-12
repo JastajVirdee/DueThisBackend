@@ -6,8 +6,9 @@ package model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.Duration;
 
-// line 17 "model.ump"
+// line 14 "model.ump"
 // line 59 "model.ump"
 public class Student
 {

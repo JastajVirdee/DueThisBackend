@@ -4,8 +4,8 @@ package model;
 
 
 
-// line 37 "model.ump"
-// line 76 "model.ump"
+// line 36 "model.ump"
+// line 74 "model.ump"
 public class NoviceStudent extends StudentRole
 {
 

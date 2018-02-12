@@ -3,12 +3,9 @@ package model;
 /*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
 
 
-import java.util.*;
 
-import model.Availability.Day;
-
-// line 43 "model.ump"
-// line 82 "model.ump"
+// line 41 "model.ump"
+// line 79 "model.ump"
 public class ExperiencedStudent extends StudentRole
 {
 
@@ -16,142 +13,141 @@ public class ExperiencedStudent extends StudentRole
   // MEMBER VARIABLES
   //------------------------
 
-  //ExperiencedStudent Associations
-  private List<Availability> availabilities;
+  //ExperiencedStudent Attributes
+  private int sundayAvailability;
+  private int mondayAvailability;
+  private int tuesdayAvailability;
+  private int wednesdayAvailability;
+  private int thursdayAvailability;
+  private int fridayAvailability;
+  private int saturdayAvailability;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ExperiencedStudent(Student aStudent)
+  public ExperiencedStudent(Student aStudent, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability)
   {
     super(aStudent);
-    availabilities = new ArrayList<Availability>();
+    sundayAvailability = aSundayAvailability;
+    mondayAvailability = aMondayAvailability;
+    tuesdayAvailability = aTuesdayAvailability;
+    wednesdayAvailability = aWednesdayAvailability;
+    thursdayAvailability = aThursdayAvailability;
+    fridayAvailability = aFridayAvailability;
+    saturdayAvailability = aSaturdayAvailability;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-  /* Code from template association_GetMany */
-  public Availability getAvailability(int index)
+
+  public boolean setSundayAvailability(int aSundayAvailability)
   {
-    Availability aAvailability = availabilities.get(index);
-    return aAvailability;
+    boolean wasSet = false;
+    sundayAvailability = aSundayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public List<Availability> getAvailabilities()
+  public boolean setMondayAvailability(int aMondayAvailability)
   {
-    List<Availability> newAvailabilities = Collections.unmodifiableList(availabilities);
-    return newAvailabilities;
+    boolean wasSet = false;
+    mondayAvailability = aMondayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public int numberOfAvailabilities()
+  public boolean setTuesdayAvailability(int aTuesdayAvailability)
   {
-    int number = availabilities.size();
-    return number;
+    boolean wasSet = false;
+    tuesdayAvailability = aTuesdayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public boolean hasAvailabilities()
+  public boolean setWednesdayAvailability(int aWednesdayAvailability)
   {
-    boolean has = availabilities.size() > 0;
-    return has;
+    boolean wasSet = false;
+    wednesdayAvailability = aWednesdayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public int indexOfAvailability(Availability aAvailability)
+  public boolean setThursdayAvailability(int aThursdayAvailability)
   {
-    int index = availabilities.indexOf(aAvailability);
-    return index;
-  }
-  /* Code from template association_IsNumberOfValidMethod */
-  public boolean isNumberOfAvailabilitiesValid()
-  {
-    boolean isValid = numberOfAvailabilities() >= minimumNumberOfAvailabilities() && numberOfAvailabilities() <= maximumNumberOfAvailabilities();
-    return isValid;
-  }
-  /* Code from template association_RequiredNumberOfMethod */
-  public static int requiredNumberOfAvailabilities()
-  {
-    return 7;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAvailabilities()
-  {
-    return 7;
-  }
-  /* Code from template association_MaximumNumberOfMethod */
-  public static int maximumNumberOfAvailabilities()
-  {
-    return 7;
-  }
-  /* Code from template association_AddMNToOnlyOne */
-  public Availability addAvailability(Day aDay, int aHoursAvailable)
-  {
-    if (numberOfAvailabilities() >= maximumNumberOfAvailabilities())
-    {
-      return null;
-    }
-    else
-    {
-      return new Availability(aDay, aHoursAvailable, this);
-    }
+    boolean wasSet = false;
+    thursdayAvailability = aThursdayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public boolean addAvailability(Availability aAvailability)
+  public boolean setFridayAvailability(int aFridayAvailability)
   {
-    boolean wasAdded = false;
-    if (availabilities.contains(aAvailability)) { return false; }
-    if (numberOfAvailabilities() >= maximumNumberOfAvailabilities())
-    {
-      return wasAdded;
-    }
-
-    ExperiencedStudent existingExperiencedStudent = aAvailability.getExperiencedStudent();
-    boolean isNewExperiencedStudent = existingExperiencedStudent != null && !this.equals(existingExperiencedStudent);
-
-    if (isNewExperiencedStudent && existingExperiencedStudent.numberOfAvailabilities() <= minimumNumberOfAvailabilities())
-    {
-      return wasAdded;
-    }
-
-    if (isNewExperiencedStudent)
-    {
-      aAvailability.setExperiencedStudent(this);
-    }
-    else
-    {
-      availabilities.add(aAvailability);
-    }
-    wasAdded = true;
-    return wasAdded;
+    boolean wasSet = false;
+    fridayAvailability = aFridayAvailability;
+    wasSet = true;
+    return wasSet;
   }
 
-  public boolean removeAvailability(Availability aAvailability)
+  public boolean setSaturdayAvailability(int aSaturdayAvailability)
   {
-    boolean wasRemoved = false;
-    //Unable to remove aAvailability, as it must always have a experiencedStudent
-    if (this.equals(aAvailability.getExperiencedStudent()))
-    {
-      return wasRemoved;
-    }
+    boolean wasSet = false;
+    saturdayAvailability = aSaturdayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
 
-    //experiencedStudent already at minimum (7)
-    if (numberOfAvailabilities() <= minimumNumberOfAvailabilities())
-    {
-      return wasRemoved;
-    }
-    availabilities.remove(aAvailability);
-    wasRemoved = true;
-    return wasRemoved;
+  public int getSundayAvailability()
+  {
+    return sundayAvailability;
+  }
+
+  public int getMondayAvailability()
+  {
+    return mondayAvailability;
+  }
+
+  public int getTuesdayAvailability()
+  {
+    return tuesdayAvailability;
+  }
+
+  public int getWednesdayAvailability()
+  {
+    return wednesdayAvailability;
+  }
+
+  public int getThursdayAvailability()
+  {
+    return thursdayAvailability;
+  }
+
+  public int getFridayAvailability()
+  {
+    return fridayAvailability;
+  }
+
+  public int getSaturdayAvailability()
+  {
+    return saturdayAvailability;
   }
 
   public void delete()
   {
-    for(int i=availabilities.size(); i > 0; i--)
-    {
-      Availability aAvailability = availabilities.get(i - 1);
-      aAvailability.delete();
-    }
     super.delete();
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "sundayAvailability" + ":" + getSundayAvailability()+ "," +
+            "mondayAvailability" + ":" + getMondayAvailability()+ "," +
+            "tuesdayAvailability" + ":" + getTuesdayAvailability()+ "," +
+            "wednesdayAvailability" + ":" + getWednesdayAvailability()+ "," +
+            "thursdayAvailability" + ":" + getThursdayAvailability()+ "," +
+            "fridayAvailability" + ":" + getFridayAvailability()+ "," +
+            "saturdayAvailability" + ":" + getSaturdayAvailability()+ "]";
+  }
 }

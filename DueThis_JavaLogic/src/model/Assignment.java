@@ -6,7 +6,7 @@ package model;
 import java.sql.Date;
 import java.time.Duration;
 
-// line 5 "model.ump"
+// line 2 "model.ump"
 // line 54 "model.ump"
 public class Assignment
 {
