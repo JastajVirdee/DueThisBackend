@@ -170,7 +170,7 @@ public class DueThisController
 		event.setEndTime(endTime);
 		event.setRepeatedWeekly(repeatWeekly);
 		
-		return false;
+		return true; // MAKE SURE THIS IS RIGHT
 	}
 
 }
