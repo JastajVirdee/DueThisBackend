@@ -175,13 +175,46 @@ public class DueThisController
 	}
 	
 	
-	public boolean updateAvailabilities(ExperiencedStudent experiencedStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ //when you click the save button on the availabilities page it runs this
+	
+	//when you click the save button on the availabilities page it runs this
+	public boolean updateAvailabilities(ExperiencedStudent experiencedStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ 
 		
-		// add legal remove check (if student is experienced student)
+		// ADD legal remove check (if student role is experienced student)
+		// example:    boolean legalRemove = aStudent.equals(anAssignment.getStudent());
+
 		
-		// make sure hours between 0 and 24 inclusive, and not null
 		
-		//set the availabilities
+		// Make sure hours between 0 and 24 inclusive
+		String error = "";
+		
+		if(sunday<0 || sunday>24) {
+			error += "Sunday hours must be between 0 and 24! ";
+		}
+		if(monday<0 || monday>24) {
+			error += "Monday hours must be between 0 and 24! ";
+		}
+		if(tuesday<0 || tuesday>24) {
+			error += "Tuesday hours must be between 0 and 24! ";
+		}
+		if(wednesday<0 || wednesday>24) {
+			error += "Wednesday hours must be between 0 and 24! ";
+		}
+		if(thursday<0 || thursday>24) {
+			error += "Thursday hours must be between 0 and 24! ";
+		}
+		if(friday<0 || friday>24) {
+			error += "Friday hours must be between 0 and 24! ";
+		}
+		if(saturday<0 || saturday>24) {
+			error += "Saturday hours must be between 0 and 24! ";
+		}
+		
+		if (error.trim().length() > 0) {
+			throw new InvalidInputException(error);
+		}
+		
+		
+		// Set the availabilities
 		experiencedStudent.setSundayAvailability(sunday);
 		experiencedStudent.setMondayAvailability(monday);
 		experiencedStudent.setTuesdayAvailability(tuesday);
