@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.time.Duration;
 
 import model.Assignment;
+import model.Event;
 import model.Student;
 
 public class DueThisController
@@ -84,6 +85,47 @@ public class DueThisController
 		}
 		
 		return legalRemove;
+	}
+	
+	public boolean editEvent(Event event, String name, Date date, Time startTime, Time endTime, boolean repeatWeekly) throws InvalidInputException {		
+		
+		java.util.Calendar cal = Calendar.getInstance();
+		java.util.Date utilDate = new java.util.Date();
+		cal.setTime(utilDate);
+		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime());
+		
+		// Check for input errors
+		String error = "";
+		if (name == null || name.trim().length() == 0) {
+			error += "Please enter a valid name! ";
+		}
+		if (date == null) {
+			error += "Date cannot be empty! ";
+		}
+		else if (date.before(sqlDate) == true) {
+			error += "Date must be in the future! ";
+		}
+		if (startTime == null) {
+			error += "Start time cannot be empty! ";
+		}
+		else if (endTime == null) {
+			error += "End time cannot be empty! ";
+		}
+		else if (endTime.before(startTime) == true) {
+			error += "Start time must be before end time! ";
+		}
+		if (error.trim().length() > 0) {
+			throw new InvalidInputException(error);
+		}
+		
+		// Edit the event
+		event.setName(name);
+		event.setDate(date);
+		event.setStartTime(startTime);
+		event.setEndTime(endTime);
+		event.setRepeatedWeekly(repeatWeekly);
+		
+		return false;
 	}
 
 }

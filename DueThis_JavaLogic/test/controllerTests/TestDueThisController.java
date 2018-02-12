@@ -15,6 +15,7 @@ import org.junit.Test;
 import controller.DueThisController;
 import controller.InvalidInputException;
 import model.Assignment;
+import model.Event;
 import model.ExperiencedStudent;
 import model.Student;
 import model.NoviceStudent;
@@ -31,6 +32,14 @@ public class TestDueThisController
 	// This is suppressed since it is easier to create a specific date
 	@SuppressWarnings("deprecation")
 	Date dueDate = new Date(118, 4, 30);
+	
+	boolean isCompleted = false;
+	boolean repeatedWeekly = false;
+	
+	@SuppressWarnings("deprecation")
+	Time startTime = new Time(8, 30, 0);
+	@SuppressWarnings("deprecation")
+	Time endTime = new Time(9, 30, 0);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
@@ -354,7 +363,86 @@ public class TestDueThisController
 		
 	}
 	
-
+	@Test
+	public void testEditEvent() {
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		@SuppressWarnings("deprecation")
+		Date date = new Date(119, 4, 30);
+		@SuppressWarnings("deprecation")
+		Time starttime = new Time(10, 30, 0);
+		@SuppressWarnings("deprecation")
+		Time endtime = new Time(11, 30, 0);
+		
+		String error = "";
+		try {
+			dtc.editEvent(event, "class", date, starttime, endtime, true);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("", error);
+		assertEquals("class", event.getName());
+		assertEquals(date, event.getDate());
+		assertEquals(starttime, event.getStartTime());
+		assertEquals(endtime, event.getEndTime());
+		assertEquals(true, event.getRepeatedWeekly());
+	}
+	
+	@Test
+	public void testEditEventEndBeforeStart () {
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		@SuppressWarnings("deprecation")
+		Time endtime = new Time(7, 30, 0);
+		
+		String error ="";
+		try {
+			dtc.editEvent(event, name, dueDate, startTime, endtime, repeatedWeekly);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Start time must be before end time! ", error);
+	}
+	
+	@Test
+	public void testEditEventInvalidName() {
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		String error ="";
+		try {
+			dtc.editEvent(event, "", dueDate, startTime, endTime, repeatedWeekly);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a valid name! ", error);
+	}
+	
+	@Test
+	public void testEditEventNullStartTime() {
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		String error ="";
+		try {
+			dtc.editEvent(event, name, dueDate, null, endTime, repeatedWeekly);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Start time cannot be empty! ", error);
+	}
 
 	private Student createNoviceStudent()
 	{
@@ -371,7 +459,11 @@ public class TestDueThisController
 	}
 	
 	private Assignment createAssignment(Student s) {
-		return new Assignment("testId", name, course, dueDate, gradeWeight, compTime, s);
+		return new Assignment("testId", name, course, dueDate, gradeWeight, isCompleted, compTime, s);
+	}
+	
+	private Event createEvent(Student s) {
+		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s);
 	}
 	
 }
