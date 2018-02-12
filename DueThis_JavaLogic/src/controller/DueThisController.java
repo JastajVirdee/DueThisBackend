@@ -102,15 +102,16 @@ public class DueThisController
 		if (date == null) {
 			error += "Date cannot be empty! ";
 		}
-		else if (date.before(sqlDate) == true)
+		else if (date.before(sqlDate) == true) {
 			error += "Date must be in the future! ";
+		}
 		if (startTime == null) {
 			error += "Start time cannot be empty! ";
 		}
-		if (endTime == null) {
+		else if (endTime == null) {
 			error += "End time cannot be empty! ";
 		}
-		if (endTime.before(startTime) == true) {
+		else if (endTime.before(startTime) == true) {
 			error += "Start time must be before end time! ";
 		}
 		if (error.trim().length() > 0) {
