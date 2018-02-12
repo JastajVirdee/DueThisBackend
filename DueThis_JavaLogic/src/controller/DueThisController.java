@@ -87,6 +87,51 @@ public class DueThisController
 		return legalRemove;
 	}
 	
+	public boolean createEvent(Student aStudent, String name, Date date, Time startTime, Time endTime, boolean repeatWeekly) throws InvalidInputException {
+		java.util.Calendar cal = Calendar.getInstance();
+		java.util.Date utilDate = new java.util.Date();
+		cal.setTime(utilDate);
+		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime());
+		
+		String error = "";
+
+		//Verify that there is a student provided
+		if (aStudent == null)
+		{
+			error += "No student is associated to this event! ";
+			throw new InvalidInputException(error);
+		}
+		
+		// Check for input errors
+		if (name == null || name.trim().length() == 0) {
+			error += "Please enter a valid name! ";
+		}
+		if (date == null) {
+			error += "Date cannot be empty! ";
+		}
+		else if (date.before(sqlDate) == true) {
+			error += "Date must be in the future! ";
+		}
+		if (startTime == null) {
+			error += "Start time cannot be empty! ";
+		}
+		else if (endTime == null) {
+			error += "End time cannot be empty! ";
+		}
+		else if (endTime.before(startTime) == true) {
+			error += "Start time must be before end time! ";
+		}
+		if (error.trim().length() > 0) {
+			throw new InvalidInputException(error);
+		}
+		
+		String id = UUID.randomUUID().toString();
+
+		Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent);
+		return true;
+		
+	}
+	
 	public boolean editEvent(Event event, String name, Date date, Time startTime, Time endTime, boolean repeatWeekly) throws InvalidInputException {		
 		
 		java.util.Calendar cal = Calendar.getInstance();
