@@ -640,6 +640,11 @@ public class TestDueThisController
 		
 	}
 	
+	@Test
+	public void testUpdateAvailabilitiesWrongRole() {
+		
+	}
+	
 	// Sunday
 	@Test
 	public void testUpdateAvailabilitiesSundayHigh() {
