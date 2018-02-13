@@ -633,6 +633,21 @@ public class TestDueThisController
 		assertEquals("Start time cannot be empty! ", error);
 	}
 	
+	@Test
+	public void testUpdateAvailabilitiesNoStudent() {
+		
+	}
+	
+	@Test
+	public void testUpdateAvailabilitiesGoodHours() {
+		
+	}
+	
+	@Test
+	public void testUpdateAvailabilitiesBadHours() {
+		
+	}
+	
 	
 
 	private Student createNoviceStudent()
