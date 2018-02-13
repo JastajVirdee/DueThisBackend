@@ -370,7 +370,13 @@ public class TestDueThisController
 		Assignment a1 = createAssignment(s);
 		a1.setIsCompleted(false);
 		
-		dtc.completeAssignment(a1);
+		try{
+			dtc.completeAssignment(s, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			fail();
+		}
 		
 		assertEquals(true, a1.getIsCompleted());
 	}
@@ -385,9 +391,37 @@ public class TestDueThisController
 		Assignment a1 = createAssignment(s);
 		a1.setIsCompleted(true);
 		
-		dtc.completeAssignment(a1);
+		try{
+			dtc.completeAssignment(s, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			fail();
+		}
 		
 		assertEquals(false, a1.getIsCompleted());
+	}
+	
+	@Test
+	public void testCompleteAssignmentError()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = new Student("testId", "Richard Potato");
+		Student s2 = new Student("ID", "Ichard Potato");
+		Assignment a1 = createAssignment(s);
+		a1.setIsCompleted(true);
+		
+		try{
+			dtc.completeAssignment(s2, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("This assignment does not belong to this student! ", error);
 	}
 
 	@Test
@@ -752,6 +786,45 @@ public class TestDueThisController
 		}
 
 		assertEquals("Start time cannot be empty! ", error);
+	}
+	
+	@Test
+	public void testRemoveEventSuccess(){
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(ns, event);
+		}catch(InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(0, ns.getEvents().size());	
+	}
+	
+	@Test
+	public void testRemoveEventNotOwned(){
+		String error = "";
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(es, event);
+		}catch(InvalidInputException e)
+		{
+			error = e.getMessage();
+		}	
+		assertEquals("This event does not belong to this student! ", error);
 	}
 
 	private Student createNoviceStudent()
