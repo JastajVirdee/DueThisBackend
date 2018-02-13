@@ -177,16 +177,24 @@ public class DueThisController
 	
 	
 	//when you click the save button on the availabilities page it runs this
-	public boolean updateAvailabilities(ExperiencedStudent experiencedStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ 
+	public boolean updateAvailabilities(Student aStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ 
 		
-		// ADD legal remove check (if student role is experienced student)
-		// example:    boolean legalRemove = aStudent.equals(anAssignment.getStudent());
-
+		String error = "";
+		
+		// Check if the student is an experienced student
+		boolean legalRemove = aStudent.getStudentRole(0) instanceof model.ExperiencedStudent;
+			// true if student is an experienced student
+		
+		if (!legalRemove) {
+			error += "Only experienced students can set availabilities.";
+			throw new InvalidInputException(error);	
+		}
+		
+		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
+		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
 		
 		
 		// Make sure hours between 0 and 24 inclusive
-		String error = "";
-		
 		if(sunday<0 || sunday>24) {
 			error += "Sunday hours must be between 0 and 24! ";
 		}
@@ -208,22 +216,19 @@ public class DueThisController
 		if(saturday<0 || saturday>24) {
 			error += "Saturday hours must be between 0 and 24! ";
 		}
-		
-		if (error.trim().length() > 0) {
+		if (error.trim().length() > 0) { //if errors exist
 			throw new InvalidInputException(error);
 		}
 		
 		
 		// Set the availabilities
-		experiencedStudent.setSundayAvailability(sunday);
-		experiencedStudent.setMondayAvailability(monday);
-		experiencedStudent.setTuesdayAvailability(tuesday);
-		experiencedStudent.setWednesdayAvailability(wednesday);
-		experiencedStudent.setThursdayAvailability(thursday);
-		experiencedStudent.setFridayAvailability(friday);
-		experiencedStudent.setSaturdayAvailability(saturday);
-		
-		
+		anExperiencedStudent.setSundayAvailability(sunday);
+		anExperiencedStudent.setMondayAvailability(monday);
+		anExperiencedStudent.setTuesdayAvailability(tuesday);
+		anExperiencedStudent.setWednesdayAvailability(wednesday);
+		anExperiencedStudent.setThursdayAvailability(thursday);
+		anExperiencedStudent.setFridayAvailability(friday);
+		anExperiencedStudent.setSaturdayAvailability(saturday);
 		
 		
 		return true;
