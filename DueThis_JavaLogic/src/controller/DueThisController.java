@@ -136,10 +136,10 @@ public class DueThisController
 		return false;
 	}
 
-	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException
-	{
-
-		// Verify that the assignment belongs to the student
+	
+	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException {
+		
+		//Verify that the assignment belongs to the student
 		boolean legalRemove = aStudent.equals(anAssignment.getStudent());
 
 		String error = "";
