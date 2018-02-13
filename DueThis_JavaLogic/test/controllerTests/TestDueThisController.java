@@ -551,7 +551,7 @@ public class TestDueThisController
 	}
 	
 	
-	
+	////////////////////////////////////////////////////////////////////////////////////////
 	@Test
 	public void testEditEvent() {
 		
@@ -633,23 +633,85 @@ public class TestDueThisController
 		assertEquals("Start time cannot be empty! ", error);
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////
+	//Testing the updateAvailabilitiesMethod
 	@Test
 	public void testUpdateAvailabilitiesNoStudent() {
 		
 	}
 	
+	// Sunday
 	@Test
-	public void testUpdateAvailabilitiesGoodHours() {
+	public void testUpdateAvailabilitiesSundayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesSundayLow() {
 		
 	}
 	
+	// Monday
 	@Test
-	public void testUpdateAvailabilitiesBadHours() {
+	public void testUpdateAvailabilitiesMondayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesMondayLow() {
+		
+	}
+	
+	// Tuesday
+	@Test
+	public void testUpdateAvailabilitiesTuesdayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesTuesdayLow() {
+		
+	}
+	
+	// Wednesday
+	@Test
+	public void testUpdateAvailabilitiesWednesdayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesWednesdayLow() {
+		
+	}
+	
+	// Thursday
+	@Test
+	public void testUpdateAvailabilitiesThursdayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesThursdayLow() {
+		
+	}
+	
+	// Friday
+	@Test
+	public void testUpdateAvailabilitiesFridayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesFridayLow() {
+		
+	}
+	
+	// Saturday
+	@Test
+	public void testUpdateAvailabilitiesSaturdayHigh() {
+		
+	}
+	@Test
+	public void testUpdateAvailabilitiesSaturdayLow() {
 		
 	}
 	
 	
-
+	////////////////////////////////////////////////////////////////////////////////
 	private Student createNoviceStudent()
 	{
 		Student s = new Student("testId", "Richard Potato");
