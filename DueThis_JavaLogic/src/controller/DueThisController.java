@@ -240,7 +240,7 @@ public class DueThisController
 		return true;
 	}
 
-	public boolean removeEvent(Event anEvent, Student aStudent) throws InvalidInputException
+	public boolean removeEvent(Student aStudent, Event anEvent) throws InvalidInputException
 	{
 		boolean legalRemove = aStudent.equals(anEvent.getStudent());
 

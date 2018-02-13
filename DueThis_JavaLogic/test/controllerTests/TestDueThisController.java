@@ -633,7 +633,44 @@ public class TestDueThisController
 		assertEquals("Start time cannot be empty! ", error);
 	}
 	
+	@Test
+	public void testRemoveEventSuccess(){
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(ns, event);
+		}catch(InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(0, ns.getEvents().size());	
+	}
 	
+	@Test
+	public void testRemoveEventNotOwned(){
+		String error = "";
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(es, event);
+		}catch(InvalidInputException e)
+		{
+			error = e.getMessage();
+		}	
+		assertEquals("This event does not belong to this student! ", error);
+	}
 
 	private Student createNoviceStudent()
 	{
