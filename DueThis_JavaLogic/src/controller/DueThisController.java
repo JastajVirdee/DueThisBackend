@@ -171,7 +171,7 @@ public class DueThisController
 		event.setEndTime(endTime);
 		event.setRepeatedWeekly(repeatWeekly);
 		
-		return true; // MAKE SURE THIS IS RIGHT
+		return true;
 	}
 	
 	
@@ -181,14 +181,16 @@ public class DueThisController
 		
 		String error = "";
 		
+		
 		// Check if the student is an experienced student
 		boolean legalRemove = aStudent.getStudentRole(0) instanceof model.ExperiencedStudent;
-			// true if student is an experienced student
+				// true if student is an experienced student
 		
 		if (!legalRemove) {
 			error += "Only experienced students can set availabilities.";
 			throw new InvalidInputException(error);	
 		}
+		
 		
 		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
 		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
