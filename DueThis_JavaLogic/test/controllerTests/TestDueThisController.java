@@ -23,15 +23,21 @@ import model.NoviceStudent;
 public class TestDueThisController
 {
 	String name = "Assignment1";
+	String newName = "AssignmentChanged";
 	String course = "ECSE428";
+	String newCourse = "ECSE429";
 	float gradeWeight = (float) 0.4;
+	float newGradeWeight = (float) 0.5;
 
 	// Temporary value until the model has been updated
 	Duration compTime = Duration.ofHours(5);
+	Duration newCompTime = Duration.ofHours(6);
 
 	// This is suppressed since it is easier to create a specific date
 	@SuppressWarnings("deprecation")
 	Date dueDate = new Date(118, 4, 30);
+	@SuppressWarnings("deprecation")
+	Date newDueDate = new Date(118, 4, 40);
 
 	boolean isCompleted = false;
 	boolean repeatedWeekly = false;
@@ -314,17 +320,17 @@ public class TestDueThisController
 		
 		try
 		{
-			dtc.editAssignment(s.getAssignment(0), "DueThis Controller", course, dueDate, gradeWeight, compTime, s);
+			dtc.editAssignment(s.getAssignment(0), newName, newCourse, newDueDate, newGradeWeight, newCompTime, s);
 		} catch (InvalidInputException e)
 		{
 			fail();
 		}
 		
 		assertEquals(1, s.getAssignments().size());
-		assertEquals("DueThis Controller", s.getAssignment(0).getName());
-		assertEquals(course, s.getAssignment(0).getCourse());
-		assertEquals(dueDate, s.getAssignment(0).getDueDate());
-		assertEquals(gradeWeight, s.getAssignment(0).getGradeWeight(),0.0f);
+		assertEquals(newName, s.getAssignment(0).getName());
+		assertEquals(newCourse, s.getAssignment(0).getCourse());
+		assertEquals(newDueDate, s.getAssignment(0).getDueDate());
+		assertEquals(newGradeWeight, s.getAssignment(0).getGradeWeight(),0.0f);
 		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		assertEquals(id1, s.getAssignment(0).getId());
 		
@@ -343,21 +349,69 @@ public class TestDueThisController
 
 		try
 		{
-			dtc.editAssignment(s.getAssignment(0), "DueThis Controller", course, dueDate, gradeWeight, compTime, s);
+			dtc.editAssignment(s.getAssignment(0), newName, newCourse, newDueDate, newGradeWeight, newCompTime, s);
 		} catch (InvalidInputException e)
 		{
 			fail();
 		}
 		
 		assertEquals(1, s.getAssignments().size());
-		assertEquals("DueThis Controller", s.getAssignment(0).getName());
-		assertEquals(course, s.getAssignment(0).getCourse());
-		assertEquals(dueDate, s.getAssignment(0).getDueDate());
-		assertEquals(compTime, s.getAssignment(0).getCompletionTime());
+		assertEquals(newName, s.getAssignment(0).getName());
+		assertEquals(newCourse, s.getAssignment(0).getCourse());
+		assertEquals(newDueDate, s.getAssignment(0).getDueDate());
+		assertEquals(newCompTime, s.getAssignment(0).getCompletionTime());
 		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		assertEquals(id1, s.getAssignment(0).getId());
 		
 		s.delete();
+	}
+	
+	@Test
+	public void testEditAssignmentNoviceInvalidInputs()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createNoviceStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+		
+		@SuppressWarnings("deprecation")
+		Date d1 = new Date(0, 1, 1);
+		
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), null, "", d1, -gradeWeight, null, s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a valid assignment name! Please enter a valid course name! Due date must be in the future! Please enter a positive grade weight! ", error);
+	}
+	
+	@Test
+	public void testEditAssignmentExperiencedInvalidInputs()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createExperiencedStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+		
+		@SuppressWarnings("deprecation")
+		Date d1 = new Date(0, 1, 1);
+		
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), null, "", d1, -gradeWeight, null, s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a valid assignment name! Please enter a valid course name! Due date must be in the future! Please enter an estimated completion time! ", error);
 	}
 	
 	@Test
