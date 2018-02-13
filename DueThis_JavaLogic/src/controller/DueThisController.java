@@ -9,6 +9,7 @@ import model.Assignment;
 import model.Event;
 import model.ExperiencedStudent;
 import model.Student;
+import model.ExperiencedStudent;
 
 public class DueThisController
 {
@@ -133,7 +134,7 @@ public class DueThisController
 	{
 		boolean currentState = anAssignment.getIsCompleted();
 		anAssignment.setIsCompleted(!currentState);
-		return false;
+		return true;
 	}
 
 	
@@ -251,9 +252,10 @@ public class DueThisController
 		event.setEndTime(endTime);
 		event.setRepeatedWeekly(repeatWeekly);
 
-		return true; // MAKE SURE THIS IS RIGHT
+		return true;
 	}
-
+	
+	//when you click the save button on the availabilities page it runs this
 	public boolean updateAvailabilities(Student aStudent, int sunday, int monday, int tuesday, int wednesday,
 			int thursday, int friday, int saturday) throws InvalidInputException
 	{
