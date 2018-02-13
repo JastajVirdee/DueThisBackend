@@ -8,6 +8,7 @@ import java.time.Duration;
 import model.Assignment;
 import model.Event;
 import model.Student;
+import model.ExperiencedStudent;
 
 public class DueThisController
 {
@@ -170,7 +171,69 @@ public class DueThisController
 		event.setEndTime(endTime);
 		event.setRepeatedWeekly(repeatWeekly);
 		
-		return true; // MAKE SURE THIS IS RIGHT
+		return true;
+	}
+	
+	
+	
+	//when you click the save button on the availabilities page it runs this
+	public boolean updateAvailabilities(Student aStudent, int sunday, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday) throws InvalidInputException{ 
+		
+		String error = "";
+		
+		
+		// Check if the student is an experienced student
+		boolean legalRemove = aStudent.getStudentRole(0) instanceof model.ExperiencedStudent;
+				// true if student is an experienced student
+		
+		if (!legalRemove) {
+			error += "Only experienced students can set availabilities.";
+			throw new InvalidInputException(error);	
+		}
+		
+		
+		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
+		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
+		
+		
+		// Make sure hours between 0 and 24 inclusive
+		if(sunday<0 || sunday>24) {
+			error += "Sunday hours must be between 0 and 24! ";
+		}
+		if(monday<0 || monday>24) {
+			error += "Monday hours must be between 0 and 24! ";
+		}
+		if(tuesday<0 || tuesday>24) {
+			error += "Tuesday hours must be between 0 and 24! ";
+		}
+		if(wednesday<0 || wednesday>24) {
+			error += "Wednesday hours must be between 0 and 24! ";
+		}
+		if(thursday<0 || thursday>24) {
+			error += "Thursday hours must be between 0 and 24! ";
+		}
+		if(friday<0 || friday>24) {
+			error += "Friday hours must be between 0 and 24! ";
+		}
+		if(saturday<0 || saturday>24) {
+			error += "Saturday hours must be between 0 and 24! ";
+		}
+		if (error.trim().length() > 0) { //if errors exist
+			throw new InvalidInputException(error);
+		}
+		
+		
+		// Set the availabilities
+		anExperiencedStudent.setSundayAvailability(sunday);
+		anExperiencedStudent.setMondayAvailability(monday);
+		anExperiencedStudent.setTuesdayAvailability(tuesday);
+		anExperiencedStudent.setWednesdayAvailability(wednesday);
+		anExperiencedStudent.setThursdayAvailability(thursday);
+		anExperiencedStudent.setFridayAvailability(friday);
+		anExperiencedStudent.setSaturdayAvailability(saturday);
+		
+		
+		return true;
 	}
 
 }
