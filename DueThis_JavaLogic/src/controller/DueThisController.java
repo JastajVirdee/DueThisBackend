@@ -130,16 +130,28 @@ public class DueThisController
 		}
 	}
 
-	public boolean completeAssignment(Assignment anAssignment)
+	public boolean completeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException
 	{
-		boolean currentState = anAssignment.getIsCompleted();
-		anAssignment.setIsCompleted(!currentState);
+		boolean legalRemove = aStudent.equals(anAssignment.getStudent());
+
+		String error = "";
+		if (legalRemove)
+		{
+			boolean currentState = anAssignment.getIsCompleted();
+			anAssignment.setIsCompleted(!currentState);
+		} else
+		{
+			error += "This assignment does not belong to this student! ";
+			throw new InvalidInputException(error);
+		}
+
 		return true;
 	}
-	
-	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException {
-		
-		//Verify that the assignment belongs to the student
+
+	public boolean removeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException
+	{
+
+		// Verify that the assignment belongs to the student
 		boolean legalRemove = aStudent.equals(anAssignment.getStudent());
 
 		String error = "";
@@ -254,7 +266,6 @@ public class DueThisController
 		return true;
 	}
 
-
 	public boolean removeEvent(Student aStudent, Event anEvent) throws InvalidInputException
 	{
 		boolean legalRemove = aStudent.equals(anEvent.getStudent());
@@ -272,8 +283,8 @@ public class DueThisController
 
 		return legalRemove;
 	}
-	
-	//when you click the save button on the availabilities page it runs this
+
+	// when you click the save button on the availabilities page it runs this
 	public boolean updateAvailabilities(Student aStudent, int sunday, int monday, int tuesday, int wednesday,
 			int thursday, int friday, int saturday) throws InvalidInputException
 	{
