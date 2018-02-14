@@ -91,6 +91,8 @@ public class StudyAlgorithm {
 					//Update availability
 					setAvailabilityForDay(availability, dayOfWeek, 0);
 					
+					c.add(Calendar.DAY_OF_WEEK, 1);
+					
 					compTimeSeconds = compTimeSeconds - availableToday;
 					
 				}
