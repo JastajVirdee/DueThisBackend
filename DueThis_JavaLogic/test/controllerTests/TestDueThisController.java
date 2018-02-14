@@ -834,13 +834,17 @@ public class TestDueThisController
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		Event event2 = createEvent(ns);
+		Event event3 = createEvent(ns);
+		Event event4 = createEvent(ns);
 		DueThisController dtc = new DueThisController();
 		
 		List<Event> list = dtc.showEvent(ns, dueDate);
 		
-		assertEquals(2, list.size());
+		assertEquals(4, list.size());
 		assertEquals(event, list.get(0));
 		assertEquals(event2, list.get(1));
+		assertEquals(event3, list.get(2));
+		assertEquals(event4, list.get(3));
 	}
 	
 	@Test
@@ -849,13 +853,18 @@ public class TestDueThisController
 		Student ns = createNoviceStudent();
 		Assignment assignment = createAssignment(ns);
 		Assignment assignment2 = createAssignment(ns);
+		Assignment assignment3 = createAssignment(ns);
+		Assignment assignment4 = createAssignment(ns);
+		
 		DueThisController dtc = new DueThisController();
 		
 		List<Assignment> list = dtc.showAssignment(ns, dueDate);
 		
-		assertEquals(2, list.size());
+		assertEquals(4, list.size());
 		assertEquals(assignment, list.get(0));
-		assertEquals(assignment2, list.get(1));	
+		assertEquals(assignment2, list.get(1));
+		assertEquals(assignment3, list.get(2));
+		assertEquals(assignment4, list.get(3));
 	}
 
 	private Student createNoviceStudent()
