@@ -831,11 +831,17 @@ public class TestDueThisController
 	@Test
 	public void testShowEvent()
 	{
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		Event event2 = createEvent(ns);
 		Event event3 = createEvent(ns);
 		Event event4 = createEvent(ns);
+		Event event5 = createEventDetailed(ns, testDate);
+		
 		DueThisController dtc = new DueThisController();
 		
 		List<Event> list = dtc.showEvent(ns, dueDate);
@@ -845,6 +851,7 @@ public class TestDueThisController
 		assertEquals(event2, list.get(1));
 		assertEquals(event3, list.get(2));
 		assertEquals(event4, list.get(3));
+		//assertEquals(event5, list.get(4));
 	}
 	
 	@Test
@@ -889,6 +896,10 @@ public class TestDueThisController
 	private Event createEvent(Student s)
 	{
 		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s);
+	}
+	
+	private Event createEventDetailed(Student s, Date date) {
+		return new Event("testId", name, date, startTime, endTime, repeatedWeekly, s);
 	}
 
 }

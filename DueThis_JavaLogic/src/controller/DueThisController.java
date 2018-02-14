@@ -361,7 +361,8 @@ public class DueThisController
 		return timeSpent;
 	}
 	
-	public List<Event> showEvent(Student aStudent, Date dateSelected) { //Showing all events on a date
+	@SuppressWarnings("deprecation")
+	public List<Event> showEvent(Student aStudent, Date dateSelected) { //Showing all events on a date (same year, month and day)
 		List<Event> allEvents = new ArrayList<>();
 		allEvents = aStudent.getEvents();
 		
@@ -369,14 +370,15 @@ public class DueThisController
 		
 		for(Event e: allEvents)
 		{
-			if (e.getDate() == dateSelected) {
+			if ( (e.getDate().getDate() == dateSelected.getDate()) && (e.getDate().getMonth() == dateSelected.getMonth()) && (e.getDate().getYear() == dateSelected.getYear()) ) {
 				eventsToday.add(e);
 			}
 		}
 		return eventsToday;
 	}
 	
-	public List<Assignment> showAssignment(Student aStudent, Date dateSelected) { //Showing all assignments on a date
+	@SuppressWarnings("deprecation")
+	public List<Assignment> showAssignment(Student aStudent, Date dateSelected) { //Showing all assignments on a date (same year, month and day)
 		List<Assignment> allAssignments = new ArrayList<>();
 		allAssignments = aStudent.getAssignments();
 		
@@ -384,7 +386,7 @@ public class DueThisController
 		
 		for(Assignment a : allAssignments)
 		{
-			if (a.getDueDate() == dateSelected) {
+			if ( (a.getDueDate().getDate() == dateSelected.getDate()) && (a.getDueDate().getMonth() == dateSelected.getMonth()) && (a.getDueDate().getYear() == dateSelected.getYear()) ) {
 				assignmentsToday.add(a);
 			}	
 		}
