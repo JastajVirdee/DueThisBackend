@@ -857,12 +857,16 @@ public class TestDueThisController
 	@Test
 	public void testShowAssignment()
 	{
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		
 		Student ns = createNoviceStudent();
 		Assignment assignment = createAssignment(ns);
 		Assignment assignment2 = createAssignment(ns);
 		Assignment assignment3 = createAssignment(ns);
 		Assignment assignment4 = createAssignment(ns);
-		
+		Assignment assignment5 = createAssignmentDetailed(ns, testDate);
 		DueThisController dtc = new DueThisController();
 		
 		List<Assignment> list = dtc.showAssignment(ns, dueDate);
@@ -901,5 +905,9 @@ public class TestDueThisController
 	private Event createEventDetailed(Student s, Date date) {
 		return new Event("testId", name, date, startTime, endTime, repeatedWeekly, s);
 	}
-
+	
+	private Assignment createAssignmentDetailed(Student s, Date date) {
+		return new Assignment("testId", name, course, date, gradeWeight, isCompleted, compTime, s);
+	}
+	
 }
