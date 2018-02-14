@@ -20,6 +20,7 @@ public class StudyAlgorithm {
 	
 	public void generateStudySchedule(Student aStudent) {
 		
+	
 		java.util.Calendar cal = Calendar.getInstance();
 		java.util.Date utilDate = new java.util.Date();
 		cal.setTime(utilDate);
@@ -36,6 +37,7 @@ public class StudyAlgorithm {
 		
 		ArrayList<Assignment> trackedAssignments = new ArrayList<Assignment>();
 		
+		
 		//Check if student is experienced student
 		if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent) {
 			
@@ -50,7 +52,6 @@ public class StudyAlgorithm {
 				
 			}
 						
-			
 		//Sort the assignments by due date	
 		Collections.sort(trackedAssignments, new Comparator<Assignment>(){
 
@@ -59,7 +60,7 @@ public class StudyAlgorithm {
 		                return a1.getDueDate().compareTo(a2.getDueDate());
 		            }
 		        });
-		
+
 		for (Assignment a : trackedAssignments) {
 			
 			Date dueDate = a.getDueDate();
@@ -84,10 +85,12 @@ public class StudyAlgorithm {
 					setAvailabilityForDay(availability, dayOfWeek, availableToday-compTimeSeconds);
 					
 					compTimeSeconds = 0;
+
 				}
 				else {
+
 					createStudyEvent(dtc, aStudent, a, dueDate, availableToday);
-					
+
 					//Update availability
 					setAvailabilityForDay(availability, dayOfWeek, 0);
 					
@@ -104,7 +107,7 @@ public class StudyAlgorithm {
 		
 		}
 		
-	}
+	} 
 }
 	
 	private int getAvailabilityForDay(int[] availability, int dayOfWeek) {

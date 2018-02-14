@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.After;
@@ -15,6 +16,7 @@ import org.junit.Test;
 
 import controller.DueThisController;
 import controller.InvalidInputException;
+import controller.StudyAlgorithm;
 import model.Assignment;
 import model.Event;
 import model.ExperiencedStudent;
@@ -931,6 +933,27 @@ public class TestDueThisController
 		assertEquals(assignment3, list.get(2));
 		assertEquals(assignment4, list.get(3));
 	}
+	
+	@Test
+	public void testAlgorithmOneEvent() {
+		
+		Student s = createExperiencedStudentAlg(8);
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DAY_OF_WEEK, 4);
+		
+		Date dueDate = new Date(c.getTimeInMillis());
+		
+		Duration compTime = Duration.ofHours(5);
+		
+		Assignment a = new Assignment("testId", name, course, dueDate, gradeWeight, false, compTime, s);
+		StudyAlgorithm algo = new StudyAlgorithm();
+		
+		algo.generateStudySchedule(s);
+		
+		assertEquals(s.numberOfEvents(), 1);
+		assertEquals(s.getEvent(0).getName(), "study_" + a.getName());
+		
+	}
 
 	private Student createNoviceStudent()
 	{
@@ -945,6 +968,14 @@ public class TestDueThisController
 		new ExperiencedStudent(s, 0, 0, 0, 0, 0, 0, 0);
 		return s;
 	}
+	
+	private Student createExperiencedStudentAlg(int hours)
+	{
+		Student s = new Student("testId", "Richard Potato");
+		new ExperiencedStudent(s, hours, hours, hours, hours, hours, hours, hours);
+		return s;
+	}
+
 
 	private Assignment createAssignment(Student s)
 	{

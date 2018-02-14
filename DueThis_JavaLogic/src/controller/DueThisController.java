@@ -392,4 +392,5 @@ public class DueThisController
 		}
 		return assignmentsToday;
 	}
+	
 }
