@@ -23,19 +23,25 @@ import model.NoviceStudent;
 public class TestDueThisController
 {
 	String name = "Assignment1";
+	String newName = "AssignmentChanged";
 	String course = "ECSE428";
+	String newCourse = "ECSE429";
 	float gradeWeight = (float) 0.4;
+	float newGradeWeight = (float) 0.5;
 
 	// Temporary value until the model has been updated
 	Duration compTime = Duration.ofHours(5);
+	Duration newCompTime = Duration.ofHours(6);
 
 	// This is suppressed since it is easier to create a specific date
 	@SuppressWarnings("deprecation")
 	Date dueDate = new Date(118, 4, 30);
-	
+	@SuppressWarnings("deprecation")
+	Date newDueDate = new Date(118, 4, 40);
+
 	boolean isCompleted = false;
 	boolean repeatedWeekly = false;
-	
+
 	@SuppressWarnings("deprecation")
 	Time startTime = new Time(8, 30, 0);
 	@SuppressWarnings("deprecation")
@@ -301,83 +307,263 @@ public class TestDueThisController
 		assertEquals("Please enter a positive estimated completion time! ", error);
 		s.delete();
 	}
+
+	@Test
+	public void testEditAssignmentNoviceStudent()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createNoviceStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+		
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), newName, newCourse, newDueDate, newGradeWeight, newCompTime, s);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(1, s.getAssignments().size());
+		assertEquals(newName, s.getAssignment(0).getName());
+		assertEquals(newCourse, s.getAssignment(0).getCourse());
+		assertEquals(newDueDate, s.getAssignment(0).getDueDate());
+		assertEquals(newGradeWeight, s.getAssignment(0).getGradeWeight(),0.0f);
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
+		assertEquals(id1, s.getAssignment(0).getId());
+		
+		s.delete();
+	}
 	
 	@Test
-	public void testRemoveAssignment() {
+	public void testEditAssignmentExperiencedStudent()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createExperiencedStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), newName, newCourse, newDueDate, newGradeWeight, newCompTime, s);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(1, s.getAssignments().size());
+		assertEquals(newName, s.getAssignment(0).getName());
+		assertEquals(newCourse, s.getAssignment(0).getCourse());
+		assertEquals(newDueDate, s.getAssignment(0).getDueDate());
+		assertEquals(newCompTime, s.getAssignment(0).getCompletionTime());
+		assertEquals(false, s.getAssignment(0).isIsCompleted());
+		assertEquals(id1, s.getAssignment(0).getId());
+		
+		s.delete();
+	}
+	
+	@Test
+	public void testEditAssignmentNoviceInvalidInputs()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createNoviceStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+		
+		@SuppressWarnings("deprecation")
+		Date d1 = new Date(0, 1, 1);
+		
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), null, "", d1, -gradeWeight, null, s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a valid assignment name! Please enter a valid course name! Due date must be in the future! Please enter a positive grade weight! ", error);
+	}
+	
+	@Test
+	public void testEditAssignmentExperiencedInvalidInputs()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = createExperiencedStudent();
+		Assignment a1 = createAssignment(s);
+		String id1 = s.getAssignment(0).getId();
+		
+		@SuppressWarnings("deprecation")
+		Date d1 = new Date(0, 1, 1);
+		
+		try
+		{
+			dtc.editAssignment(s.getAssignment(0), null, "", d1, -gradeWeight, null, s);
+		} catch (InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("Please enter a valid assignment name! Please enter a valid course name! Due date must be in the future! Please enter an estimated completion time! ", error);
+	}
+	
+	@Test
+	public void testCompleteAssignmentFalseToTrue()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = new Student("testId", "Richard Potato");
+		Assignment a1 = createAssignment(s);
+		a1.setIsCompleted(false);
+		
+		try{
+			dtc.completeAssignment(s, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(true, a1.getIsCompleted());
+	}
+	
+	@Test
+	public void testCompleteAssignmentTrueToFalse()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = new Student("testId", "Richard Potato");
+		Assignment a1 = createAssignment(s);
+		a1.setIsCompleted(true);
+		
+		try{
+			dtc.completeAssignment(s, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(false, a1.getIsCompleted());
+	}
+	
+	@Test
+	public void testCompleteAssignmentError()
+	{
+		DueThisController dtc = new DueThisController();
+		String error = "";
+
+		Student s = new Student("testId", "Richard Potato");
+		Student s2 = new Student("ID", "Ichard Potato");
+		Assignment a1 = createAssignment(s);
+		a1.setIsCompleted(true);
+		
+		try{
+			dtc.completeAssignment(s2, a1);
+		}
+		catch(InvalidInputException e)
+		{
+			error = e.getMessage();
+		}
+		
+		assertEquals("This assignment does not belong to this student! ", error);
+	}
+
+	@Test
+	public void testRemoveAssignment()
+	{
 		Student ns = createNoviceStudent();
 		Student es = createExperiencedStudent();
-		
+
 		assertEquals(0, ns.numberOfAssignments());
 		assertEquals(0, es.numberOfAssignments());
-		
+
 		Assignment a1 = createAssignment(ns);
 		Assignment a2 = createAssignment(es);
-		
+
 		assertEquals(1, ns.numberOfAssignments());
 		assertEquals(1, es.numberOfAssignments());
-		
+
 		DueThisController dtc = new DueThisController();
-		
-		try {
+
+		try
+		{
 			dtc.removeAssignment(ns, a1);
 			dtc.removeAssignment(es, a2);
-			
-		} catch (InvalidInputException e) {
+
+		} catch (InvalidInputException e)
+		{
 			fail();
 		}
-		
-		assertEquals(0, ns.numberOfAssignments());
-		assertEquals(0, es.numberOfAssignments());	
-	}
-	
-	@Test
-	public void testRemoveUnownedAssignment() {
-		Student ns = createNoviceStudent();
-		Student es = createExperiencedStudent();
-		
+
 		assertEquals(0, ns.numberOfAssignments());
 		assertEquals(0, es.numberOfAssignments());
-		
+	}
+
+	@Test
+	public void testRemoveUnownedAssignment()
+	{
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+
+		assertEquals(0, ns.numberOfAssignments());
+		assertEquals(0, es.numberOfAssignments());
+
 		Assignment a1 = createAssignment(ns);
 		Assignment a2 = createAssignment(es);
-		
+
 		assertEquals(1, ns.numberOfAssignments());
 		assertEquals(1, es.numberOfAssignments());
-		
+
 		DueThisController dtc = new DueThisController();
-		
-		try {
+
+		try
+		{
 			dtc.removeAssignment(ns, a2);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			assertEquals("This assignment does not belong to this student! ", e.getMessage());
 		}
-		
-		try {
+
+		try
+		{
 			dtc.removeAssignment(es, a1);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			assertEquals("This assignment does not belong to this student! ", e.getMessage());
 		}
-		
+
 		assertEquals(1, ns.numberOfAssignments());
 		assertEquals(1, es.numberOfAssignments());
-		
+
 	}
-	
+
 	@Test
-	public void testCreateEvent() {
+	public void testCreateEvent()
+	{
 		DueThisController dtc = new DueThisController();
-		
+
 		Student s = createNoviceStudent();
-		
+
 		assertEquals(s.numberOfEvents(), 0);
-		
-		try {
+
+		try
+		{
 			dtc.createEvent(s, name, dueDate, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			fail();
 		}
-		
+
 		assertEquals(s.numberOfEvents(), 1);
 		assertEquals(s.getEvent(0).getName(), name);
 		assertEquals(s.getEvent(0).getDate().toString(), dueDate.toString());
@@ -385,91 +571,100 @@ public class TestDueThisController
 		assertEquals(s.getEvent(0).getEndTime().toString(), endTime.toString());
 		assertEquals(s.getEvent(0).getRepeatedWeekly(), true);
 	}
-	
-	@Test 
-	public void testCreateEventNoStudent() {
+
+	@Test
+	public void testCreateEventNoStudent()
+	{
 		DueThisController dtc = new DueThisController();
 		String error = "";
-		
-		try {
+
+		try
+		{
 			dtc.createEvent(null, name, dueDate, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "No student is associated to this event! ");
 	}
-	
+
 	@Test
-	public void testCreateEventNoName() {
+	public void testCreateEventNoName()
+	{
 		DueThisController dtc = new DueThisController();
 		Student s = createNoviceStudent();
 		String error = "";
-		
+
 		assertEquals(s.numberOfEvents(), 0);
-		
-		//Test for name being null
-		try {
+
+		// Test for name being null
+		try
+		{
 			dtc.createEvent(s, null, dueDate, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Please enter a valid name! ");
 		assertEquals(s.numberOfEvents(), 0);
-		
+
 		error = "";
 		assertEquals(error, "");
-		
-		//Test for name being empty
-		try {
+
+		// Test for name being empty
+		try
+		{
 			dtc.createEvent(s, "", dueDate, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Please enter a valid name! ");
 		assertEquals(s.numberOfEvents(), 0);
-		
+
 		error = "";
 		assertEquals(error, "");
-		
-		//Test for name being empty spaces
-		try {
+
+		// Test for name being empty spaces
+		try
+		{
 			dtc.createEvent(s, "    ", dueDate, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Please enter a valid name! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
+
 	@Test
-	public void testCreateEventNoDate() {
+	public void testCreateEventNoDate()
+	{
 		DueThisController dtc = new DueThisController();
 		Student s = createNoviceStudent();
 		String error = "";
-		
+
 		assertEquals(s.numberOfEvents(), 0);
-		
-		try {
+
+		try
+		{
 			dtc.createEvent(s, name, null, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Date cannot be empty! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
+
 	@Test
-	public void testCreatePastEvent() {
+	public void testCreatePastEvent()
+	{
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
@@ -478,83 +673,87 @@ public class TestDueThisController
 
 		@SuppressWarnings("deprecation")
 		Date d1 = new Date(0, 1, 1);
-		
-		try {
+
+		try
+		{
 			dtc.createEvent(s, name, d1, startTime, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Date must be in the future! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
+
 	@Test
-	public void testCreateEventNoStartTime() {
+	public void testCreateEventNoStartTime()
+	{
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
 		Student s = createNoviceStudent();
 		assertEquals(s.numberOfEvents(), 0);
 
-		
-		try {
+		try
+		{
 			dtc.createEvent(s, name, dueDate, null, endTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Start time cannot be empty! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
+
 	@Test
-	public void testCreateEventNoEndTime() {
+	public void testCreateEventNoEndTime()
+	{
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
 		Student s = createNoviceStudent();
 		assertEquals(s.numberOfEvents(), 0);
 
-		
-		try {
+		try
+		{
 			dtc.createEvent(s, name, dueDate, startTime, null, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "End time cannot be empty! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
+
 	@Test
-	public void testCreateEventEndBeforeStart() {
+	public void testCreateEventEndBeforeStart()
+	{
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
 		Student s = createNoviceStudent();
 		assertEquals(s.numberOfEvents(), 0);
 
-		
-		try {
+		try
+		{
 			dtc.createEvent(s, name, dueDate, endTime, startTime, true);
-		}
-		catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals(error, "Start time must be before end time! ");
 		assertEquals(s.numberOfEvents(), 0);
 	}
-	
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////
 	@Test
-	public void testEditEvent() {
-		
+	public void testEditEvent()
+	{
+
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		DueThisController dtc = new DueThisController();
@@ -564,14 +763,16 @@ public class TestDueThisController
 		Time starttime = new Time(10, 30, 0);
 		@SuppressWarnings("deprecation")
 		Time endtime = new Time(11, 30, 0);
-		
+
 		String error = "";
-		try {
+		try
+		{
 			dtc.editEvent(event, "class", date, starttime, endtime, true);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals("", error);
 		assertEquals("class", event.getName());
 		assertEquals(date, event.getDate());
@@ -579,57 +780,66 @@ public class TestDueThisController
 		assertEquals(endtime, event.getEndTime());
 		assertEquals(true, event.getRepeatedWeekly());
 	}
-	
+
 	@Test
-	public void testEditEventEndBeforeStart () {
-		
+	public void testEditEventEndBeforeStart()
+	{
+
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		DueThisController dtc = new DueThisController();
 		@SuppressWarnings("deprecation")
 		Time endtime = new Time(7, 30, 0);
-		
-		String error ="";
-		try {
+
+		String error = "";
+		try
+		{
 			dtc.editEvent(event, name, dueDate, startTime, endtime, repeatedWeekly);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals("Start time must be before end time! ", error);
 	}
-	
+
 	@Test
-	public void testEditEventInvalidName() {
-		
+	public void testEditEventInvalidName()
+	{
+
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		DueThisController dtc = new DueThisController();
-		
-		String error ="";
-		try {
+
+		String error = "";
+		try
+		{
 			dtc.editEvent(event, "", dueDate, startTime, endTime, repeatedWeekly);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals("Please enter a valid name! ", error);
 	}
-	
+
 	@Test
-	public void testEditEventNullStartTime() {
-		
+	public void testEditEventNullStartTime()
+	{
+
 		Student ns = createNoviceStudent();
 		Event event = createEvent(ns);
 		DueThisController dtc = new DueThisController();
-		
-		String error ="";
-		try {
+
+		String error = "";
+		try
+		{
 			dtc.editEvent(event, name, dueDate, null, endTime, repeatedWeekly);
-		} catch (InvalidInputException e) {
+		} catch (InvalidInputException e)
+		{
 			error = e.getMessage();
 		}
-		
+
 		assertEquals("Start time cannot be empty! ", error);
 	}
 	
@@ -923,6 +1133,46 @@ public class TestDueThisController
 	
 	
 	////////////////////////////////////////////////////////////////////////////////
+
+	@Test
+	public void testRemoveEventSuccess(){
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(ns, event);
+		}catch(InvalidInputException e)
+		{
+			fail();
+		}
+		
+		assertEquals(0, ns.getEvents().size());	
+	}
+	
+	@Test
+	public void testRemoveEventNotOwned(){
+		String error = "";
+		Student ns = createNoviceStudent();
+		Student es = createExperiencedStudent();
+		Event event = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		assertEquals(event, ns.getEvent(0));
+		assertEquals(1, ns.getEvents().size());
+		
+		try{
+			dtc.removeEvent(es, event);
+		}catch(InvalidInputException e)
+		{
+			error = e.getMessage();
+		}	
+		assertEquals("This event does not belong to this student! ", error);
+	}
+
 	private Student createNoviceStudent()
 	{
 		Student s = new Student("testId", "Richard Potato");
@@ -936,13 +1186,15 @@ public class TestDueThisController
 		new ExperiencedStudent(s, 0, 0, 0, 0, 0, 0, 0);
 		return s;
 	}
-	
-	private Assignment createAssignment(Student s) {
+
+	private Assignment createAssignment(Student s)
+	{
 		return new Assignment("testId", name, course, dueDate, gradeWeight, isCompleted, compTime, s);
 	}
-	
-	private Event createEvent(Student s) {
+
+	private Event createEvent(Student s)
+	{
 		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s);
 	}
-	
+
 }
