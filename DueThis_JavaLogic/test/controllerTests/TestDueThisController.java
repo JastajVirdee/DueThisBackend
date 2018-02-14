@@ -657,14 +657,25 @@ public class TestDueThisController
 			error = e.getMessage();
 		}
 		
+		// To access the methods in the ExperiencedStudent class
+		ExperiencedStudent aExpStud = (ExperiencedStudent)ns.getStudentRole(0);
+		int sunActual =  aExpStud.getSundayAvailability();
+		int monActual =  aExpStud.getMondayAvailability();
+		int tueActual =  aExpStud.getTuesdayAvailability();
+		int wedActual =  aExpStud.getWednesdayAvailability();
+		int thuActual =  aExpStud.getThursdayAvailability();
+		int friActual =  aExpStud.getFridayAvailability();
+		int satActual =  aExpStud.getSaturdayAvailability();
+		
+		
 		assertEquals("", error);
-		//assertEquals(sun, ns.); //want to -->  getSundayHours(); but idk how to access experienced student object
-		//assertEquals(mon, ns.);
-		//assertEquals(tue, ns.);
-		//assertEquals(wed, ns.);
-		//assertEquals(thu, ns.);
-		//assertEquals(fri, ns.);
-		//assertEquals(sat, ns.);
+		assertEquals(sun, sunActual);
+		assertEquals(mon, monActual);
+		assertEquals(tue, tueActual);
+		assertEquals(wed, wedActual);
+		assertEquals(thu, thuActual);
+		assertEquals(fri, friActual);
+		assertEquals(sat, satActual);
 		
 	}
 	
