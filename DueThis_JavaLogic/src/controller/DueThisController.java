@@ -182,7 +182,7 @@ public class DueThisController
 		String error = "";
 		
 		if(aStudent == null) {
-			error += "No student was input into the updateAvailabilities method";
+			error += "No student was input into the updateAvailabilities method.";
 			throw new InvalidInputException(error);
 		}
 		
