@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.sql.Date;
 import java.util.List;
 
@@ -15,23 +16,6 @@ import model.Student;
 
 public class StudyAlgorithm {
 	
-	public static class MyObject implements Comparable<MyObject> {
-
-		  private Date dateTime;
-
-		  public Date getDateTime() {
-		    return dateTime;
-		  }
-
-		  public void setDateTime(Date datetime) {
-		    this.dateTime = datetime;
-		  }
-
-		  @Override
-		  public int compareTo(MyObject o) {
-		    return getDateTime().compareTo(o.getDateTime());
-		  }
-		}
 	
 	
 	public void generateStudySchedule(Student aStudent) {
@@ -67,10 +51,66 @@ public class StudyAlgorithm {
 			}
 						
 			
+		//Sort the assignments by due date	
+		Collections.sort(trackedAssignments, new Comparator<Assignment>(){
+
+		            @Override
+		            public int compare(Assignment a1, Assignment a2) {
+		                return a1.getDueDate().compareTo(a2.getDueDate());
+		            }
+		        });
+		
+		for (Assignment a : trackedAssignments) {
+			
+			Date dueDate = a.getDueDate();
+			Duration compTime = a.getCompletionTime();
+			
+			int compTimeSeconds = (int) compTime.getSeconds();
+			
+			Calendar c = Calendar.getInstance();
+			DueThisController dtc = new DueThisController();
+			
+			while (compTimeSeconds > 0) {
+				//Returns 1 for sunday, 2 monday etc...
+				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+				
+				int availableToday = getAvailabilityForDay(availability, dayOfWeek);
+				
+				//Complete the entire assignment today
+				if (compTimeSeconds <= availableToday) {
+					createStudyEvent(dtc, aStudent, a, dueDate, compTimeSeconds);
+					
+					//Update availability
+					setAvailabilityForDay(availability, dayOfWeek, availableToday-compTimeSeconds);
+					
+					compTimeSeconds = 0;
+				}
+				else {
+					createStudyEvent(dtc, aStudent, a, dueDate, availableToday);
+					
+					//Update availability
+					setAvailabilityForDay(availability, dayOfWeek, 0);
+					
+					compTimeSeconds = compTimeSeconds - availableToday;
+					
+				}
+				
+			}
 			
 			
+			
+		
 		}
 		
+	}
+}
+	
+	private int getAvailabilityForDay(int[] availability, int dayOfWeek) {
+		return availability[dayOfWeek-1];
+	}
+	
+	private void setAvailabilityForDay(int[] availability, int dayOfWeek, int newTime) {
+		availability[dayOfWeek-1] = newTime;
 	}
 	
 	//Creating an event with name study_<assignment_name>, date, start time=0, end time=duration (in milliseconds)
@@ -100,75 +140,17 @@ public class StudyAlgorithm {
 		return numHours*3600;
 	
 	}
-	
-	private void setAvailableHoursFromWeekday(ExperiencedStudent aStudent, int dayOfWeek, int newHours) {
-		
-		if (dayOfWeek == Calendar.SUNDAY) {
-			aStudent.setSundayAvailability(newHours);
-		}
-		
-		else if (dayOfWeek == Calendar.MONDAY) {
-			aStudent.setMondayAvailability(newHours);
-		}
-		
-		else if (dayOfWeek == Calendar.TUESDAY) {
-			aStudent.setTuesdayAvailability(newHours);
-		}
-		
-		else if (dayOfWeek == Calendar.WEDNESDAY) {
-			aStudent.setWednesdayAvailability(newHours);
-		}
-		
-		else if (dayOfWeek == Calendar.THURSDAY) {
-			aStudent.setThursdayAvailability(newHours);
-		}
-		
-		else if (dayOfWeek == Calendar.FRIDAY) {
-			aStudent.setFridayAvailability(newHours);
-		}
-		
-		else {
-			aStudent.setSaturdayAvailability(newHours);
-		}
-	}
-	
-	private int getAvailableHoursFromWeekday(ExperiencedStudent aStudent, int dayOfWeek) {
-		
-		if (dayOfWeek == Calendar.SUNDAY) {
-			return aStudent.getSundayAvailability();
-		}
-		
-		else if (dayOfWeek == Calendar.MONDAY) {
-			return aStudent.getMondayAvailability();
-		}
-		
-		else if (dayOfWeek == Calendar.TUESDAY) {
-			return aStudent.getTuesdayAvailability();
-		}
-		
-		else if (dayOfWeek == Calendar.WEDNESDAY) {
-			return aStudent.getWednesdayAvailability();
-		}
-		
-		else if (dayOfWeek == Calendar.THURSDAY) {
-			return aStudent.getThursdayAvailability();
-		}
-		
-		else if (dayOfWeek == Calendar.FRIDAY) {
-			return aStudent.getFridayAvailability();
-		}
-		
-		else {
-			return aStudent.getSaturdayAvailability();
-		}
-	}
+
 	
 	private int[] getAvailability(ExperiencedStudent aStudent) {
 		int[] availability =  {aStudent.getSundayAvailability(),aStudent.getMondayAvailability(),aStudent.getTuesdayAvailability(),aStudent.getWednesdayAvailability(),
 			aStudent.getThursdayAvailability(),aStudent.getFridayAvailability(),aStudent.getSaturdayAvailability()};
 		
+		for (int i=0; i<availability.length; i++) {
+			availability[i] = convertHoursToSeconds(availability[i]);
+		}
+		
 		return availability;
 		}
 	}
 
-}
