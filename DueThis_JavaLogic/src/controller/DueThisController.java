@@ -350,5 +350,46 @@ public class DueThisController
 
 		return true;
 	}
-
+	
+	public List<Time> showStudyTimeNovice(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
+		List<Time> listOfIntervals = new ArrayList<>(); //List containing all the intervals of study time
+		return listOfIntervals;
+	}
+	
+	public Duration showStudyTimeExperienced(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
+		Duration timeSpent = null; //The time you need to study on a given day will be returned as type Duration
+		return timeSpent;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<Event> showEvent(Student aStudent, Date dateSelected) { //Showing all events on a date (same year, month and day)
+		List<Event> allEvents = new ArrayList<>();
+		allEvents = aStudent.getEvents();
+		
+		List<Event> eventsToday = new ArrayList<>();
+		
+		for(Event e: allEvents)
+		{
+			if ( (e.getDate().getDate() == dateSelected.getDate()) && (e.getDate().getMonth() == dateSelected.getMonth()) && (e.getDate().getYear() == dateSelected.getYear()) ) {
+				eventsToday.add(e);
+			}
+		}
+		return eventsToday;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<Assignment> showAssignment(Student aStudent, Date dateSelected) { //Showing all assignments on a date (same year, month and day)
+		List<Assignment> allAssignments = new ArrayList<>();
+		allAssignments = aStudent.getAssignments();
+		
+		List<Assignment> assignmentsToday = new ArrayList<>();
+		
+		for(Assignment a : allAssignments)
+		{
+			if ( (a.getDueDate().getDate() == dateSelected.getDate()) && (a.getDueDate().getMonth() == dateSelected.getMonth()) && (a.getDueDate().getYear() == dateSelected.getYear()) ) {
+				assignmentsToday.add(a);
+			}	
+		}
+		return assignmentsToday;
+	}
 }

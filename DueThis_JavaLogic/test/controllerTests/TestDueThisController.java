@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -880,6 +881,56 @@ public class TestDueThisController
 		}	
 		assertEquals("This event does not belong to this student! ", error);
 	}
+	
+	@Test
+	public void testShowEvent()
+	{
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		Event event2 = createEvent(ns);
+		Event event3 = createEvent(ns);
+		Event event4 = createEvent(ns);
+		Event event5 = createEventDetailed(ns, testDate);
+		
+		DueThisController dtc = new DueThisController();
+		
+		List<Event> list = dtc.showEvent(ns, dueDate);
+		
+		assertEquals(4, list.size());
+		assertEquals(event, list.get(0));
+		assertEquals(event2, list.get(1));
+		assertEquals(event3, list.get(2));
+		assertEquals(event4, list.get(3));
+		//assertEquals(event5, list.get(4));
+	}
+	
+	@Test
+	public void testShowAssignment()
+	{
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		
+		Student ns = createNoviceStudent();
+		Assignment assignment = createAssignment(ns);
+		Assignment assignment2 = createAssignment(ns);
+		Assignment assignment3 = createAssignment(ns);
+		Assignment assignment4 = createAssignment(ns);
+		Assignment assignment5 = createAssignmentDetailed(ns, testDate);
+		DueThisController dtc = new DueThisController();
+		
+		List<Assignment> list = dtc.showAssignment(ns, dueDate);
+		
+		assertEquals(4, list.size());
+		assertEquals(assignment, list.get(0));
+		assertEquals(assignment2, list.get(1));
+		assertEquals(assignment3, list.get(2));
+		assertEquals(assignment4, list.get(3));
+	}
 
 	private Student createNoviceStudent()
 	{
@@ -904,5 +955,13 @@ public class TestDueThisController
 	{
 		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s);
 	}
-
+	
+	private Event createEventDetailed(Student s, Date date) {
+		return new Event("testId", name, date, startTime, endTime, repeatedWeekly, s);
+	}
+	
+	private Assignment createAssignmentDetailed(Student s, Date date) {
+		return new Assignment("testId", name, course, date, gradeWeight, isCompleted, compTime, s);
+	}
+	
 }
