@@ -350,5 +350,44 @@ public class DueThisController
 
 		return true;
 	}
-
+	
+	public ArrayList<Time> showStudyTimeNovice(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
+		ArrayList<Time> listOfIntervals = new ArrayList<Time>(); //ArrayList containing all the intervals of study time
+		return listOfIntervals;
+	}
+	
+	public Duration showStudyTimeExperienced(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
+		Duration timeSpent = null;
+		return timeSpent;
+	}
+	
+	public List<Event> showEvent(Student aStudent, Date dateSelected) { //Showing all events on a date
+		List<Event> allEvents = new ArrayList<>();
+		allEvents = aStudent.getEvents();
+		
+		List<Event> eventsToday = new ArrayList<>();
+		
+		for(Event e: allEvents)
+		{
+			if (e.getDate() == dateSelected) {
+				eventsToday.add(e);
+			}
+		}
+		return eventsToday;
+	}
+	
+	public List<Assignment> showAssignment(Student aStudent, Date dateSelected) { //Showing all assignments on a date
+		List<Assignment> allAssignments = new ArrayList<>();
+		allAssignments = aStudent.getAssignments();
+		
+		List<Assignment> assignmentsToday = new ArrayList<>();
+		
+		for(Assignment a : allAssignments)
+		{
+			if (a.getDueDate() == dateSelected) {
+				assignmentsToday.add(a);
+			}	
+		}
+		return assignmentsToday;
+	}
 }

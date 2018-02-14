@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -825,6 +826,36 @@ public class TestDueThisController
 			error = e.getMessage();
 		}	
 		assertEquals("This event does not belong to this student! ", error);
+	}
+	
+	@Test
+	public void testShowEvent()
+	{
+		Student ns = createNoviceStudent();
+		Event event = createEvent(ns);
+		Event event2 = createEvent(ns);
+		DueThisController dtc = new DueThisController();
+		
+		List<Event> list = dtc.showEvent(ns, dueDate);
+		
+		assertEquals(2, list.size());
+		assertEquals(event, list.get(0));
+		assertEquals(event2, list.get(1));
+	}
+	
+	@Test
+	public void testShowAssignment()
+	{
+		Student ns = createNoviceStudent();
+		Assignment assignment = createAssignment(ns);
+		Assignment assignment2 = createAssignment(ns);
+		DueThisController dtc = new DueThisController();
+		
+		List<Assignment> list = dtc.showAssignment(ns, dueDate);
+		
+		assertEquals(2, list.size());
+		assertEquals(assignment, list.get(0));
+		assertEquals(assignment2, list.get(1));	
 	}
 
 	private Student createNoviceStudent()
