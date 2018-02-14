@@ -351,13 +351,13 @@ public class DueThisController
 		return true;
 	}
 	
-	public ArrayList<Time> showStudyTimeNovice(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
-		ArrayList<Time> listOfIntervals = new ArrayList<Time>(); //ArrayList containing all the intervals of study time
+	public List<Time> showStudyTimeNovice(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
+		List<Time> listOfIntervals = new ArrayList<>(); //List containing all the intervals of study time
 		return listOfIntervals;
 	}
 	
 	public Duration showStudyTimeExperienced(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
-		Duration timeSpent = null;
+		Duration timeSpent = null; //The time you need to study on a given day will be returned as type Duration
 		return timeSpent;
 	}
 	
