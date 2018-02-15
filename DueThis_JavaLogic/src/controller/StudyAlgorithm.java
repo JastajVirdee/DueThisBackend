@@ -79,7 +79,9 @@ public class StudyAlgorithm {
 				
 				//Complete the entire assignment today
 				if (compTimeSeconds <= availableToday) {
-					createStudyEvent(dtc, aStudent, a, dueDate, compTimeSeconds);
+					
+					Date studyDate = new Date(c.getTimeInMillis());
+					createStudyEvent(dtc, aStudent, a, studyDate, compTimeSeconds);
 					
 					//Update availability
 					setAvailabilityForDay(availability, dayOfWeek, availableToday-compTimeSeconds);
@@ -88,8 +90,8 @@ public class StudyAlgorithm {
 
 				}
 				else {
-
-					createStudyEvent(dtc, aStudent, a, dueDate, availableToday);
+					Date studyDate = new Date(c.getTimeInMillis());
+					createStudyEvent(dtc, aStudent, a, studyDate, availableToday);
 
 					//Update availability
 					setAvailabilityForDay(availability, dayOfWeek, 0);
@@ -124,10 +126,9 @@ public class StudyAlgorithm {
 		Time startTime = new Time(0);
 	
 		
-		//Obtain the duration in milliseconds
-		int durationMS = durationSeconds*1000;
+;
 		
-		Time endTime = new Time(durationMS);
+		Time endTime = new Time(durationSeconds);
 		
 		try {
 			return dtc.createEvent(aStudent, name, date, startTime, endTime, false);

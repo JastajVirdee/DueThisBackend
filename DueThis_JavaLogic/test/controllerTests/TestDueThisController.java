@@ -935,10 +935,51 @@ public class TestDueThisController
 	}
 	
 	@Test
+	public void testShowStudyTime() {
+		
+		int numHours = 5;
+		
+		Student s = createExperiencedStudentAlg(8);
+		Calendar c = Calendar.getInstance();
+		Date today = new Date(c.getTimeInMillis());
+	
+		c.add(Calendar.DAY_OF_WEEK, 4);
+		
+		Date dueDate = new Date(c.getTimeInMillis());
+		
+		Duration compTime = Duration.ofHours(numHours);
+		
+		Assignment a = new Assignment("testId", name, course, dueDate, gradeWeight, false, compTime, s);
+		
+		DueThisController dtc = new DueThisController();
+		
+		Duration d = Duration.ofSeconds(0);
+		
+		try {	
+			d = dtc.showStudyTimeExperienced(s, today);
+		}
+		catch (InvalidInputException e) {
+			fail();
+		}
+		
+		Duration correctDur = Duration.ofHours(numHours);
+	
+		List<Event> events = dtc.showEvent(s, today);
+		
+		assertEquals(events.size(), 1);
+		assertEquals(correctDur, d);
+		
+	}
+	
+	@Test
 	public void testAlgorithmOneEvent() {
 		
 		Student s = createExperiencedStudentAlg(8);
 		Calendar c = Calendar.getInstance();
+		Date today = new Date(c.getTimeInMillis());
+		String todayString = today.toString();
+		
+		
 		c.add(Calendar.DAY_OF_WEEK, 4);
 		
 		Date dueDate = new Date(c.getTimeInMillis());
@@ -952,6 +993,7 @@ public class TestDueThisController
 		
 		assertEquals(s.numberOfEvents(), 1);
 		assertEquals(s.getEvent(0).getName(), "study_" + a.getName());
+		assertEquals(s.getEvent(0).getDate().toString(), todayString);
 		
 	}
 

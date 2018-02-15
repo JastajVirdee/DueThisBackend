@@ -356,8 +356,35 @@ public class DueThisController
 		return listOfIntervals;
 	}
 	
-	public Duration showStudyTimeExperienced(Student aStudent, Date dateSelected) { //No values now but this will eventually work with the algorithm
-		Duration timeSpent = null; //The time you need to study on a given day will be returned as type Duration
+	public Duration showStudyTimeExperienced(Student aStudent, Date dateSelected) throws InvalidInputException { //No values now but this will eventually work with the algorithm
+		
+		StudyAlgorithm sa = new StudyAlgorithm();
+		
+		if (!(aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)) {
+			String error = "This is only available for experienced students! ";
+			throw new InvalidInputException(error);
+		}
+		
+		sa.generateStudySchedule(aStudent);
+		
+		List<Event> eventList = showEvent(aStudent, dateSelected);
+		
+		int studyTime = 0;
+		
+		for (Event e : eventList) {
+
+			String name = e.getName();
+			
+			if (name.substring(0, 6).equals("study_")) {
+				int time = (int) e.getEndTime().getTime();
+				
+				
+				studyTime += time;
+			}
+		}
+		
+		Duration timeSpent = Duration.ofSeconds(studyTime); //The time you need to study on a given day will be returned as type Duration
+		
 		return timeSpent;
 	}
 	
