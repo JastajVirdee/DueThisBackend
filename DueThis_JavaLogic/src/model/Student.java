@@ -1,15 +1,14 @@
 package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3800.2fb7a63 modeling language!*/
 
 
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.Duration;
 
 // line 14 "model.ump"
-// line 59 "model.ump"
+// line 55 "model.ump"
 public class Student
 {
 
@@ -20,23 +19,43 @@ public class Student
   //Student Attributes
   private String id;
   private String name;
+  private boolean experienced;
+  private int sundayAvailability;
+  private int mondayAvailability;
+  private int tuesdayAvailability;
+  private int wednesdayAvailability;
+  private int thursdayAvailability;
+  private int fridayAvailability;
+  private int saturdayAvailability;
 
   //Student Associations
-  private List<StudentRole> studentRoles;
   private List<Assignment> assignments;
   private List<Event> events;
+  private Application application;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aId, String aName)
+  public Student(String aId, String aName, boolean aExperienced, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability, Application aApplication)
   {
     id = aId;
     name = aName;
-    studentRoles = new ArrayList<StudentRole>();
+    experienced = aExperienced;
+    sundayAvailability = aSundayAvailability;
+    mondayAvailability = aMondayAvailability;
+    tuesdayAvailability = aTuesdayAvailability;
+    wednesdayAvailability = aWednesdayAvailability;
+    thursdayAvailability = aThursdayAvailability;
+    fridayAvailability = aFridayAvailability;
+    saturdayAvailability = aSaturdayAvailability;
     assignments = new ArrayList<Assignment>();
     events = new ArrayList<Event>();
+    boolean didAddApplication = setApplication(aApplication);
+    if (!didAddApplication)
+    {
+      throw new RuntimeException("Unable to create student due to application");
+    }
   }
 
   //------------------------
@@ -59,6 +78,70 @@ public class Student
     return wasSet;
   }
 
+  public boolean setExperienced(boolean aExperienced)
+  {
+    boolean wasSet = false;
+    experienced = aExperienced;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setSundayAvailability(int aSundayAvailability)
+  {
+    boolean wasSet = false;
+    sundayAvailability = aSundayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setMondayAvailability(int aMondayAvailability)
+  {
+    boolean wasSet = false;
+    mondayAvailability = aMondayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTuesdayAvailability(int aTuesdayAvailability)
+  {
+    boolean wasSet = false;
+    tuesdayAvailability = aTuesdayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setWednesdayAvailability(int aWednesdayAvailability)
+  {
+    boolean wasSet = false;
+    wednesdayAvailability = aWednesdayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setThursdayAvailability(int aThursdayAvailability)
+  {
+    boolean wasSet = false;
+    thursdayAvailability = aThursdayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setFridayAvailability(int aFridayAvailability)
+  {
+    boolean wasSet = false;
+    fridayAvailability = aFridayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setSaturdayAvailability(int aSaturdayAvailability)
+  {
+    boolean wasSet = false;
+    saturdayAvailability = aSaturdayAvailability;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getId()
   {
     return id;
@@ -68,35 +151,50 @@ public class Student
   {
     return name;
   }
-  /* Code from template association_GetMany */
-  public StudentRole getStudentRole(int index)
+
+  public boolean getExperienced()
   {
-    StudentRole aStudentRole = studentRoles.get(index);
-    return aStudentRole;
+    return experienced;
   }
 
-  public List<StudentRole> getStudentRoles()
+  public int getSundayAvailability()
   {
-    List<StudentRole> newStudentRoles = Collections.unmodifiableList(studentRoles);
-    return newStudentRoles;
+    return sundayAvailability;
   }
 
-  public int numberOfStudentRoles()
+  public int getMondayAvailability()
   {
-    int number = studentRoles.size();
-    return number;
+    return mondayAvailability;
   }
 
-  public boolean hasStudentRoles()
+  public int getTuesdayAvailability()
   {
-    boolean has = studentRoles.size() > 0;
-    return has;
+    return tuesdayAvailability;
   }
 
-  public int indexOfStudentRole(StudentRole aStudentRole)
+  public int getWednesdayAvailability()
   {
-    int index = studentRoles.indexOf(aStudentRole);
-    return index;
+    return wednesdayAvailability;
+  }
+
+  public int getThursdayAvailability()
+  {
+    return thursdayAvailability;
+  }
+
+  public int getFridayAvailability()
+  {
+    return fridayAvailability;
+  }
+
+  public int getSaturdayAvailability()
+  {
+    return saturdayAvailability;
+  }
+  /* Code from template attribute_IsBoolean */
+  public boolean isExperienced()
+  {
+    return experienced;
   }
   /* Code from template association_GetMany */
   public Assignment getAssignment(int index)
@@ -158,77 +256,10 @@ public class Student
     int index = events.indexOf(aEvent);
     return index;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfStudentRoles()
+  /* Code from template association_GetOne */
+  public Application getApplication()
   {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public StudentRole addStudentRole()
-  {
-    return new StudentRole(this);
-  }
-
-  public boolean addStudentRole(StudentRole aStudentRole)
-  {
-    boolean wasAdded = false;
-    if (studentRoles.contains(aStudentRole)) { return false; }
-    Student existingStudent = aStudentRole.getStudent();
-    boolean isNewStudent = existingStudent != null && !this.equals(existingStudent);
-    if (isNewStudent)
-    {
-      aStudentRole.setStudent(this);
-    }
-    else
-    {
-      studentRoles.add(aStudentRole);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeStudentRole(StudentRole aStudentRole)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aStudentRole, as it must always have a student
-    if (!this.equals(aStudentRole.getStudent()))
-    {
-      studentRoles.remove(aStudentRole);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addStudentRoleAt(StudentRole aStudentRole, int index)
-  {  
-    boolean wasAdded = false;
-    if(addStudentRole(aStudentRole))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStudentRoles()) { index = numberOfStudentRoles() - 1; }
-      studentRoles.remove(aStudentRole);
-      studentRoles.add(index, aStudentRole);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveStudentRoleAt(StudentRole aStudentRole, int index)
-  {
-    boolean wasAdded = false;
-    if(studentRoles.contains(aStudentRole))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStudentRoles()) { index = numberOfStudentRoles() - 1; }
-      studentRoles.remove(aStudentRole);
-      studentRoles.add(index, aStudentRole);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addStudentRoleAt(aStudentRole, index);
-    }
-    return wasAdded;
+    return application;
   }
   /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfAssignments()
@@ -236,9 +267,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, float aGradeWeight, boolean aIsCompleted, Duration aCompletionTime)
+  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, boolean aIsCompleted, float aGradeWeight, Duration aCompletionTime)
   {
-    return new Assignment(aId, aName, aCourse, aDueDate, aGradeWeight, aIsCompleted, aCompletionTime, this);
+    return new Assignment(aId, aName, aCourse, aDueDate, aIsCompleted, aGradeWeight, aCompletionTime, this);
   }
 
   public boolean addAssignment(Assignment aAssignment)
@@ -374,14 +405,28 @@ public class Student
     }
     return wasAdded;
   }
+  /* Code from template association_SetOneToMany */
+  public boolean setApplication(Application aApplication)
+  {
+    boolean wasSet = false;
+    if (aApplication == null)
+    {
+      return wasSet;
+    }
+
+    Application existingApplication = application;
+    application = aApplication;
+    if (existingApplication != null && !existingApplication.equals(aApplication))
+    {
+      existingApplication.removeStudent(this);
+    }
+    application.addStudent(this);
+    wasSet = true;
+    return wasSet;
+  }
 
   public void delete()
   {
-    for(int i=studentRoles.size(); i > 0; i--)
-    {
-      StudentRole aStudentRole = studentRoles.get(i - 1);
-      aStudentRole.delete();
-    }
     for(int i=assignments.size(); i > 0; i--)
     {
       Assignment aAssignment = assignments.get(i - 1);
@@ -392,6 +437,12 @@ public class Student
       Event aEvent = events.get(i - 1);
       aEvent.delete();
     }
+    Application placeholderApplication = application;
+    this.application = null;
+    if(placeholderApplication != null)
+    {
+      placeholderApplication.removeStudent(this);
+    }
   }
 
 
@@ -399,6 +450,15 @@ public class Student
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "]";
+            "name" + ":" + getName()+ "," +
+            "experienced" + ":" + getExperienced()+ "," +
+            "sundayAvailability" + ":" + getSundayAvailability()+ "," +
+            "mondayAvailability" + ":" + getMondayAvailability()+ "," +
+            "tuesdayAvailability" + ":" + getTuesdayAvailability()+ "," +
+            "wednesdayAvailability" + ":" + getWednesdayAvailability()+ "," +
+            "thursdayAvailability" + ":" + getThursdayAvailability()+ "," +
+            "fridayAvailability" + ":" + getFridayAvailability()+ "," +
+            "saturdayAvailability" + ":" + getSaturdayAvailability()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "application = "+(getApplication()!=null?Integer.toHexString(System.identityHashCode(getApplication())):"null");
   }
 }
