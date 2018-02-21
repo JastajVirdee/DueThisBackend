@@ -6,6 +6,7 @@ package model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.Duration;
 
 // line 14 "model.ump"
 // line 55 "model.ump"
