@@ -14,7 +14,15 @@ class Student
 {
   id;
   name;
-1 -- * StudentRole;
+  Boolean experienced;
+  int sundayAvailability;
+  int mondayAvailability;
+  int tuesdayAvailability;
+  int wednesdayAvailability;
+  int thursdayAvailability;
+  int fridayAvailability;
+  int saturdayAvailability;
+ 
 }
 
 class Event
@@ -28,24 +36,9 @@ class Event
   * -- 1 Student;
 }
 
-class StudentRole
-{
-}
 
-class NoviceStudent
+class Application
 {
-  isA StudentRole;
-}
-
-class ExperiencedStudent
-{
-  isA StudentRole;
-
-  int sundayAvailability;
-  int mondayAvailability;
-  int tuesdayAvailability;
-  int wednesdayAvailability;
-  int thursdayAvailability;
-  int fridayAvailability;
-  int saturdayAvailability;
+  
+  1 -- * Student;
 }
