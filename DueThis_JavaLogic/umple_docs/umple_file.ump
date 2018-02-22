@@ -13,7 +13,9 @@ class Assignment
 class Student
 {
   id;
-  name;
+  username;
+  password;
+  email;
   Boolean experienced;
   int sundayAvailability;
   int mondayAvailability;

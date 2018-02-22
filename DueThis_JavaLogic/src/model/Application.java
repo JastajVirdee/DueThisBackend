@@ -9,8 +9,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
 
-// line 41 "model.ump"
-// line 66 "model.ump"
+// line 43 "model.ump"
+// line 68 "model.ump"
 public class Application
 {
 
@@ -148,9 +148,9 @@ public class Application
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Student addStudent(String aId, String aName, boolean aExperienced, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability)
+  public Student addStudent(String aId, String aUsername, String aPassword, String aEmail, boolean aExperienced, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability)
   {
-    return new Student(aId, aName, aExperienced, aSundayAvailability, aMondayAvailability, aTuesdayAvailability, aWednesdayAvailability, aThursdayAvailability, aFridayAvailability, aSaturdayAvailability, this);
+    return new Student(aId, aUsername, aPassword, aEmail, aExperienced, aSundayAvailability, aMondayAvailability, aTuesdayAvailability, aWednesdayAvailability, aThursdayAvailability, aFridayAvailability, aSaturdayAvailability, this);
   }
 
   public boolean addStudent(Student aStudent)

@@ -5,12 +5,12 @@ package model;
 
 
 import java.util.*;
+import java.time.Duration;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.Duration;
 
 // line 14 "model.ump"
-// line 55 "model.ump"
+// line 57 "model.ump"
 public class Student
 {
 
@@ -20,7 +20,9 @@ public class Student
 
   //Student Attributes
   private String id;
-  private String name;
+  private String username;
+  private String password;
+  private String email;
   private boolean experienced;
   private int sundayAvailability;
   private int mondayAvailability;
@@ -39,10 +41,12 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aId, String aName, boolean aExperienced, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability, Application aApplication)
+  public Student(String aId, String aUsername, String aPassword, String aEmail, boolean aExperienced, int aSundayAvailability, int aMondayAvailability, int aTuesdayAvailability, int aWednesdayAvailability, int aThursdayAvailability, int aFridayAvailability, int aSaturdayAvailability, Application aApplication)
   {
     id = aId;
-    name = aName;
+    username = aUsername;
+    password = aPassword;
+    email = aEmail;
     experienced = aExperienced;
     sundayAvailability = aSundayAvailability;
     mondayAvailability = aMondayAvailability;
@@ -72,10 +76,26 @@ public class Student
     return wasSet;
   }
 
-  public boolean setName(String aName)
+  public boolean setUsername(String aUsername)
   {
     boolean wasSet = false;
-    name = aName;
+    username = aUsername;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setPassword(String aPassword)
+  {
+    boolean wasSet = false;
+    password = aPassword;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setEmail(String aEmail)
+  {
+    boolean wasSet = false;
+    email = aEmail;
     wasSet = true;
     return wasSet;
   }
@@ -149,9 +169,19 @@ public class Student
     return id;
   }
 
-  public String getName()
+  public String getUsername()
   {
-    return name;
+    return username;
+  }
+
+  public String getPassword()
+  {
+    return password;
+  }
+
+  public String getEmail()
+  {
+    return email;
   }
 
   public boolean getExperienced()
@@ -452,7 +482,9 @@ public class Student
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "," +
+            "username" + ":" + getUsername()+ "," +
+            "password" + ":" + getPassword()+ "," +
+            "email" + ":" + getEmail()+ "," +
             "experienced" + ":" + getExperienced()+ "," +
             "sundayAvailability" + ":" + getSundayAvailability()+ "," +
             "mondayAvailability" + ":" + getMondayAvailability()+ "," +
