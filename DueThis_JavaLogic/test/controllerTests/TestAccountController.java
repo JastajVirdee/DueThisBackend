@@ -217,6 +217,27 @@ public class TestAccountController {
 	}
 	
 	@Test
+	public void testCreateInvalidEmail() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+		assertEquals(0, manager.numberOfStudents());
+		
+		String invalidEmail = "invalidEmail";
+		String error = "";
+		
+		try {
+			ac.createAccount(username, password, invalidEmail, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Email address is invalid! ");
+	}
+	
+	@Test
 	public void testCreateDuplicateUsername() {
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
