@@ -25,9 +25,7 @@ public class AccountController {
 			 
 			error += "Email is required to create an account! ";
 		}
-		
-		//Check if email is valid
-		if (!email.contains("@")) {
+		else if (!email.contains("@")) {
 			
 			error += "Email address is invalid! ";
 		}

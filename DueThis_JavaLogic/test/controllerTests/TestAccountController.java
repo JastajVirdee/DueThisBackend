@@ -89,5 +89,255 @@ public class TestAccountController {
 		assertEquals(0, manager.getStudent(0).getFridayAvailability());
 		assertEquals(0, manager.getStudent(0).getSaturdayAvailability());
 	}
+	
+	@Test
+	public void testCreateNoUsername() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+		assertEquals(0, manager.numberOfStudents());
+		String error = "";
+		try {
+			ac.createAccount(null, password, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Username is required to create an account! ");
+		
+		error = "";
+
+		try {
+			ac.createAccount("", password, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Username is required to create an account! ");
+		
+		error = "";
+		
+		try {
+			ac.createAccount("    ", password, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Username is required to create an account! ");
+	}
+	
+	@Test
+	public void testCreateNoEmail() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+		assertEquals(0, manager.numberOfStudents());
+		String error = "";
+		try {
+			ac.createAccount(username, password, null, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Email is required to create an account! ");
+		
+		error = "";
+
+		try {
+			ac.createAccount(username, password, "", experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Email is required to create an account! ");
+		
+		error = "";
+		
+		try {
+			ac.createAccount(username, password, "    ", experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Email is required to create an account! ");
+	}
+	
+	@Test
+	public void testCreateNoPassword() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+		assertEquals(0, manager.numberOfStudents());
+		String error = "";
+		try {
+			ac.createAccount(username, null, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Password is required to create an account! ");
+		
+		error = "";
+
+		try {
+			ac.createAccount(username, "", email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Password is required to create an account! ");
+		
+		error = "";
+		
+		try {
+			ac.createAccount(username, "   ", email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Password is required to create an account! ");
+	}
+	
+	@Test
+	public void testCreateDuplicateUsername() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+
+		
+		assertEquals(0, manager.numberOfStudents());
+		
+		try {
+			ac.createAccount(username, password, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(1, manager.numberOfStudents());
+		
+		assertEquals(username, manager.getStudent(0).getUsername());
+		
+		String newEmail = "mikesmith@gmail.com";
+		String newPass = "abc123";
+		
+		String error = "";
+		
+		try {
+			ac.createAccount(username, newPass, newEmail, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(1, manager.numberOfStudents());
+		assertEquals(error, "Username is already in use! ");
+	}
+	
+	@Test
+	public void testCreateDuplicateEmail() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+		
+
+		
+		assertEquals(0, manager.numberOfStudents());
+		
+		try {
+			ac.createAccount(username, password, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(1, manager.numberOfStudents());
+		
+		assertEquals(email, manager.getStudent(0).getEmail());
+		
+		String newUsername = "mikesmith";
+		String newPass = "abc123";
+		
+		String error = "";
+		
+		try {
+			ac.createAccount(newUsername, newPass, email, experienced, avail, avail, avail, avail, avail, avail, avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(1, manager.numberOfStudents());
+		assertEquals(error, "Email is already in use! ");
+	}
+	
+	@Test
+	public void testCreateNegativeAvailability() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+	
+		assertEquals(0, manager.numberOfStudents());
+		
+		int negAvail = -1;
+		
+		String error = "";
+		
+		try {
+			ac.createAccount(username, password, email, experienced, negAvail, negAvail, negAvail, negAvail, negAvail, negAvail, negAvail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Sunday hours must be between 0 and 24! Monday hours must be between 0 and 24! "
+				+ "Tuesday hours must be between 0 and 24! Wednesday hours must be between 0 and 24! "
+				+ "Thursday hours must be between 0 and 24! Friday hours must be between 0 and 24! "
+				+ "Saturday hours must be between 0 and 24! ");
+		
+	}
+	
+	@Test
+	public void testCreateOver24Availability() {
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+	
+		assertEquals(0, manager.numberOfStudents());
+		
+		int over24Avail = 25;
+		
+		String error = "";
+		
+		try {
+			ac.createAccount(username, password, email, experienced, over24Avail, over24Avail, over24Avail, over24Avail, over24Avail, over24Avail, over24Avail);
+		}
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(0, manager.numberOfStudents());
+		assertEquals(error, "Sunday hours must be between 0 and 24! Monday hours must be between 0 and 24! "
+				+ "Tuesday hours must be between 0 and 24! Wednesday hours must be between 0 and 24! "
+				+ "Thursday hours must be between 0 and 24! Friday hours must be between 0 and 24! "
+				+ "Saturday hours must be between 0 and 24! ");
+		
+	}
 
 }
