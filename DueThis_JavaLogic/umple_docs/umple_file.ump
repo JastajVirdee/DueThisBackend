@@ -39,6 +39,8 @@ class Event
 
 class Application
 {
-  
+  singleton;
   1 -- * Student;
+  1 -- * Event;
+  1 -- * Assignment;
 }

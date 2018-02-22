@@ -1,12 +1,10 @@
-package model;
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3800.2fb7a63 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3802.c2696fa modeling language!*/
 
 
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.Duration;
 
 // line 14 "model.ump"
 // line 55 "model.ump"
@@ -268,9 +266,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, boolean aIsCompleted, float aGradeWeight, Duration aCompletionTime)
+  public Assignment addAssignment(String aId, String aName, String aCourse, Date aDueDate, boolean aIsCompleted, float aGradeWeight, Duration aCompletionTime, Application aApplication)
   {
-    return new Assignment(aId, aName, aCourse, aDueDate, aIsCompleted, aGradeWeight, aCompletionTime, this);
+    return new Assignment(aId, aName, aCourse, aDueDate, aIsCompleted, aGradeWeight, aCompletionTime, this, aApplication);
   }
 
   public boolean addAssignment(Assignment aAssignment)
@@ -340,9 +338,9 @@ public class Student
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Event addEvent(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly)
+  public Event addEvent(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly, Application aApplication)
   {
-    return new Event(aId, aName, aDate, aStartTime, aEndTime, aRepeatedWeekly, this);
+    return new Event(aId, aName, aDate, aStartTime, aEndTime, aRepeatedWeekly, this, aApplication);
   }
 
   public boolean addEvent(Event aEvent)
