@@ -15,11 +15,10 @@ import org.junit.Test;
 
 import controller.DueThisController;
 import controller.InvalidInputException;
+import model.Application;
 import model.Assignment;
 import model.Event;
-import model.ExperiencedStudent;
 import model.Student;
-import model.NoviceStudent;
 
 public class TestDueThisController
 {
@@ -56,17 +55,19 @@ public class TestDueThisController
 	@After
 	public void tearDown() throws Exception
 	{
-
+		Application a = Application.getInstance();
+		a.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoviceSucceeds()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		assertEquals(false, s.getExperienced());
 
 		try
 		{
@@ -86,16 +87,16 @@ public class TestDueThisController
 		{
 			fail();
 		}
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentExperiencedSucceeds()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 
-		Student s = createExperiencedStudent();
-		assertEquals(model.ExperiencedStudent.class, s.getStudentRole(0).getClass());
+		Student s = createExperiencedStudent(app);
+		assertEquals(true, s.getExperienced());
 
 		try
 		{
@@ -115,17 +116,17 @@ public class TestDueThisController
 		{
 			fail();
 		}
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoName()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		Student s = createNoviceStudent(app);
+		assertEquals(false, s.getExperienced());
 
 		try
 		{
@@ -137,17 +138,17 @@ public class TestDueThisController
 
 		assertEquals("Please enter a valid assignment name! ", error);
 		assertEquals(0, s.getAssignments().size());
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoCourse()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		Student s = createNoviceStudent(app);
+		assertEquals(false, s.getExperienced());
 
 		try
 		{
@@ -159,17 +160,17 @@ public class TestDueThisController
 
 		assertEquals("Please enter a valid course name! ", error);
 		assertEquals(0, s.getAssignments().size());
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoDueDate()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		Student s = createNoviceStudent(app);
+		assertEquals(false, s.getExperienced());
 
 		try
 		{
@@ -181,17 +182,17 @@ public class TestDueThisController
 
 		assertEquals("Due data cannot be empty! ", error);
 		assertEquals(0, s.getAssignments().size());
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentPastDueDate()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		Student s = createNoviceStudent(app);
+		assertEquals(false, s.getExperienced());
 
 		@SuppressWarnings("deprecation")
 		Date d1 = new Date(0, 1, 1);
@@ -206,17 +207,17 @@ public class TestDueThisController
 
 		assertEquals("Due date must be in the future! ", error);
 		assertEquals(0, s.getAssignments().size());
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoviceNegativeFloat()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		assertEquals(model.NoviceStudent.class, s.getStudentRole(0).getClass());
+		Student s = createNoviceStudent(app);
+		assertEquals(false, s.getExperienced());
 
 		try
 		{
@@ -228,12 +229,12 @@ public class TestDueThisController
 
 		assertEquals("Please enter a positive grade weight! ", error);
 		assertEquals(0, s.getAssignments().size());
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentNoStudent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
@@ -249,33 +250,13 @@ public class TestDueThisController
 	}
 
 	@Test
-	public void testCreateAssignmentNoStudentRole()
-	{
-		DueThisController dtc = new DueThisController();
-		String error = "";
-
-		Student s = new Student("testId", "Richard Potato");
-		boolean result = true;
-
-		try
-		{
-			result = dtc.createAssignment(name, course, dueDate, -gradeWeight, null, s);
-		} catch (InvalidInputException e)
-		{
-			error = e.getMessage();
-		}
-
-		assertEquals("Student must have a role! ", error);
-		s.delete();
-	}
-
-	@Test
 	public void testCreateAssignmentExperiencedStudentNoCompTime()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createExperiencedStudent();
+		Student s = createExperiencedStudent(app);
 
 		try
 		{
@@ -286,16 +267,16 @@ public class TestDueThisController
 		}
 
 		assertEquals("Please enter an estimated completion time! ", error);
-		s.delete();
 	}
 
 	@Test
 	public void testCreateAssignmentExperiencedStudentNegCompTime()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createExperiencedStudent();
+		Student s = createExperiencedStudent(app);
 
 		try
 		{
@@ -306,17 +287,17 @@ public class TestDueThisController
 		}
 
 		assertEquals("Please enter a positive estimated completion time! ", error);
-		s.delete();
 	}
 
 	@Test
 	public void testEditAssignmentNoviceStudent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		Assignment a1 = createAssignment(s);
+		Student s = createNoviceStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		String id1 = s.getAssignment(0).getId();
 		
 		try
@@ -334,18 +315,17 @@ public class TestDueThisController
 		assertEquals(newGradeWeight, s.getAssignment(0).getGradeWeight(),0.0f);
 		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		assertEquals(id1, s.getAssignment(0).getId());
-		
-		s.delete();
 	}
 	
 	@Test
 	public void testEditAssignmentExperiencedStudent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createExperiencedStudent();
-		Assignment a1 = createAssignment(s);
+		Student s = createExperiencedStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		String id1 = s.getAssignment(0).getId();
 
 		try
@@ -363,18 +343,17 @@ public class TestDueThisController
 		assertEquals(newCompTime, s.getAssignment(0).getCompletionTime());
 		assertEquals(false, s.getAssignment(0).isIsCompleted());
 		assertEquals(id1, s.getAssignment(0).getId());
-		
-		s.delete();
 	}
 	
 	@Test
 	public void testEditAssignmentNoviceInvalidInputs()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
-		Assignment a1 = createAssignment(s);
+		Student s = createNoviceStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		String id1 = s.getAssignment(0).getId();
 		
 		@SuppressWarnings("deprecation")
@@ -394,11 +373,12 @@ public class TestDueThisController
 	@Test
 	public void testEditAssignmentExperiencedInvalidInputs()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createExperiencedStudent();
-		Assignment a1 = createAssignment(s);
+		Student s = createExperiencedStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		String id1 = s.getAssignment(0).getId();
 		
 		@SuppressWarnings("deprecation")
@@ -418,11 +398,12 @@ public class TestDueThisController
 	@Test
 	public void testCompleteAssignmentFalseToTrue()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = new Student("testId", "Richard Potato");
-		Assignment a1 = createAssignment(s);
+		Student s = createExperiencedStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		a1.setIsCompleted(false);
 		
 		try{
@@ -439,11 +420,12 @@ public class TestDueThisController
 	@Test
 	public void testCompleteAssignmentTrueToFalse()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = new Student("testId", "Richard Potato");
-		Assignment a1 = createAssignment(s);
+		Student s = createExperiencedStudent(app);
+		Assignment a1 = createAssignment(s, app);
 		a1.setIsCompleted(true);
 		
 		try{
@@ -460,12 +442,13 @@ public class TestDueThisController
 	@Test
 	public void testCompleteAssignmentError()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = new Student("testId", "Richard Potato");
-		Student s2 = new Student("ID", "Ichard Potato");
-		Assignment a1 = createAssignment(s);
+		Student s = createExperiencedStudent(app);
+		Student s2 = createExperiencedStudent2(app);
+		Assignment a1 = createAssignment(s, app);
 		a1.setIsCompleted(true);
 		
 		try{
@@ -482,19 +465,20 @@ public class TestDueThisController
 	@Test
 	public void testRemoveAssignment()
 	{
-		Student ns = createNoviceStudent();
-		Student es = createExperiencedStudent();
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Student es = createExperiencedStudent(app);
 
 		assertEquals(0, ns.numberOfAssignments());
 		assertEquals(0, es.numberOfAssignments());
 
-		Assignment a1 = createAssignment(ns);
-		Assignment a2 = createAssignment(es);
+		Assignment a1 = createAssignment(ns, app);
+		Assignment a2 = createAssignment(es, app);
 
 		assertEquals(1, ns.numberOfAssignments());
 		assertEquals(1, es.numberOfAssignments());
-
-		DueThisController dtc = new DueThisController();
 
 		try
 		{
@@ -513,19 +497,21 @@ public class TestDueThisController
 	@Test
 	public void testRemoveUnownedAssignment()
 	{
-		Student ns = createNoviceStudent();
-		Student es = createExperiencedStudent();
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Student es = createExperiencedStudent(app);
 
 		assertEquals(0, ns.numberOfAssignments());
 		assertEquals(0, es.numberOfAssignments());
 
-		Assignment a1 = createAssignment(ns);
-		Assignment a2 = createAssignment(es);
+		Assignment a1 = createAssignment(ns, app);
+		Assignment a2 = createAssignment(es, app);
 
 		assertEquals(1, ns.numberOfAssignments());
 		assertEquals(1, es.numberOfAssignments());
 
-		DueThisController dtc = new DueThisController();
 
 		try
 		{
@@ -551,9 +537,10 @@ public class TestDueThisController
 	@Test
 	public void testCreateEvent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 
 		assertEquals(s.numberOfEvents(), 0);
 
@@ -576,6 +563,7 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventNoStudent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
@@ -593,8 +581,9 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventNoName()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		String error = "";
 
 		assertEquals(s.numberOfEvents(), 0);
@@ -645,8 +634,9 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventNoDate()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		String error = "";
 
 		assertEquals(s.numberOfEvents(), 0);
@@ -666,10 +656,11 @@ public class TestDueThisController
 	@Test
 	public void testCreatePastEvent()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		assertEquals(s.numberOfEvents(), 0);
 
 		@SuppressWarnings("deprecation")
@@ -690,10 +681,11 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventNoStartTime()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		assertEquals(s.numberOfEvents(), 0);
 
 		try
@@ -711,10 +703,11 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventNoEndTime()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		assertEquals(s.numberOfEvents(), 0);
 
 		try
@@ -732,10 +725,11 @@ public class TestDueThisController
 	@Test
 	public void testCreateEventEndBeforeStart()
 	{
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
 		String error = "";
 
-		Student s = createNoviceStudent();
+		Student s = createNoviceStudent(app);
 		assertEquals(s.numberOfEvents(), 0);
 
 		try
@@ -753,10 +747,12 @@ public class TestDueThisController
 	@Test
 	public void testEditEvent()
 	{
-
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
+		
 		@SuppressWarnings("deprecation")
 		Date date = new Date(119, 4, 30);
 		@SuppressWarnings("deprecation")
@@ -784,10 +780,11 @@ public class TestDueThisController
 	@Test
 	public void testEditEventEndBeforeStart()
 	{
-
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
+		
 		@SuppressWarnings("deprecation")
 		Time endtime = new Time(7, 30, 0);
 
@@ -806,10 +803,10 @@ public class TestDueThisController
 	@Test
 	public void testEditEventInvalidName()
 	{
-
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
 
 		String error = "";
 		try
@@ -826,10 +823,10 @@ public class TestDueThisController
 	@Test
 	public void testEditEventNullStartTime()
 	{
-
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
 
 		String error = "";
 		try
@@ -845,9 +842,11 @@ public class TestDueThisController
 	
 	@Test
 	public void testRemoveEventSuccess(){
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
 		
 		assertEquals(event, ns.getEvent(0));
 		assertEquals(1, ns.getEvents().size());
@@ -864,11 +863,13 @@ public class TestDueThisController
 	
 	@Test
 	public void testRemoveEventNotOwned(){
-		String error = "";
-		Student ns = createNoviceStudent();
-		Student es = createExperiencedStudent();
-		Event event = createEvent(ns);
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		Student ns = createNoviceStudent(app);
+		Student es = createExperiencedStudent(app);
+		Event event = createEvent(ns, app);
 		
 		assertEquals(event, ns.getEvent(0));
 		assertEquals(1, ns.getEvents().size());
@@ -885,18 +886,18 @@ public class TestDueThisController
 	@Test
 	public void testShowEvent()
 	{
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
 		
 		@SuppressWarnings("deprecation")
 		Date testDate = new Date(120, 5, 25);
 		
-		Student ns = createNoviceStudent();
-		Event event = createEvent(ns);
-		Event event2 = createEvent(ns);
-		Event event3 = createEvent(ns);
-		Event event4 = createEvent(ns);
-		Event event5 = createEventDetailed(ns, testDate);
-		
-		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
+		Event event = createEvent(ns, app);
+		Event event2 = createEvent(ns, app);
+		Event event3 = createEvent(ns, app);
+		Event event4 = createEvent(ns, app);
+		Event event5 = createEventDetailed(ns, testDate, app);
 		
 		List<Event> list = dtc.showEvent(ns, dueDate);
 		
@@ -911,17 +912,18 @@ public class TestDueThisController
 	@Test
 	public void testShowAssignment()
 	{
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
 		
 		@SuppressWarnings("deprecation")
 		Date testDate = new Date(120, 5, 25);
 		
-		Student ns = createNoviceStudent();
-		Assignment assignment = createAssignment(ns);
-		Assignment assignment2 = createAssignment(ns);
-		Assignment assignment3 = createAssignment(ns);
-		Assignment assignment4 = createAssignment(ns);
-		Assignment assignment5 = createAssignmentDetailed(ns, testDate);
-		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
+		Assignment assignment = createAssignment(ns, app);
+		Assignment assignment2 = createAssignment(ns, app);
+		Assignment assignment3 = createAssignment(ns, app);
+		Assignment assignment4 = createAssignment(ns, app);
+		Assignment assignment5 = createAssignmentDetailed(ns, testDate, app);
 		
 		List<Assignment> list = dtc.showAssignment(ns, dueDate);
 		
@@ -932,36 +934,40 @@ public class TestDueThisController
 		assertEquals(assignment4, list.get(3));
 	}
 
-	private Student createNoviceStudent()
+	private Student createNoviceStudent(Application app)
 	{
-		Student s = new Student("testId", "Richard Potato");
-		new NoviceStudent(s);
+		Student s = new Student("testId", "Richard Potato", "food", "a@b.c", false, 0, 0, 0, 0, 0, 0, 0, app);
 		return s;
 	}
 
-	private Student createExperiencedStudent()
+	private Student createExperiencedStudent(Application app)
 	{
-		Student s = new Student("testId", "Richard Potato");
-		new ExperiencedStudent(s, 0, 0, 0, 0, 0, 0, 0);
+		Student s = new Student("testId", "Richard Potato", "food", "a@b.c", true, 5, 5, 5, 5, 5, 5, 5, app);
+		return s;
+	}
+	
+	private Student createExperiencedStudent2(Application app)
+	{
+		Student s = new Student("UID", "Ichard Potato", "nope", "a@b.c", true, 5, 5, 5, 5, 5, 5, 5, app);
 		return s;
 	}
 
-	private Assignment createAssignment(Student s)
+	private Assignment createAssignment(Student s, Application app)
 	{
-		return new Assignment("testId", name, course, dueDate, gradeWeight, isCompleted, compTime, s);
+		return new Assignment("testId", name, course, dueDate, isCompleted, gradeWeight, compTime, s, app);
 	}
 
-	private Event createEvent(Student s)
+	private Event createEvent(Student s, Application app)
 	{
-		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s);
+		return new Event("testId", name, dueDate, startTime, endTime, repeatedWeekly, s, app);
 	}
 	
-	private Event createEventDetailed(Student s, Date date) {
-		return new Event("testId", name, date, startTime, endTime, repeatedWeekly, s);
+	private Event createEventDetailed(Student s, Date date, Application app) {
+		return new Event("testId", name, date, startTime, endTime, repeatedWeekly, s, app);
 	}
 	
-	private Assignment createAssignmentDetailed(Student s, Date date) {
-		return new Assignment("testId", name, course, date, gradeWeight, isCompleted, compTime, s);
+	private Assignment createAssignmentDetailed(Student s, Date date, Application app) {
+		return new Assignment("testId", name, course, date, isCompleted, gradeWeight, compTime, s, app);
 	}
 	
 }
