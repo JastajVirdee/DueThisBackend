@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import model.Application;
@@ -103,4 +104,41 @@ public class AccountController {
 		
 	}
 
+	public boolean deleteAccount(String uname, String pword) throws InvalidInputException 
+	{
+		String error = "";
+		Application manager = Application.getInstance();
+		
+		//If no students then we can't delete
+		if (!manager.hasStudents())
+		{
+			error = "No students have been created";
+			throw new InvalidInputException(error);
+		}
+		
+		// Get a list of the students and search for the one we want to delete
+		List <Student> studentList = manager.getStudents();
+		for (Student s : studentList)
+		{
+			if (s.getUsername().equals(uname))
+			{
+				// If the student is found, we make sure that the passwords match
+				if (s.getPassword().equals(pword))
+				{
+					s.delete();
+					return true;
+				}
+				else
+				{
+					error = "Password entered does not match";
+					throw new InvalidInputException(error);
+				}
+			}
+		}
+		
+		// This will probably never happen but if a user does not exist
+		// Put this for completeness mostly. Candidate for removal.
+		error = "User does not exist";
+		throw new InvalidInputException(error);
+	}
 }

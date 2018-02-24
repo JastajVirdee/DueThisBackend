@@ -2,6 +2,7 @@ package controllerTests;
 
 import static org.junit.Assert.*;
 import model.Application;
+import model.Student;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -359,6 +360,99 @@ public class TestAccountController {
 				+ "Thursday hours must be between 0 and 24! Friday hours must be between 0 and 24! "
 				+ "Saturday hours must be between 0 and 24! ");
 		
+	}
+
+	@Test
+	public void testDeleteAccountValidInfo()
+	{
+		AccountController ac = new AccountController();
+		
+		Application manager = Application.getInstance();
+		
+		//Create some accounts
+		try 
+		{
+			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail, avail);
+			ac.createAccount("User", "pass", "email@gmail.com", experienced, avail, avail, avail, avail, avail, avail, avail);
+		} 
+		catch (InvalidInputException e) 
+		{
+			fail();
+		}
+		
+		try 
+		{
+			ac.deleteAccount("User", "pass");
+		}
+		catch (InvalidInputException e)
+		{
+			fail();
+		}
+		
+		//Check is the user name is not in the application anymore
+		for (Student s : manager.getStudents())
+		{
+			assertEquals(false, s.getUsername().equals("User"));
+		}
+		
+		//Check that the number of students went down
+		assertEquals(1, manager.numberOfStudents());
+	}
+
+	@Test
+	public void testDeleteAccountWrongPassword()
+	{
+		AccountController ac = new AccountController();
+		
+		Application manager = Application.getInstance();
+		
+		//Create some accounts
+		try 
+		{
+			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail, avail);
+			ac.createAccount("User", "pass", "email@gmail.com", experienced, avail, avail, avail, avail, avail, avail, avail);
+		} 
+		catch (InvalidInputException e) 
+		{
+			fail();
+		}
+		
+		try 
+		{
+			ac.deleteAccount("User", "1234");
+		}
+		catch (InvalidInputException e)
+		{
+			//Check that nothing was altered
+			assertEquals(2, manager.numberOfStudents());
+			assertEquals("Password entered does not match", e.getMessage());
+			return;
+		}
+		
+		fail();
+	}
+
+	@Test
+	public void testDeleteAccountNoStudents()
+	{
+		AccountController ac = new AccountController();
+		
+		Application manager = Application.getInstance();
+		
+		assertEquals(0, manager.numberOfStudents());
+
+		try 
+		{
+			ac.deleteAccount("User", "1234");
+		}
+		catch (InvalidInputException e)
+		{
+			//Check that nothing was altered
+			assertEquals("No students have been created", e.getMessage());
+			return;
+		}
+		
+		fail();
 	}
 
 }
