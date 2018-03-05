@@ -5,11 +5,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
 
+import model.Application;
 import model.Assignment;
 import model.Event;
-import model.ExperiencedStudent;
 import model.Student;
-import model.ExperiencedStudent;
 
 public class DueThisController
 {
@@ -36,9 +35,7 @@ public class DueThisController
 			error += "Due data cannot be empty! ";
 		else if (dueDate.before(sqlDate) == true)
 			error += "Due date must be in the future! ";
-		if (aStudent.getStudentRoles().size() == 0)
-			error += "Student must have a role! ";
-		else if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
+		if (aStudent.getExperienced() == false)
 		{
 			if (gradeWeight <= 0)
 				error += "Please enter a positive grade weight! ";
@@ -53,22 +50,25 @@ public class DueThisController
 		if (error.trim().length() > 0)
 			throw new InvalidInputException(error);
 
+		
 		String id = UUID.randomUUID().toString();
-		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
+		Application app = Application.getInstance();
+		if (aStudent.getExperienced() == false)
 		{
-			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, false, null, aStudent);
-			aStudent.addAssignment(a);
+			Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight, null, aStudent, app);
+			aStudent.addAssignment(a); 
+			//TODO:Persistence needed here
+			
 			return true;
-		} else if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)
+		} else if (aStudent.getExperienced())
 		{
-			// Cannot put null for the grade weight. Will leave as a 0 for now.
-			Assignment a = new Assignment(id, name, course, dueDate, gradeWeight, false, compTime, aStudent);
+			Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight, compTime, aStudent, app);
 			aStudent.addAssignment(a);
+			//TODO: Persistence needed here
 			return true;
-		} else
-		{
-			return false;
 		}
+		
+		return false;
 	}
 
 	public boolean editAssignment(Assignment anAssignment, String name, String course, Date dueDate, float gradeWeight,
@@ -93,9 +93,7 @@ public class DueThisController
 			error += "Due data cannot be empty! ";
 		else if (dueDate.before(sqlDate) == true)
 			error += "Due date must be in the future! ";
-		if (aStudent.getStudentRoles().size() == 0)
-			error += "Student must have a role! ";
-		else if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
+		if (aStudent.getExperienced() == false)
 		{
 			if (gradeWeight <= 0)
 				error += "Please enter a positive grade weight! ";
@@ -110,24 +108,25 @@ public class DueThisController
 		if (error.trim().length() > 0)
 			throw new InvalidInputException(error);
 
-		if (aStudent.getStudentRole(0) instanceof model.NoviceStudent)
+		if (aStudent.getExperienced() == false)
 		{
 			anAssignment.setName(name);
 			anAssignment.setCourse(course);
 			anAssignment.setDueDate(dueDate);
 			anAssignment.setGradeWeight(gradeWeight);
+			//TODO: Persistence needed here
 			return true;
-		} else if (aStudent.getStudentRole(0) instanceof model.ExperiencedStudent)
+		} else if (aStudent.getExperienced())
 		{
 			anAssignment.setName(name);
 			anAssignment.setCourse(course);
 			anAssignment.setDueDate(dueDate);
 			anAssignment.setCompletionTime(compTime);
+			//TODO: Persistence needed here
 			return true;
-		} else
-		{
-			return false;
 		}
+		
+		return false;
 	}
 
 	public boolean completeAssignment(Student aStudent, Assignment anAssignment) throws InvalidInputException
@@ -144,6 +143,8 @@ public class DueThisController
 			error += "This assignment does not belong to this student! ";
 			throw new InvalidInputException(error);
 		}
+		
+		//TODO: Persistence needed here
 
 		return true;
 	}
@@ -165,6 +166,7 @@ public class DueThisController
 			throw new InvalidInputException(error);
 		}
 
+		//TODO: Persistence needed here
 		return legalRemove;
 	}
 
@@ -213,8 +215,10 @@ public class DueThisController
 		}
 
 		String id = UUID.randomUUID().toString();
+		Application app = Application.getInstance();
 
-		Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent);
+		Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent, app);
+		//TODO: Persistence needed here
 		return true;
 
 	}
@@ -262,7 +266,8 @@ public class DueThisController
 		event.setStartTime(startTime);
 		event.setEndTime(endTime);
 		event.setRepeatedWeekly(repeatWeekly);
-
+		//TODO: Persistence needed here
+		
 		return true;
 	}
 
@@ -281,6 +286,7 @@ public class DueThisController
 			throw new InvalidInputException(error);
 		}
 
+		//TODO: Persistence needed here
 		return legalRemove;
 	}
 
@@ -298,7 +304,7 @@ public class DueThisController
 		}
 
 		// Check if the student is an experienced student
-		boolean legalRemove = aStudent.getStudentRole(0) instanceof model.ExperiencedStudent;
+		boolean legalRemove = aStudent.getExperienced();
 		// true if student is an experienced student
 
 		if (!legalRemove)
@@ -306,7 +312,6 @@ public class DueThisController
 			error += "Only experienced students can set availabilities.";
 			throw new InvalidInputException(error);	
 		}
-		
 
 		// Make sure hours between 0 and 24 inclusive
 		if (sunday < 0 || sunday > 24)
@@ -342,18 +347,17 @@ public class DueThisController
 			throw new InvalidInputException(error);
 		}
 
-		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
-		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
-
 		// Set the availabilities
-		anExperiencedStudent.setSundayAvailability(sunday);
-		anExperiencedStudent.setMondayAvailability(monday);
-		anExperiencedStudent.setTuesdayAvailability(tuesday);
-		anExperiencedStudent.setWednesdayAvailability(wednesday);
-		anExperiencedStudent.setThursdayAvailability(thursday);
-		anExperiencedStudent.setFridayAvailability(friday);
-		anExperiencedStudent.setSaturdayAvailability(saturday);
+		aStudent.setSundayAvailability(sunday);
+		aStudent.setMondayAvailability(monday);
+		aStudent.setTuesdayAvailability(tuesday);
+		aStudent.setWednesdayAvailability(wednesday);
+		aStudent.setThursdayAvailability(thursday);
+		aStudent.setFridayAvailability(friday);
+		aStudent.setSaturdayAvailability(saturday);
 
+		//TODO: Persistence needed here
+		
 		return true;
 	}
 	

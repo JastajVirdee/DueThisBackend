@@ -1,13 +1,14 @@
 package model;
+
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3789.8ef58d1 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3802.c2696fa modeling language!*/
 
 
 import java.sql.Date;
 import java.sql.Time;
 
-// line 21 "model.ump"
-// line 64 "model.ump"
+// line 31 "model.ump"
+// line 62 "model.ump"
 public class Event
 {
 
@@ -25,12 +26,13 @@ public class Event
 
   //Event Associations
   private Student student;
+  private Application application;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Event(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly, Student aStudent)
+  public Event(String aId, String aName, Date aDate, Time aStartTime, Time aEndTime, boolean aRepeatedWeekly, Student aStudent, Application aApplication)
   {
     id = aId;
     name = aName;
@@ -42,6 +44,11 @@ public class Event
     if (!didAddStudent)
     {
       throw new RuntimeException("Unable to create event due to student");
+    }
+    boolean didAddApplication = setApplication(aApplication);
+    if (!didAddApplication)
+    {
+      throw new RuntimeException("Unable to create event due to application");
     }
   }
 
@@ -136,6 +143,11 @@ public class Event
   {
     return student;
   }
+  /* Code from template association_GetOne */
+  public Application getApplication()
+  {
+    return application;
+  }
   /* Code from template association_SetOneToMany */
   public boolean setStudent(Student aStudent)
   {
@@ -155,6 +167,25 @@ public class Event
     wasSet = true;
     return wasSet;
   }
+  /* Code from template association_SetOneToMany */
+  public boolean setApplication(Application aApplication)
+  {
+    boolean wasSet = false;
+    if (aApplication == null)
+    {
+      return wasSet;
+    }
+
+    Application existingApplication = application;
+    application = aApplication;
+    if (existingApplication != null && !existingApplication.equals(aApplication))
+    {
+      existingApplication.removeEvent(this);
+    }
+    application.addEvent(this);
+    wasSet = true;
+    return wasSet;
+  }
 
   public void delete()
   {
@@ -163,6 +194,12 @@ public class Event
     if(placeholderStudent != null)
     {
       placeholderStudent.removeEvent(this);
+    }
+    Application placeholderApplication = application;
+    this.application = null;
+    if(placeholderApplication != null)
+    {
+      placeholderApplication.removeEvent(this);
     }
   }
 
@@ -176,6 +213,7 @@ public class Event
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null");
+            "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "application = "+(getApplication()!=null?Integer.toHexString(System.identityHashCode(getApplication())):"null");
   }
 }
