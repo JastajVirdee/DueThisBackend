@@ -847,8 +847,9 @@ public class TestDueThisController
 	@Test
 	public void testUpdateAvailabilitiesGoodInput() {
 		//*******UNDER CONSTRUCTION STILL******
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		int sun=1;
@@ -860,20 +861,19 @@ public class TestDueThisController
 		int sat=9;	
 		
 		try{
-			dtc.updateAvailabilities(ns, sun, mon, tue, wed, thu, fri, sat);
+			dtc.updateAvailabilities(es, sun, mon, tue, wed, thu, fri, sat);
 		} catch(InvalidInputException e){
 			error = e.getMessage();
 		}
 		
 		// To access the methods in the ExperiencedStudent class
-		ExperiencedStudent aExpStud = (ExperiencedStudent)ns.getStudentRole(0);
-		int sunActual =  aExpStud.getSundayAvailability();
-		int monActual =  aExpStud.getMondayAvailability();
-		int tueActual =  aExpStud.getTuesdayAvailability();
-		int wedActual =  aExpStud.getWednesdayAvailability();
-		int thuActual =  aExpStud.getThursdayAvailability();
-		int friActual =  aExpStud.getFridayAvailability();
-		int satActual =  aExpStud.getSaturdayAvailability();
+		int sunActual =  es.getSundayAvailability();
+		int monActual =  es.getMondayAvailability();
+		int tueActual =  es.getTuesdayAvailability();
+		int wedActual =  es.getWednesdayAvailability();
+		int thuActual =  es.getThursdayAvailability();
+		int friActual =  es.getFridayAvailability();
+		int satActual =  es.getSaturdayAvailability();
 		
 		
 		assertEquals("", error);
@@ -890,8 +890,9 @@ public class TestDueThisController
 	
 	@Test
 	public void testUpdateAvailabilitiesNoStudent() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
@@ -905,8 +906,9 @@ public class TestDueThisController
 	
 	@Test
 	public void testUpdateAvailabilitiesWrongRole() {
-		Student ns = createNoviceStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student ns = createNoviceStudent(app);
 		
 		String error = "";
 		try {
@@ -922,12 +924,13 @@ public class TestDueThisController
 	// Sunday
 	@Test
 	public void testUpdateAvailabilitiesSundayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 25, 2, 2, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, 25, 2, 2, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -936,12 +939,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesSundayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, -1, 2, 2, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, -1, 2, 2, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -952,12 +956,13 @@ public class TestDueThisController
 	// Monday
 	@Test
 	public void testUpdateAvailabilitiesMondayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 25, 2, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, 25, 2, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -966,12 +971,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesMondayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, -1, 2, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, -1, 2, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -982,12 +988,13 @@ public class TestDueThisController
 	// Tuesday
 	@Test
 	public void testUpdateAvailabilitiesTuesdayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 25, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, 25, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -996,12 +1003,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesTuesdayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, -1, 2, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, -1, 2, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1012,12 +1020,13 @@ public class TestDueThisController
 	// Wednesday
 	@Test
 	public void testUpdateAvailabilitiesWednesdayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 25, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, 25, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1026,12 +1035,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesWednesdayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, -1, 2, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, -1, 2, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1042,12 +1052,13 @@ public class TestDueThisController
 	// Thursday
 	@Test
 	public void testUpdateAvailabilitiesThursdayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 25, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, 25, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1056,12 +1067,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesThursdayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, -1, 2, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, -1, 2, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1072,12 +1084,13 @@ public class TestDueThisController
 	// Friday
 	@Test
 	public void testUpdateAvailabilitiesFridayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 25, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, 2, 25, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1086,12 +1099,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesFridayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, -1, 2);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, 2, -1, 2);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1102,12 +1116,13 @@ public class TestDueThisController
 	// Saturday
 	@Test
 	public void testUpdateAvailabilitiesSaturdayHigh() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 2, 25);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, 2, 2, 25);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
@@ -1116,12 +1131,13 @@ public class TestDueThisController
 	}
 	@Test
 	public void testUpdateAvailabilitiesSaturdayLow() {
-		Student ns = createExperiencedStudent();
+		Application app = Application.getInstance();
 		DueThisController dtc = new DueThisController();
+		Student es = createExperiencedStudent(app);
 		
 		String error = "";
 		try {
-			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 2, -1);
+			dtc.updateAvailabilities(es, 2, 2, 2, 2, 2, 2, -1);
 		} catch(InvalidInputException e) {
 			error = e.getMessage();
 		}
