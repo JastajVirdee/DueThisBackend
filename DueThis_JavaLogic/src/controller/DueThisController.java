@@ -297,6 +297,12 @@ public class DueThisController
 
 		String error = "";
 
+		
+		if(aStudent == null) {
+			error += "No student was input into the updateAvailabilities method.";
+			throw new InvalidInputException(error);
+		}
+
 		// Check if the student is an experienced student
 		boolean legalRemove = aStudent.getExperienced();
 		// true if student is an experienced student
@@ -304,7 +310,7 @@ public class DueThisController
 		if (!legalRemove)
 		{
 			error += "Only experienced students can set availabilities.";
-			throw new InvalidInputException(error);
+			throw new InvalidInputException(error);	
 		}
 
 		// Make sure hours between 0 and 24 inclusive
@@ -340,6 +346,9 @@ public class DueThisController
 		{ // if errors exist
 			throw new InvalidInputException(error);
 		}
+
+		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
+		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
 
 		// Set the availabilities
 		aStudent.setSundayAvailability(sunday);

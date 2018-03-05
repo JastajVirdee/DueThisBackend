@@ -744,6 +744,7 @@ public class TestDueThisController
 		assertEquals(s.numberOfEvents(), 0);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
 	@Test
 	public void testEditEvent()
 	{
@@ -840,6 +841,297 @@ public class TestDueThisController
 		assertEquals("Start time cannot be empty! ", error);
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////
+	//Testing the updateAvailabilitiesMethod
+	
+	@Test
+	public void testUpdateAvailabilitiesGoodInput() {
+		//*******UNDER CONSTRUCTION STILL******
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		int sun=1;
+		int mon=0;
+		int tue=24;
+		int wed=23;
+		int thu=2;
+		int fri=7;
+		int sat=9;	
+		
+		try{
+			dtc.updateAvailabilities(ns, sun, mon, tue, wed, thu, fri, sat);
+		} catch(InvalidInputException e){
+			error = e.getMessage();
+		}
+		
+		// To access the methods in the ExperiencedStudent class
+		ExperiencedStudent aExpStud = (ExperiencedStudent)ns.getStudentRole(0);
+		int sunActual =  aExpStud.getSundayAvailability();
+		int monActual =  aExpStud.getMondayAvailability();
+		int tueActual =  aExpStud.getTuesdayAvailability();
+		int wedActual =  aExpStud.getWednesdayAvailability();
+		int thuActual =  aExpStud.getThursdayAvailability();
+		int friActual =  aExpStud.getFridayAvailability();
+		int satActual =  aExpStud.getSaturdayAvailability();
+		
+		
+		assertEquals("", error);
+		assertEquals(sun, sunActual);
+		assertEquals(mon, monActual);
+		assertEquals(tue, tueActual);
+		assertEquals(wed, wedActual);
+		assertEquals(thu, thuActual);
+		assertEquals(fri, friActual);
+		assertEquals(sat, satActual);
+		
+	}
+	
+	
+	@Test
+	public void testUpdateAvailabilitiesNoStudent() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(null, 2, 2, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("No student was input into the updateAvailabilities method.", error);
+	}
+	
+	@Test
+	public void testUpdateAvailabilitiesWrongRole() {
+		Student ns = createNoviceStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Only experienced students can set availabilities.", error);
+		
+	}
+	
+	// Sunday
+	@Test
+	public void testUpdateAvailabilitiesSundayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 25, 2, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Sunday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesSundayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, -1, 2, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Sunday hours must be between 0 and 24! ", error);
+	}
+	
+	// Monday
+	@Test
+	public void testUpdateAvailabilitiesMondayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 25, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Monday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesMondayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, -1, 2, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Monday hours must be between 0 and 24! ", error);
+	}
+	
+	// Tuesday
+	@Test
+	public void testUpdateAvailabilitiesTuesdayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 25, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Tuesday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesTuesdayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, -1, 2, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Tuesday hours must be between 0 and 24! ", error);
+	}
+	
+	// Wednesday
+	@Test
+	public void testUpdateAvailabilitiesWednesdayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 25, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Wednesday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesWednesdayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, -1, 2, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Wednesday hours must be between 0 and 24! ", error);
+	}
+	
+	// Thursday
+	@Test
+	public void testUpdateAvailabilitiesThursdayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 25, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Thursday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesThursdayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, -1, 2, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Thursday hours must be between 0 and 24! ", error);
+	}
+	
+	// Friday
+	@Test
+	public void testUpdateAvailabilitiesFridayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 25, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Friday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesFridayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, -1, 2);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Friday hours must be between 0 and 24! ", error);
+	}
+	
+	// Saturday
+	@Test
+	public void testUpdateAvailabilitiesSaturdayHigh() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 2, 25);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Saturday hours must be between 0 and 24! ", error);
+	}
+	@Test
+	public void testUpdateAvailabilitiesSaturdayLow() {
+		Student ns = createExperiencedStudent();
+		DueThisController dtc = new DueThisController();
+		
+		String error = "";
+		try {
+			dtc.updateAvailabilities(ns, 2, 2, 2, 2, 2, 2, -1);
+		} catch(InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Saturday hours must be between 0 and 24! ", error);
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////////
+
 	@Test
 	public void testRemoveEventSuccess(){
 		Application app = Application.getInstance();
