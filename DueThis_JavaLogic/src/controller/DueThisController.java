@@ -347,9 +347,6 @@ public class DueThisController
 			throw new InvalidInputException(error);
 		}
 
-		// Get the role and get experiencedStudent, allows the method to access experiencedStudent object
-		ExperiencedStudent anExperiencedStudent = (ExperiencedStudent)aStudent.getStudentRole(0);
-
 		// Set the availabilities
 		aStudent.setSundayAvailability(sunday);
 		aStudent.setMondayAvailability(monday);
