@@ -491,7 +491,7 @@ public class TestAccountController
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
 		Student s = null;
-		
+
 		try
 		{
 			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
@@ -500,28 +500,28 @@ public class TestAccountController
 		{
 			fail();
 		}
-		
+
 		try
 		{
 			s = ac.logIn("Person", "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			fail();
 		}
-		
+
 		assertEquals("Person", s.getUsername());
 		assertEquals("1234", s.getPassword());
 		assertEquals("email@email.com", s.getEmail());
 		assertEquals(experienced, s.getExperienced());
 	}
-	
+
 	@Test
 	public void testLogInSuccessEmail()
 	{
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
 		Student s = null;
-		
+
 		try
 		{
 			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
@@ -530,28 +530,28 @@ public class TestAccountController
 		{
 			fail();
 		}
-		
+
 		try
 		{
 			s = ac.logIn("email@email.com", "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			fail();
 		}
-		
+
 		assertEquals("Person", s.getUsername());
 		assertEquals("1234", s.getPassword());
 		assertEquals("email@email.com", s.getEmail());
 		assertEquals(experienced, s.getExperienced());
 	}
-	
+
 	@Test
 	public void testLogInNoUsernameOrEmail()
 	{
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
 		Student s = null;
-		
+
 		try
 		{
 			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
@@ -560,34 +560,34 @@ public class TestAccountController
 		{
 			fail();
 		}
-		
+
 		try
 		{
 			s = ac.logIn("    ", "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Username or email is required to log in! ", e.getMessage());
 		}
-		
+
 		try
 		{
 			s = ac.logIn(null, "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Username or email is required to log in! ", e.getMessage());
 			return;
 		}
-		
+
 		fail();
 	}
-	
+
 	@Test
 	public void testLogInNoPassword()
 	{
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
 		Student s = null;
-		
+
 		try
 		{
 			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
@@ -596,34 +596,34 @@ public class TestAccountController
 		{
 			fail();
 		}
-		
+
 		try
 		{
 			s = ac.logIn("Person", "     ");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Password is required to log in! ", e.getMessage());
 		}
-		
+
 		try
 		{
-			s = ac.logIn("Person" , null);
-		}catch (InvalidInputException e)
+			s = ac.logIn("Person", null);
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Password is required to log in! ", e.getMessage());
 			return;
 		}
-		
+
 		fail();
 	}
-	
+
 	@Test
 	public void testLogInNoMatch()
 	{
 		AccountController ac = new AccountController();
 		Application manager = Application.getInstance();
 		Student s = null;
-		
+
 		try
 		{
 			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
@@ -632,24 +632,171 @@ public class TestAccountController
 		{
 			fail();
 		}
-		
+
 		try
 		{
 			s = ac.logIn("NotPerson", "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Invalid Username/Email or Password!", e.getMessage());
 		}
-		
+
 		try
 		{
 			s = ac.logIn("email@notemail.com", "1234");
-		}catch (InvalidInputException e)
+		} catch (InvalidInputException e)
 		{
 			assertEquals("Invalid Username/Email or Password!", e.getMessage());
 			return;
 		}
-		
+
+		fail();
+	}
+
+	@Test
+	public void testSwitchSuccessNoviceToExperienced()
+	{
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+
+		try
+		{
+			ac.createAccount("Person", "1234", "email@email.com", false, avail, avail, avail, avail, avail, avail,
+					avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		Student s = manager.getStudent(0);
+
+		try
+		{
+			ac.changeRole(s, experienced, avail, avail, avail, avail, avail, avail, avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		assertEquals(experienced, manager.getStudent(0).getExperienced());
+		assertEquals(avail, manager.getStudent(0).getSundayAvailability());
+		assertEquals(avail, manager.getStudent(0).getMondayAvailability());
+		assertEquals(avail, manager.getStudent(0).getTuesdayAvailability());
+		assertEquals(avail, manager.getStudent(0).getWednesdayAvailability());
+		assertEquals(avail, manager.getStudent(0).getThursdayAvailability());
+		assertEquals(avail, manager.getStudent(0).getFridayAvailability());
+		assertEquals(avail, manager.getStudent(0).getSaturdayAvailability());
+	}
+
+	@Test
+	public void testSwitchSuccessExperiencedToNovice()
+	{
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+
+		try
+		{
+			ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail, avail, avail, avail,
+					avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		Student s = manager.getStudent(0);
+
+		try
+		{
+			ac.changeRole(s, false, avail, avail, avail, avail, avail, avail, avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		assertEquals(false, manager.getStudent(0).getExperienced());
+		assertEquals(0, manager.getStudent(0).getSundayAvailability());
+		assertEquals(0, manager.getStudent(0).getMondayAvailability());
+		assertEquals(0, manager.getStudent(0).getTuesdayAvailability());
+		assertEquals(0, manager.getStudent(0).getWednesdayAvailability());
+		assertEquals(0, manager.getStudent(0).getThursdayAvailability());
+		assertEquals(0, manager.getStudent(0).getFridayAvailability());
+		assertEquals(0, manager.getStudent(0).getSaturdayAvailability());
+	}
+
+	@Test
+	public void testSwitchInvalidStudent()
+	{
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+
+		try
+		{
+			ac.changeRole(null, experienced, avail, avail, avail, avail, avail, avail, avail);
+		} catch (InvalidInputException e)
+		{
+			assertEquals("A valid student must be passed! ", e.getMessage());
+			return;
+		}
+		fail();
+	}
+
+	@Test
+	public void testSwitchNegativeHours()
+	{
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+
+		try
+		{
+			ac.createAccount("Person", "1234", "email@email.com", false, avail, avail, avail, avail, avail, avail,
+					avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		try
+		{
+			ac.changeRole(manager.getStudent(0), experienced, -avail, -avail, -avail, -avail, -avail, -avail, -avail);
+		} catch (InvalidInputException e)
+		{
+			assertEquals("Sunday hours must be between 0 and 24! Monday hours must be between 0 and 24! "
+					+ "Tuesday hours must be between 0 and 24! Wednesday hours must be between 0 and 24! "
+					+ "Thursday hours must be between 0 and 24! Friday hours must be between 0 and 24! "
+					+ "Saturday hours must be between 0 and 24! ", e.getMessage());
+			return;
+		}
+
+		fail();
+	}
+
+	@Test
+	public void testSwitchHoursTooBig()
+	{
+		AccountController ac = new AccountController();
+		Application manager = Application.getInstance();
+
+		try
+		{
+			ac.createAccount("Person", "1234", "email@email.com", false, avail, avail, avail, avail, avail, avail,
+					avail);
+		} catch (InvalidInputException e)
+		{
+			fail();
+		}
+
+		try
+		{
+			ac.changeRole(manager.getStudent(0), experienced, 25, 25, 25, 25, 25, 25, 25);
+		} catch (InvalidInputException e)
+		{
+			assertEquals("Sunday hours must be between 0 and 24! Monday hours must be between 0 and 24! "
+					+ "Tuesday hours must be between 0 and 24! Wednesday hours must be between 0 and 24! "
+					+ "Thursday hours must be between 0 and 24! Friday hours must be between 0 and 24! "
+					+ "Saturday hours must be between 0 and 24! ", e.getMessage());
+			return;
+		}
+
 		fail();
 	}
 

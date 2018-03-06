@@ -195,13 +195,75 @@ public class AccountController
 				}
 			}
 		}
-		
-		if(s == null)
+
+		if (s == null)
 		{
 			error = "Invalid Username/Email or Password!";
 			throw new InvalidInputException(error);
 		}
-		
+
 		return s;
+	}
+
+	public Student changeRole(Student a, boolean experienced, int sun, int mon, int tues, int wed, int thurs, int fri,
+			int sat) throws InvalidInputException
+	{
+		String error = "";
+		Application manager = Application.getInstance();
+
+		if (a == null || !manager.getStudents().contains(a))
+			error += "A valid student must be passed! ";
+
+		if (experienced)
+		{
+			// Make sure hours between 0 and 24 inclusive
+			if (sun < 0 || sun > 24)
+				error += "Sunday hours must be between 0 and 24! ";
+
+			if (mon < 0 || mon > 24)
+				error += "Monday hours must be between 0 and 24! ";
+
+			if (tues < 0 || tues > 24)
+				error += "Tuesday hours must be between 0 and 24! ";
+
+			if (wed < 0 || wed > 24)
+				error += "Wednesday hours must be between 0 and 24! ";
+
+			if (thurs < 0 || thurs > 24)
+				error += "Thursday hours must be between 0 and 24! ";
+
+			if (fri < 0 || fri > 24)
+				error += "Friday hours must be between 0 and 24! ";
+
+			if (sat < 0 || sat > 24)
+				error += "Saturday hours must be between 0 and 24! ";
+		}
+
+		if (!experienced)
+		{
+			sun = 0;
+			mon = 0;
+			tues = 0;
+			wed = 0;
+			thurs = 0;
+			fri = 0;
+			sat = 0;
+		}
+
+		if (error.length() > 0)
+			throw new InvalidInputException(error);
+
+		a.setExperienced(experienced);
+		a.setSundayAvailability(sun);
+		a.setMondayAvailability(mon);
+		a.setTuesdayAvailability(tues);
+		a.setWednesdayAvailability(wed);
+		a.setThursdayAvailability(thurs);
+		a.setFridayAvailability(fri);
+		a.setSaturdayAvailability(sat);
+
+		// PERSISTANCE MUST BE ADDED HERE;
+
+		return a;
 	}
 }
