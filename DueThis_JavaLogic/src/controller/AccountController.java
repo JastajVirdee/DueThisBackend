@@ -6,50 +6,61 @@ import java.util.UUID;
 import model.Application;
 import model.Student;
 
-public class AccountController {
-	
-	public boolean createAccount(String uname, String pword, String email, boolean experiencedStudent, int sun, int mon, int tues, int wed, int thurs, int fri, int sat) throws InvalidInputException {
+public class AccountController
+{
+
+	public boolean createAccount(String uname, String pword, String email, boolean experiencedStudent, int sun, int mon,
+			int tues, int wed, int thurs, int fri, int sat) throws InvalidInputException
+	{
 		String error = "";
-		
-		//Check if required fields are null
-		if (uname == null || uname.trim().length() == 0) {
-			
+
+		// Check if required fields are null
+		if (uname == null || uname.trim().length() == 0)
+		{
+
 			error += "Username is required to create an account! ";
 		}
-		
-		if (pword == null || pword.trim().length() == 0) {
-			
+
+		if (pword == null || pword.trim().length() == 0)
+		{
+
 			error += "Password is required to create an account! ";
 		}
-		
-		if (email == null || email.trim().length() == 0) {
-			 
+
+		if (email == null || email.trim().length() == 0)
+		{
+
 			error += "Email is required to create an account! ";
-		}
-		else if (!email.contains("@")) {
-			
+		} else if (!email.contains("@"))
+		{
+
 			error += "Email address is invalid! ";
 		}
-		
-		//Check if username or email address is already in use
+
+		// Check if username or email address is already in use
 		Application manager = Application.getInstance();
-		
+
 		int numAccounts = manager.numberOfStudents();
-		
-		for(int i=0; i<numAccounts; i++) {
-			
-			if (manager.getStudent(i).getUsername().equals(uname.trim())) {
+
+		for (int i = 0; i < numAccounts; i++)
+		{
+
+			if (manager.getStudent(i).getUsername().equals(uname.trim()))
+			{
 				error += "Username is already in use! ";
 			}
-			
-			if (manager.getStudent(i).getEmail().equals(email.trim())) {
+
+			if (manager.getStudent(i).getEmail().equals(email.trim()))
+			{
 				error += "Email is already in use! ";
 			}
 		}
-		
-		//Check if the availabilities are valid integers if the student wishes to be experienced
-		if (experiencedStudent) {
-			
+
+		// Check if the availabilities are valid integers if the student wishes
+		// to be experienced
+		if (experiencedStudent)
+		{
+
 			// Make sure hours between 0 and 24 inclusive
 			if (sun < 0 || sun > 24)
 			{
@@ -80,65 +91,117 @@ public class AccountController {
 				error += "Saturday hours must be between 0 and 24! ";
 			}
 		}
-		
-		//If there is any errors, throw the error
-		if (error.length() > 0) {
+
+		// If there is any errors, throw the error
+		if (error.length() > 0)
+		{
 			throw new InvalidInputException(error);
 		}
-		
-		
-	
-		
-		
-		String id = UUID.randomUUID().toString();
-				
 
-		//If the student wasnt experienced set all the availabilities to zero
-		if (!experiencedStudent) {
-			sun = 0; mon = 0; tues = 0; wed = 0; thurs = 0; fri = 0; sat = 0;
+		String id = UUID.randomUUID().toString();
+
+		// If the student wasnt experienced set all the availabilities to zero
+		if (!experiencedStudent)
+		{
+			sun = 0;
+			mon = 0;
+			tues = 0;
+			wed = 0;
+			thurs = 0;
+			fri = 0;
+			sat = 0;
 		}
-		
-		//Create the student
-		Student s = new Student(id, uname, pword, email, experiencedStudent, sun, mon, tues, wed, thurs, fri, sat, manager);
+
+		// Create the student
+		Student s = new Student(id, uname, pword, email, experiencedStudent, sun, mon, tues, wed, thurs, fri, sat,
+				manager);
 		return true;
-		
+
 	}
 
-	public boolean deleteAccount(String uname, String pword) throws InvalidInputException 
+	public boolean deleteAccount(String uname, String pword) throws InvalidInputException
 	{
 		String error = "";
 		Application manager = Application.getInstance();
-		
-		//If no students then we can't delete
+
+		// If no students then we can't delete
 		if (!manager.hasStudents())
 		{
 			error = "No students have been created";
 			throw new InvalidInputException(error);
 		}
-		
+
 		// Get a list of the students and search for the one we want to delete
-		List <Student> studentList = manager.getStudents();
+		List<Student> studentList = manager.getStudents();
 		for (Student s : studentList)
 		{
 			if (s.getUsername().equals(uname))
 			{
-				// If the student is found, we make sure that the passwords match
+				// If the student is found, we make sure that the passwords
+				// match
 				if (s.getPassword().equals(pword))
 				{
 					s.delete();
 					return true;
-				}
-				else
+				} else
 				{
 					error = "Password entered does not match";
 					throw new InvalidInputException(error);
 				}
 			}
 		}
-		
+
 		// This will probably never happen but if a user does not exist
 		// Put this for completeness mostly. Candidate for removal.
 		error = "User does not exist";
 		throw new InvalidInputException(error);
+	}
+
+	// Only asking for username or email, not both in this case.
+	public Student logIn(String uname, String pword) throws InvalidInputException
+	{
+		String error = "";
+		Student s = null;
+
+		if (uname == null || uname.trim().length() == 0)
+			error += "Username or email is required to log in! ";
+
+		if (pword == null || pword.trim().length() == 0)
+			error += "Password is required to log in! ";
+
+		if (error.length() > 0)
+			throw new InvalidInputException(error);
+
+		Application manager = Application.getInstance();
+
+		if (uname.contains("@"))
+		{
+			for (Student a : manager.getStudents())
+			{
+				if (a.getEmail().equals(uname.trim()) && a.getPassword().equals(pword.trim()))
+				{
+					s = a;
+					break;
+				}
+			}
+		} else
+		{
+			for (Student a : manager.getStudents())
+			{
+				if (a.getUsername().equals(uname.trim()) && a.getPassword().equals(pword.trim()))
+				{
+					s = a;
+					break;
+				}
+			}
+		}
+		
+		if(s == null)
+		{
+			error = "Invalid Username/Email or Password!";
+			throw new InvalidInputException(error);
+		}
+		
+		return s;
 	}
 }
