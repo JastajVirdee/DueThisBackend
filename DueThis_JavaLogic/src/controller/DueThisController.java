@@ -1,9 +1,13 @@
 package controller;
 
-import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import model.Application;
 import model.Assignment;
@@ -380,8 +384,15 @@ public class DueThisController
 		
 		for(Event e: allEvents)
 		{
-			if ( (e.getDate().getDate() == dateSelected.getDate()) && (e.getDate().getMonth() == dateSelected.getMonth()) && (e.getDate().getYear() == dateSelected.getYear()) ) {
-				eventsToday.add(e);
+			if (e.getRepeatedWeekly()){
+				int diffInDays = (int) Math.round(getDateDiff(e.getDate(),dateSelected,TimeUnit.DAYS));
+				if (e.getDate().getDate() == dateSelected.getDate() && e.getDate().getMonth() == dateSelected.getMonth() && e.getDate().getYear() == dateSelected.getYear() || (diffInDays % 7) == 6) {
+					eventsToday.add(e);
+				}
+			} else {
+				if(e.getDate().getDate() == dateSelected.getDate() && e.getDate().getMonth() == dateSelected.getMonth() && e.getDate().getYear() == dateSelected.getYear()) {
+			                eventsToday.add(e);
+			    }
 			}
 		}
 		return eventsToday;
@@ -401,5 +412,10 @@ public class DueThisController
 			}	
 		}
 		return assignmentsToday;
+	}
+
+	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 }
