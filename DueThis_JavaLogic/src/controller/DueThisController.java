@@ -382,16 +382,16 @@ public class DueThisController
 		
 		List<Event> eventsToday = new ArrayList<>();
 		
-		for(Event e: allEvents)
+		for(Event event: allEvents)
 		{
-			if (e.getRepeatedWeekly()){
-				int diffInDays = (int) Math.round(getDateDiff(e.getDate(),dateSelected,TimeUnit.DAYS));
-				if (e.getDate().getDate() == dateSelected.getDate() && e.getDate().getMonth() == dateSelected.getMonth() && e.getDate().getYear() == dateSelected.getYear() || (diffInDays % 7) == 6) {
-					eventsToday.add(e);
+			if (event.getRepeatedWeekly()){
+				int diffInDays = (int) Math.round(getDateDiff(event.getDate(),dateSelected,TimeUnit.DAYS));
+				if (event.getDate().getDate() == dateSelected.getDate() && event.getDate().getMonth() == dateSelected.getMonth() && event.getDate().getYear() == dateSelected.getYear() || (diffInDays % 7) == 6) {
+					eventsToday.add(event);
 				}
 			} else {
-				if(e.getDate().getDate() == dateSelected.getDate() && e.getDate().getMonth() == dateSelected.getMonth() && e.getDate().getYear() == dateSelected.getYear()) {
-			                eventsToday.add(e);
+				if(event.getDate().getDate() == dateSelected.getDate() && event.getDate().getMonth() == dateSelected.getMonth() && event.getDate().getYear() == dateSelected.getYear()) {
+			                eventsToday.add(event);
 			    }
 			}
 		}
