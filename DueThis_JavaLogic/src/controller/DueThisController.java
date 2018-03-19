@@ -418,4 +418,31 @@ public class DueThisController
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
+	
+	public List<String> showCourses(Student aStudent) {
+		List<Assignment> allAssignments = aStudent.getAssignments();
+		
+		List<String> courses = new ArrayList<>();
+		
+		for(Assignment a : allAssignments) {
+			
+			String course = a.getCourse();
+			boolean addCourse = true;
+			
+			for (String s : courses) {
+				if (s.equals(course)) {
+					addCourse = false;
+					break;
+				}
+			}
+			
+			if(addCourse) {
+				courses.add(course);
+			}
+			
+		}
+		
+		return courses;
+		
+	}
 }
