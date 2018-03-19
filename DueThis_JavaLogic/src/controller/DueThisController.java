@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -417,5 +418,22 @@ public class DueThisController
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+	}
+	
+	public List<Assignment> showFilteredByDateAssignment(Student aStudent, Date filteredDate)
+	{
+		List<Assignment> assignments = new ArrayList<>();
+		assignments = aStudent.getAssignments();
+		
+		List<Assignment> filteredAssignments = new ArrayList<>();
+		for (Assignment a : assignments)
+		{
+			if (getDateDiff(filteredDate ,a.getDueDate(), TimeUnit.MILLISECONDS) > 0)
+			{
+				filteredAssignments.add(a);
+			}
+		}
+		
+		return filteredAssignments;
 	}
 }
