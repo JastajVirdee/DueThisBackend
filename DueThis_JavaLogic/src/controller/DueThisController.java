@@ -464,7 +464,12 @@ public class DueThisController
 		
 	}
 	
-	public List<Assignment> showAssignmentsByCourse(Student aStudent, String course) {
+	public List<Assignment> showAssignmentsByCourse(Student aStudent, String course) throws InvalidInputException {
+		
+		if (course == null || course.trim().equals("")) {
+			throw new InvalidInputException("Course is Required");
+		}
+		
 		List<Assignment> allAssignments = aStudent.getAssignments();
 
 		List<Assignment> courseAssignments = new ArrayList<>();

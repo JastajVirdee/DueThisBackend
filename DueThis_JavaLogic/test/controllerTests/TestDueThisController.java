@@ -1344,6 +1344,130 @@ public class TestDueThisController
 		
 	}
 	
+	@Test
+	public void testShowAssignmentNoCourse() {
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Assignment a = createAssignmentCourse(ns, course, app);
+
+		try {
+			dtc.showAssignmentsByCourse(ns, null);
+		}
+		catch (InvalidInputException e) {
+			assertEquals(e.getMessage(), "Course is Required");
+		}
+		
+		try {
+			dtc.showAssignmentsByCourse(ns, "");
+		}
+		catch (InvalidInputException e) {
+			assertEquals(e.getMessage(), "Course is Required");
+		}
+		
+		try {
+			dtc.showAssignmentsByCourse(ns, "    ");
+		}
+		catch (InvalidInputException e) {
+			assertEquals(e.getMessage(), "Course is Required");
+		}
+		
+	}
+	
+	@Test
+	public void testShowNoMatchingAssignmentCourse() {
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Assignment a = createAssignmentCourse(ns, course, app);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		
+		List<Assignment> assignments = new java.util.ArrayList<>();
+		
+		try {
+			assignments = dtc.showAssignmentsByCourse(ns, "lalala");
+		}
+		catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(0, assignments.size());
+		
+	}
+	
+	@Test
+	public void testShowOneMatchingAssignmentCourse() {
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		Assignment a = createAssignmentCourse(ns, course, app);
+		
+		assertEquals(1, ns.numberOfAssignments());
+		
+		List<Assignment> assignments = new java.util.ArrayList<>();
+
+		try {
+			assignments = dtc.showAssignmentsByCourse(ns, course);
+		}
+		catch (InvalidInputException e) {
+			fail();
+		}
+		
+		assertEquals(1, assignments.size());
+		assertEquals(course, assignments.get(0).getCourse());
+	}
+	
+	@Test
+	public void testShowManyMatchingAssignmentCourse() {
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student ns = createNoviceStudent(app);
+		
+		Assignment a = createAssignmentCourse(ns, course, app);
+		Assignment b = createAssignmentCourse(ns, "randomClass", app);
+		Assignment c = createAssignmentCourse(ns, course, app);
+		Assignment d = createAssignmentCourse(ns, "randomClass", app);
+		Assignment e = createAssignmentCourse(ns, course, app);
+
+		assertEquals(5, ns.numberOfAssignments());
+		
+		List<Assignment> assignments = new java.util.ArrayList<>();
+
+		try {
+			assignments = dtc.showAssignmentsByCourse(ns, course);
+		}
+		catch (InvalidInputException e1) {
+			fail();
+		}
+		
+		assertEquals(3, assignments.size());
+		
+		for (int i=0; i<3; i++) {
+			assertEquals(course, assignments.get(i).getCourse());
+		}
+		
+		List<Assignment> otherAssignments = new java.util.ArrayList<>();
+		
+		try {
+			otherAssignments = dtc.showAssignmentsByCourse(ns, "randomClass");
+		}
+		catch (InvalidInputException e2) {
+			fail();
+		}
+		
+		assertEquals(2, otherAssignments.size());
+		
+		for (int i=0; i<2; i++) {
+			assertEquals("randomClass", otherAssignments.get(i).getCourse());
+		}
+
+	}
+	
 	private Student createNoviceStudent(Application app)
 	{
 		Student s = new Student("testId", "Richard Potato", "food", "a@b.c", false, 0, 0, 0, 0, 0, 0, 0, app);
