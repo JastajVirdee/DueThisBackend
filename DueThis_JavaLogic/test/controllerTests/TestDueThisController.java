@@ -1278,4 +1278,58 @@ public class TestDueThisController
 		return new Assignment("testId", name, course, date, isCompleted, gradeWeight, compTime, s, app);
 	}
 	
+	@Test
+	public void testShowAssignmentFilteredByDateNoneToShow()
+	{
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		Date testDate2 = new Date(121, 4, 25); // Testing if assignments are shown after this date .
+		
+		Student ns = createNoviceStudent(app);
+		Assignment assignment = createAssignmentDetailedWithId(ns, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(ns, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(ns, testDate, app, "Assgn 5");
+		
+		List<Assignment> list = dtc.showFilteredByDateAssignment(ns, testDate2);
+		
+		assertEquals(0, list.size());
+	}
+	
+	@Test
+	public void testShowAssignmentFilteredByDateItemsToShow()
+	{
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		@SuppressWarnings("deprecation")
+		Date testDate = new Date(120, 5, 25);
+		Date testDate2 = new Date(117, 4, 25); // Testing if assignments are shown after this date .
+		
+		Student ns = createNoviceStudent(app);
+		Assignment assignment = createAssignmentDetailedWithId(ns, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(ns, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(ns, testDate, app, "Assgn 5");
+		
+		List<Assignment> list = dtc.showFilteredByDateAssignment(ns, testDate2);
+		
+		assertEquals(5, list.size());
+		assertEquals(assignment, list.get(0));
+		assertEquals(assignment2, list.get(1));
+		assertEquals(assignment3, list.get(2));
+		assertEquals(assignment4, list.get(3));
+		assertEquals(assignment5, list.get(4));
+	}
+	
+	//// Method used for debugging 
+	private Assignment createAssignmentDetailedWithId(Student s, Date date, Application app, String id) {
+		return new Assignment(id, name, course, date, isCompleted, gradeWeight, compTime, s, app);
+	}
+	
 }
