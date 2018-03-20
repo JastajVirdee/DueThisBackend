@@ -419,6 +419,24 @@ public class DueThisController
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 	
+	
+	public List<Assignment> showFilteredByDateAssignment(Student aStudent, Date filteredDate)
+	{
+		List<Assignment> assignments = new ArrayList<>();
+		assignments = aStudent.getAssignments();
+		
+		List<Assignment> filteredAssignments = new ArrayList<>();
+		for (Assignment a : assignments)
+		{
+			if (getDateDiff(filteredDate ,a.getDueDate(), TimeUnit.MILLISECONDS) > 0)
+			{
+				filteredAssignments.add(a);
+			}
+		}
+		
+		return filteredAssignments;
+	}
+	
 	public List<String> showCourses(Student aStudent) {
 		List<Assignment> allAssignments = aStudent.getAssignments();
 		
@@ -445,4 +463,24 @@ public class DueThisController
 		return courses;
 		
 	}
+	
+	public List<Assignment> showAssignmentsByCourse(Student aStudent, String course) {
+		List<Assignment> allAssignments = aStudent.getAssignments();
+
+		List<Assignment> courseAssignments = new ArrayList<>();
+		
+		for (Assignment a : allAssignments) {
+			
+			if (course.equals(a.getCourse())) {
+				courseAssignments.add(a);
+			}
+		}
+		
+		return courseAssignments;
+
+	}
+	
+	
+	
+	
 }
