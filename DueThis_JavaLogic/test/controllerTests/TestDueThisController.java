@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -1561,5 +1562,115 @@ public class TestDueThisController
 	private Assignment createAssignmentDetailedWithId(Student s, Date date, Application app, String id) {
 		return new Assignment(id, name, course, date, isCompleted, gradeWeight, compTime, s, app);
 	}
+	
+	
+	@Test
+	public void testShowFilteredByCompletedNormal()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+		Assignment assignment1 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 5");
+		
+		assignment1.setIsCompleted(true); //should go on list
+		assignment2.setIsCompleted(false);
+		assignment3.setIsCompleted(false);
+		assignment4.setIsCompleted(true); //should go on list
+		assignment5.setIsCompleted(true); //should go on list
+				
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByCompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(3, list.size());
+		assertEquals(assignment1, list.get(0));
+		assertEquals(assignment4, list.get(1));
+		assertEquals(assignment5, list.get(2));
+		assertEquals("", error);
+
+	}
+	
+	@Test
+	public void testShowFilteredByCompletedNullStudent()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = null;
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByCompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Student in showFilteredByCompleted is null", error);
+		
+	}
+	
+	@Test
+	public void testShowFilteredByComlpetedNoAssignments()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+				
+		List<Assignment> list = new ArrayList<>(); // list for filtered stuff
+		
+		try {
+			list = dtc.showFilteredByCompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("You have no assignments", error);
+	}
+	
+	@Test
+	public void testShowFilteredByCompletedNoCompletedAssignments()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+		Assignment assignment1 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 5");
+
+		// all assignments not completed by default
+				
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByCompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("No completed assignments", error);
+
+	}
+	
+	
+	
+	
+	
 	
 }
