@@ -517,5 +517,35 @@ public class DueThisController
 		return filteredCompletedAssignments;
 	}
 	
-	
+	public List<Assignment> showFilteredByIncompleted(Student aStudent) throws InvalidInputException
+	{
+		if (aStudent == null){
+			throw new InvalidInputException("Student in showFilteredByCompleted is null"); //should never happen
+		}
+		
+		List<Assignment> allAssignments = new ArrayList<>();
+		allAssignments = aStudent.getAssignments();
+		
+		if (allAssignments.isEmpty()){
+			throw new InvalidInputException("You have no assignments");
+			//in UI this will make it so that clicking the button brings up an error message, and the reason
+		}
+		
+		List<Assignment> filteredIncompletedAssignments = new ArrayList<>();
+		
+		for(Assignment a : allAssignments)
+		{
+			if(!(a.getIsCompleted()))
+			{
+				filteredIncompletedAssignments.add(a);
+			}
+		}
+		
+		if (filteredIncompletedAssignments.isEmpty()){
+			throw new InvalidInputException("No incompleted assignments");
+			//in UI this will make it so that clicking the button brings up an error message, and the reason
+		}
+		
+		return filteredIncompletedAssignments;
+	}
 }

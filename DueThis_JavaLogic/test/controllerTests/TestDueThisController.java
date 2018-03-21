@@ -1668,6 +1668,41 @@ public class TestDueThisController
 
 	}
 	
+	@Test
+	public void testShowFilteredByIncompletedNormal()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+		Assignment assignment1 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 5");
+		
+		assignment1.setIsCompleted(true); 
+		assignment2.setIsCompleted(false); //should go on list
+		assignment3.setIsCompleted(false); //should go on list
+		assignment4.setIsCompleted(true); 
+		assignment5.setIsCompleted(true); 
+				
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByIncompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals(2, list.size());
+		assertEquals(assignment2, list.get(0));
+		assertEquals(assignment3, list.get(1));
+		assertEquals("", error);
+
+	}
+	
 	
 	
 	
