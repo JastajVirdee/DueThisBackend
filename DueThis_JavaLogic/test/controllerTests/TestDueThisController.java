@@ -1700,12 +1700,76 @@ public class TestDueThisController
 		assertEquals(assignment2, list.get(0));
 		assertEquals(assignment3, list.get(1));
 		assertEquals("", error);
-
 	}
 	
+	@Test
+	public void testShowFilteredByIncompletedNullStudent()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = null;
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByIncompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("Student in showFilteredByCompleted is null", error);
+	}
 	
+	@Test
+	public void testShowFilteredByIncompletedNoAssignments()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+				
+		List<Assignment> list = new ArrayList<>(); // list for filtered stuff
+		
+		try {
+			list = dtc.showFilteredByIncompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("You have no assignments", error);	
+	}
 	
-	
-	
-	
+	@Test
+	public void testShowFilteredByIncompletedNoIncompletedAssignments()
+	{
+		String error = "";
+		Application app = Application.getInstance();
+		DueThisController dtc = new DueThisController();
+		
+		Student student = createNoviceStudent(app);
+		Assignment assignment1 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 1");
+		Assignment assignment2 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 2");
+		Assignment assignment3 = createAssignmentDetailedWithId(student, dueDate, app,"Assgn 3");
+		Assignment assignment4 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 4");
+		Assignment assignment5 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 5");
+
+		//Setting all assignments to completed 
+		assignment1.setIsCompleted(true); 
+		assignment2.setIsCompleted(true); 
+		assignment3.setIsCompleted(true); 
+		assignment4.setIsCompleted(true); 
+		assignment5.setIsCompleted(true); 
+				
+		List<Assignment> list = new ArrayList<>();
+		
+		try {
+			list = dtc.showFilteredByIncompleted(student);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		assertEquals("No incompleted assignments", error);
+	}
 }
