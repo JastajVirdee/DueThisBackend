@@ -5,7 +5,6 @@ import java.sql.Time;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -420,6 +419,7 @@ public class DueThisController
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 	
+	
 	public List<Assignment> showFilteredByDateAssignment(Student aStudent, Date filteredDate)
 	{
 		List<Assignment> assignments = new ArrayList<>();
@@ -436,4 +436,56 @@ public class DueThisController
 		
 		return filteredAssignments;
 	}
+	
+	public List<String> showCourses(Student aStudent) {
+		List<Assignment> allAssignments = aStudent.getAssignments();
+		
+		List<String> courses = new ArrayList<>();
+		
+		for(Assignment a : allAssignments) {
+			
+			String course = a.getCourse();
+			boolean addCourse = true;
+			
+			for (String s : courses) {
+				if (s.equals(course)) {
+					addCourse = false;
+					break;
+				}
+			}
+			
+			if(addCourse) {
+				courses.add(course);
+			}
+			
+		}
+		
+		return courses;
+		
+	}
+	
+	public List<Assignment> showAssignmentsByCourse(Student aStudent, String course) throws InvalidInputException {
+		
+		if (course == null || course.trim().equals("")) {
+			throw new InvalidInputException("Course is Required");
+		}
+		
+		List<Assignment> allAssignments = aStudent.getAssignments();
+
+		List<Assignment> courseAssignments = new ArrayList<>();
+		
+		for (Assignment a : allAssignments) {
+			
+			if (course.equals(a.getCourse())) {
+				courseAssignments.add(a);
+			}
+		}
+		
+		return courseAssignments;
+
+	}
+	
+	
+	
+	
 }
