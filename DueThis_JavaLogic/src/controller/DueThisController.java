@@ -520,7 +520,7 @@ public class DueThisController
 	public List<Assignment> showFilteredByIncompleted(Student aStudent) throws InvalidInputException
 	{
 		if (aStudent == null){
-			throw new InvalidInputException("Student in showFilteredByCompleted is null"); //should never happen
+			throw new InvalidInputException("Student in showFilteredByIncompleted is null"); //should never happen
 		}
 		
 		List<Assignment> allAssignments = new ArrayList<>();

@@ -1718,7 +1718,7 @@ public class TestDueThisController
 			error = e.getMessage();
 		}
 		
-		assertEquals("Student in showFilteredByCompleted is null", error);
+		assertEquals("Student in showFilteredByIncompleted is null", error);
 	}
 	
 	@Test
