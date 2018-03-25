@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Assignments(
     name            VARCHAR(40) NOT NULL,
     course          VARCHAR(40) NOT NULL,
     dueDate         DATE        NOT NULL,
-    completionTime  TIME        NOT NULL,
+    completionTime  SMALLINT    ,
     isCompleted     BOOLEAN     NOT NULL,
     gradeWeight     FLOAT(2)    NOT NULL,
     fk_student_id   VARCHAR(40) NOT NULL,
