@@ -199,8 +199,8 @@ public class DueThisController {
         String id = UUID.randomUUID().toString();
         Application app = Application.getInstance();
 
+        @SuppressWarnings("unused")
         Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent, app);
-        app.addEvent(e);
 
         return persistenceSQL.savePersistence();
     }
