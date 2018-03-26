@@ -65,6 +65,21 @@ public class SQLiteIntegration {
     private static String selectEventPrepared = "SELECT * FROM Events;";
     private static String selectStudentPrepared = "SELECT * FROM Students;";
 
+    private static String updateAssignmentPrepared = "UPDATE Assignments SET name = ?,"
+            + " course = ?, dueDate = ?, completionTime = ?, isCompleted = ?, gradeWeight = ?,"
+            + " fk_student_id = ? WHERE id = ?;";
+    private static String updateEventPrepared = "UPDATE Events SET name = ?, date = ?,"
+            + " startTime = ?, endTime = ?, repeatedWeekly = ?, fk_student_id = ? WHERE id = ?;";
+    private static String updateStudentPrepared = "UPDATE Students SET username = ?,"
+            + " password = ?, email = ?, experienced = ?, sundayAvailability = ?,"
+            + " mondayAvailability = ?, tuesdayAvailability = ?,"
+            + " wednesdayAvailability = ?, thursdayAvailability = ?,"
+            + " fridayAvailability = ?, saturdayAvailability = ? WHERE id = ?;";
+
+    private static String deleteAssignmentPrepared = "DELETE FROM Assignments WHERE id = ?;";
+    private static String deleteEventPrepared = "DELETE FROM Events WHERE id = ?;";
+    private static String deleteStudentPrepared = "DELETE FROM Students WHERE id = ?;";
+
     public static Connection connectOrCreate(String fileName) {
         if (fileName == null)
             return null;
@@ -131,20 +146,17 @@ public class SQLiteIntegration {
         return false;
     }
 
-    public static boolean initDB(String fn) {
+    public static boolean newDB(String fn) {
         if (fn == null)
             return false;
 
-        Connection c = connectOrCreate(fn);
+        Connection c = newDBKeepConnection(fn);
         if (c == null)
             return false;
 
-        boolean r = dropTables(c);
-        r &= createTables(c);
-
         try {
             c.close();
-            return r;
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -152,7 +164,7 @@ public class SQLiteIntegration {
         return false;
     }
 
-    public static Connection initDBKeep(String fn) {
+    public static Connection newDBKeepConnection(String fn) {
         if (fn == null)
             return null;
 
@@ -160,9 +172,17 @@ public class SQLiteIntegration {
         if (c == null)
             return null;
 
-        @SuppressWarnings("unused")
         boolean r = dropTables(c);
         r &= createTables(c);
+
+        if (!r) {
+            try {
+                c.close();
+                return null;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
         return c;
     }
@@ -173,6 +193,7 @@ public class SQLiteIntegration {
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertAssignmentPrepared);
+
             ps.setString(1, a.getId());
             ps.setString(2, a.getName());
             ps.setString(3, a.getCourse());
@@ -190,12 +211,53 @@ public class SQLiteIntegration {
         return false;
     }
 
+    public static boolean updateAssignments(Connection connection, Assignment a) {
+        if (connection == null || a == null)
+            return false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(updateAssignmentPrepared);
+
+            ps.setString(1, a.getName());
+            ps.setString(2, a.getCourse());
+            ps.setDate(3, a.getDueDate());
+            ps.setLong(4, a.getCompletionTime().getSeconds());
+            ps.setBoolean(5, a.getIsCompleted());
+            ps.setFloat(6, a.getGradeWeight());
+            ps.setString(7, a.getStudent().getId());
+            ps.setString(8, a.getId());
+
+            return executePreparedStatement(ps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean deleteAssignments(Connection connection, Assignment a) {
+        if (connection == null || a == null)
+            return false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(deleteAssignmentPrepared);
+            ps.setString(1, a.getId());
+
+            return executePreparedStatement(ps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
     public static boolean insertIntoEvents(Connection connection, Event event) {
         if (connection == null || event == null)
             return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertEventPrepared);
+
             ps.setString(1, event.getId());
             ps.setString(2, event.getName());
             ps.setDate(3, event.getDate());
@@ -212,12 +274,52 @@ public class SQLiteIntegration {
         return false;
     }
 
+    public static boolean updateEvents(Connection connection, Event event) {
+        if (connection == null || event == null)
+            return false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(updateEventPrepared);
+
+            ps.setString(1, event.getName());
+            ps.setDate(2, event.getDate());
+            ps.setTime(3, event.getStartTime());
+            ps.setTime(4, event.getEndTime());
+            ps.setBoolean(5, event.getRepeatedWeekly());
+            ps.setString(6, event.getStudent().getId());
+            ps.setString(7, event.getId());
+
+            return executePreparedStatement(ps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean deleteEvents(Connection connection, Event event) {
+        if (connection == null || event == null)
+            return false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(deleteEventPrepared);
+            ps.setString(1, event.getId());
+
+            return executePreparedStatement(ps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
     public static boolean insertIntoStudents(Connection connection, Student student) {
         if (connection == null || student == null)
             return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertStudentPrepared);
+
             ps.setString(1, student.getId());
             ps.setString(2, student.getUsername());
             ps.setString(3, student.getPassword());
@@ -239,36 +341,79 @@ public class SQLiteIntegration {
         return false;
     }
 
-    public static boolean loadDB(String fn, Application app) {
-        if (fn == null || app == null)
+    public static boolean updateStudents(Connection connection, Student student) {
+        if (connection == null || student == null)
             return false;
-
-        Connection c = connectOrCreate(fn);
-        if (c == null)
-            return false;
-
-        boolean r = createTables(c);
-
-        long countAssignments = selectCountFromAssignments(c, app);
-        long countStudents = selectCountFromStudents(c, app);
-        long countEvents = selectCountFromEvents(c, app);
-
-        if (countAssignments == 0 && countStudents == 0 && countEvents == 0)
-            r &= saveDBKeep(c, fn, app);
-
-        app.delete();
-
-        r &= selectFromStudents(c, app);
-        r &= selectFromEvents(c, app);
-        r &= selectFromAssignments(c, app);
 
         try {
-            c.close();
+            PreparedStatement ps = connection.prepareStatement(updateStudentPrepared);
+
+            ps.setString(1, student.getUsername());
+            ps.setString(2, student.getPassword());
+            ps.setString(3, student.getEmail());
+            ps.setBoolean(4, student.getExperienced());
+            ps.setInt(5, student.getSundayAvailability());
+            ps.setInt(6, student.getMondayAvailability());
+            ps.setInt(7, student.getTuesdayAvailability());
+            ps.setInt(8, student.getWednesdayAvailability());
+            ps.setInt(9, student.getThursdayAvailability());
+            ps.setInt(10, student.getFridayAvailability());
+            ps.setInt(11, student.getSaturdayAvailability());
+            ps.setString(12, student.getId());
+
+            return executePreparedStatement(ps);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
-        return r;
+        return false;
+    }
+
+    public static boolean deleteStudents(Connection connection, Student student) {
+        if (connection == null || student == null)
+            return false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(deleteStudentPrepared);
+            ps.setString(1, student.getId());
+
+            return executePreparedStatement(ps);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
+    public static boolean loadDB(String fn, Application app) {
+        if (fn == null || app == null)
+            return false;
+
+        // - Persistence is incrementally updated. The application data is synchronized
+        // - as soon as it is added. Thus, if the application is empty, we would load
+        // - from the database.
+        if (app.getAssignments().size() == 0 && app.getEvents().size() == 0
+                && app.getStudents().size() == 0) {
+
+            Connection c = connectOrCreate(fn);
+            if (c == null)
+                return false;
+
+            boolean r = createTables(c);
+
+            r &= selectFromStudents(c, app);
+            r &= selectFromEvents(c, app);
+            r &= selectFromAssignments(c, app);
+
+            try {
+                c.close();
+                return r;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -288,55 +433,7 @@ public class SQLiteIntegration {
         @SuppressWarnings("unused")
         Event e = new Event("0", "z", new Date(0), new Time(0), new Time(0), false, s, app);
 
-        saveDB("jdbc:sqlite:test.db", app);
         loadDB("jdbc:sqlite:test.db", app);
-        saveDB("jdbc:sqlite:test.db", app);
-    }
-
-    public static boolean saveDB(String fn, Application app) {
-        if (fn == null || app == null)
-            return false;
-
-        Connection c = initDBKeep(fn);
-        if (c == null)
-            return false;
-
-        boolean r = true;
-
-        for (Student s : app.getStudents())
-            r &= insertIntoStudents(c, s);
-
-        for (Assignment a : app.getAssignments())
-            r &= insertIntoAssignments(c, a);
-
-        for (Event e : app.getEvents())
-            r &= insertIntoEvents(c, e);
-
-        try {
-            c.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return r;
-    }
-
-    public static boolean saveDBKeep(Connection c, String fn, Application app) {
-        if (fn == null || app == null || c == null)
-            return false;
-
-        boolean r = true;
-
-        for (Student s : app.getStudents())
-            r &= insertIntoStudents(c, s);
-
-        for (Assignment a : app.getAssignments())
-            r &= insertIntoAssignments(c, a);
-
-        for (Event e : app.getEvents())
-            r &= insertIntoEvents(c, e);
-
-        return r;
     }
 
     public static long selectCountFromAssignments(Connection connection, Application app) {
@@ -479,20 +576,38 @@ public class SQLiteIntegration {
     }
 
     private String persistenceFilename = "jdbc:sqlite:duethis.db";
+    private Connection persistenceConnection = null;
 
-    public String getPersistenceFilename() {
+    public Connection ensureConnection() {
+        if (persistenceConnection == null) {
+            persistenceConnection = connectOrCreate(persistenceFilename);
+
+            if (persistenceConnection != null)
+                SQLiteIntegration.createTables(persistenceConnection);
+        }
+
+        return persistenceConnection;
+    }
+
+    public void closeConnection() {
+        if (persistenceConnection != null) {
+            try {
+                persistenceConnection.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public String getFilename() {
         return persistenceFilename;
     }
 
-    public boolean loadPersistence() {
-        return SQLiteIntegration.loadDB(this.getPersistenceFilename(), Application.getInstance());
+    public boolean load() {
+        return SQLiteIntegration.loadDB(this.getFilename(), Application.getInstance());
     }
 
-    public boolean savePersistence() {
-        return SQLiteIntegration.saveDB(this.getPersistenceFilename(), Application.getInstance());
-    }
-
-    public void setPersistenceFilename(String persistenceFilename) {
+    public void setFilename(String persistenceFilename) {
         if (persistenceFilename != null)
             this.persistenceFilename = persistenceFilename;
     }

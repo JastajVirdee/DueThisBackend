@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
@@ -16,11 +17,9 @@ import model.Student;
 import persistence.SQLiteIntegration;
 
 public class DueThisController {
+    // - TODO Consider separate exceptions for the database
+    // - TODO Handle the closing of the database on the front end.
     private SQLiteIntegration persistenceSQL = new SQLiteIntegration();
-
-    public String getPersistenceFilename() {
-        return persistenceSQL.getPersistenceFilename();
-    }
 
     public boolean createAssignment(String name, String course, Date dueDate, float gradeWeight,
             Duration compTime, Student aStudent) throws InvalidInputException {
@@ -57,30 +56,22 @@ public class DueThisController {
 
         String id = UUID.randomUUID().toString();
         Application app = Application.getInstance();
-        if (aStudent.getExperienced() == false) {
-            // - TODO Handle the NULLs differently
-            Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight,
-                    Duration.ZERO, aStudent, app);
-            aStudent.addAssignment(a);
 
-            boolean op = persistenceSQL.savePersistence();
-            if (!op)
-                throw new InvalidInputException("Failed to commit to database");
+        Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight,
+                aStudent.getExperienced() ? compTime : Duration.ZERO, aStudent, app);
 
-            return op;
-        } else if (aStudent.getExperienced()) {
-            Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight, compTime,
-                    aStudent, app);
-            aStudent.addAssignment(a);
+        aStudent.addAssignment(a);
 
-            boolean op = persistenceSQL.savePersistence();
-            if (!op)
-                throw new InvalidInputException("Failed to commit to database");
+        // - Try to commit to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
 
-            return op;
-        }
+        boolean op = SQLiteIntegration.insertIntoAssignments(c, a);
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
 
-        return false;
+        return true;
     }
 
     public boolean editAssignment(Assignment anAssignment, String name, String course, Date dueDate,
@@ -115,40 +106,42 @@ public class DueThisController {
         if (error.trim().length() > 0)
             throw new InvalidInputException(error);
 
-        if (aStudent.getExperienced() == false) {
-            anAssignment.setName(name);
-            anAssignment.setCourse(course);
-            anAssignment.setDueDate(dueDate);
+        anAssignment.setName(name);
+        anAssignment.setCourse(course);
+        anAssignment.setDueDate(dueDate);
+
+        if (aStudent.getExperienced())
+            anAssignment.setCompletionTime(compTime);
+        else
             anAssignment.setGradeWeight(gradeWeight);
 
-            boolean op = persistenceSQL.savePersistence();
-            if (!op)
-                throw new InvalidInputException("Failed to commit to database");
+        // - Try to commit to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
 
-            return op;
+        boolean op = SQLiteIntegration.updateAssignments(c, anAssignment);
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
 
-        } else if (aStudent.getExperienced()) {
-            anAssignment.setName(name);
-            anAssignment.setCourse(course);
-            anAssignment.setDueDate(dueDate);
-            anAssignment.setCompletionTime(compTime);
-
-            boolean op = persistenceSQL.savePersistence();
-            if (!op)
-                throw new InvalidInputException("Failed to commit to database");
-
-            return op;
-        }
-
-        return false;
+        return true;
     }
 
     public boolean completeAssignment(Student aStudent, Assignment anAssignment)
             throws InvalidInputException {
-        boolean legalRemove = aStudent.equals(anAssignment.getStudent());
+        boolean legalUpdate = aStudent.equals(anAssignment.getStudent());
 
         String error = "";
-        if (legalRemove) {
+        if (legalUpdate) {
+            // - Try to commit to the database
+            Connection c = persistenceSQL.ensureConnection();
+            if (c == null)
+                throw new InvalidInputException("Failed to connect to database");
+
+            boolean op = SQLiteIntegration.updateAssignments(c, anAssignment);
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
             boolean currentState = anAssignment.getIsCompleted();
             anAssignment.setIsCompleted(!currentState);
         } else {
@@ -156,33 +149,32 @@ public class DueThisController {
             throw new InvalidInputException(error);
         }
 
-        boolean op = persistenceSQL.savePersistence();
-        if (!op)
-            throw new InvalidInputException("Failed to commit to database");
-
-        return op;
+        return legalUpdate;
     }
 
     public boolean removeAssignment(Student aStudent, Assignment anAssignment)
             throws InvalidInputException {
-
-        // Verify that the assignment belongs to the student
+        // - Verify that the assignment belongs to the student
         boolean legalRemove = aStudent.equals(anAssignment.getStudent());
-
         String error = "";
 
         if (legalRemove) {
+            // - Try to commit to the database
+            Connection c = persistenceSQL.ensureConnection();
+            if (c == null)
+                throw new InvalidInputException("Failed to connect to database");
+
+            boolean op = SQLiteIntegration.deleteAssignments(c, anAssignment);
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
             anAssignment.delete();
         } else {
             error += "This assignment does not belong to this student! ";
             throw new InvalidInputException(error);
         }
 
-        boolean op = persistenceSQL.savePersistence();
-        if (!op)
-            throw new InvalidInputException("Failed to commit to database");
-
-        return legalRemove && op;
+        return legalRemove;
     }
 
     public boolean createEvent(Student aStudent, String name, Date date, Time startTime,
@@ -223,10 +215,14 @@ public class DueThisController {
         String id = UUID.randomUUID().toString();
         Application app = Application.getInstance();
 
-        @SuppressWarnings("unused")
         Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent, app);
 
-        boolean op = persistenceSQL.savePersistence();
+        // - Try to commit to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
+
+        boolean op = SQLiteIntegration.insertIntoEvents(c, e);
         if (!op)
             throw new InvalidInputException("Failed to commit to database");
 
@@ -269,7 +265,12 @@ public class DueThisController {
         event.setEndTime(endTime);
         event.setRepeatedWeekly(repeatWeekly);
 
-        boolean op = persistenceSQL.savePersistence();
+        // - Try to commit to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
+
+        boolean op = SQLiteIntegration.updateEvents(c, event);
         if (!op)
             throw new InvalidInputException("Failed to commit to database");
 
@@ -278,21 +279,25 @@ public class DueThisController {
 
     public boolean removeEvent(Student aStudent, Event anEvent) throws InvalidInputException {
         boolean legalRemove = aStudent.equals(anEvent.getStudent());
-
         String error = "";
 
         if (legalRemove) {
+            // - Try to commit to the database
+            Connection c = persistenceSQL.ensureConnection();
+            if (c == null)
+                throw new InvalidInputException("Failed to connect to database");
+
+            boolean op = SQLiteIntegration.deleteEvents(c, anEvent);
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
             anEvent.delete();
         } else {
             error += "This event does not belong to this student! ";
             throw new InvalidInputException(error);
         }
 
-        boolean op = persistenceSQL.savePersistence();
-        if (!op)
-            throw new InvalidInputException("Failed to commit to database");
-
-        return legalRemove && op;
+        return legalRemove;
     }
 
     // when you click the save button on the availabilities page it runs this
@@ -350,7 +355,12 @@ public class DueThisController {
         aStudent.setFridayAvailability(friday);
         aStudent.setSaturdayAvailability(saturday);
 
-        boolean op = persistenceSQL.savePersistence();
+        // - Try to commit changes to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
+
+        boolean op = SQLiteIntegration.updateStudents(c, aStudent);
         if (!op)
             throw new InvalidInputException("Failed to commit to database");
 

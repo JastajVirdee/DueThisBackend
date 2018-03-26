@@ -1,12 +1,15 @@
 package controller;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
 
 import model.Application;
 import model.Student;
+import persistence.SQLiteIntegration;
 
 public class AccountController {
+    private SQLiteIntegration persistenceSQL = new SQLiteIntegration();
 
     public boolean createAccount(String uname, String pword, String email,
             boolean experiencedStudent, int sun, int mon, int tues, int wed, int thurs, int fri,
@@ -228,13 +231,16 @@ public class AccountController {
         a.setFridayAvailability(fri);
         a.setSaturdayAvailability(sat);
 
-        // - TODO Persistence
-        // - TODO Consider an instance 'c' instead of making one.
-        manager.removeStudent(a);
-        manager.addStudent(a);
+        // - Try to commit to the database
+        Connection c = persistenceSQL.ensureConnection();
+        if (c == null)
+            throw new InvalidInputException("Failed to connect to database");
 
-        DueThisController c = new DueThisController();
-        persistence.SQLiteIntegration.saveDB(c.getPersistenceFilename(), manager);
+        boolean op = SQLiteIntegration.updateStudents(c, a);
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        persistenceSQL.closeConnection();
 
         return a;
     }
