@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.Duration;
@@ -14,6 +13,8 @@ import model.Application;
 import model.Assignment;
 import model.Event;
 import model.Student;
+
+// - TODO Remove sysouts
 
 public class SQLiteIntegration {
     private static String createTableAssignments = "CREATE TABLE IF NOT EXISTS Assignments(\n"
@@ -70,6 +71,7 @@ public class SQLiteIntegration {
         try {
             connection = DriverManager.getConnection(url);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return connection;
@@ -105,6 +107,7 @@ public class SQLiteIntegration {
             ps.executeUpdate(); // - No need to handle
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -118,6 +121,7 @@ public class SQLiteIntegration {
             Statement s = connection.createStatement();
             return s.execute(statement);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -138,6 +142,7 @@ public class SQLiteIntegration {
             c.close();
             return r;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -175,53 +180,56 @@ public class SQLiteIntegration {
 
             return executePreparedStatement(ps);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
     }
 
-    public static boolean insertIntoEvents(Connection connection, Event e) {
-        if (connection == null || e == null)
+    public static boolean insertIntoEvents(Connection connection, Event event) {
+        if (connection == null || event == null)
             return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertEventPrepared);
-            ps.setString(1, e.getId());
-            ps.setString(2, e.getName());
-            ps.setDate(3, e.getDate());
-            ps.setTime(4, e.getStartTime());
-            ps.setTime(5, e.getEndTime());
-            ps.setBoolean(6, e.getRepeatedWeekly());
-            ps.setString(7, e.getStudent().getId());
+            ps.setString(1, event.getId());
+            ps.setString(2, event.getName());
+            ps.setDate(3, event.getDate());
+            ps.setTime(4, event.getStartTime());
+            ps.setTime(5, event.getEndTime());
+            ps.setBoolean(6, event.getRepeatedWeekly());
+            ps.setString(7, event.getStudent().getId());
 
             return executePreparedStatement(ps);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
     }
 
-    public static boolean insertIntoStudents(Connection connection, Student s) {
-        if (connection == null || s == null)
+    public static boolean insertIntoStudents(Connection connection, Student student) {
+        if (connection == null || student == null)
             return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertStudentPrepared);
-            ps.setString(1, s.getId());
-            ps.setString(2, s.getUsername());
-            ps.setString(3, s.getPassword());
-            ps.setString(4, s.getEmail());
-            ps.setBoolean(5, s.getExperienced());
-            ps.setInt(6, s.getSundayAvailability());
-            ps.setInt(7, s.getMondayAvailability());
-            ps.setInt(8, s.getTuesdayAvailability());
-            ps.setInt(9, s.getWednesdayAvailability());
-            ps.setInt(10, s.getThursdayAvailability());
-            ps.setInt(11, s.getFridayAvailability());
-            ps.setInt(12, s.getSaturdayAvailability());
+            ps.setString(1, student.getId());
+            ps.setString(2, student.getUsername());
+            ps.setString(3, student.getPassword());
+            ps.setString(4, student.getEmail());
+            ps.setBoolean(5, student.getExperienced());
+            ps.setInt(6, student.getSundayAvailability());
+            ps.setInt(7, student.getMondayAvailability());
+            ps.setInt(8, student.getTuesdayAvailability());
+            ps.setInt(9, student.getWednesdayAvailability());
+            ps.setInt(10, student.getThursdayAvailability());
+            ps.setInt(11, student.getFridayAvailability());
+            ps.setInt(12, student.getSaturdayAvailability());
 
             return executePreparedStatement(ps);
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -244,6 +252,7 @@ public class SQLiteIntegration {
         try {
             c.close();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return r;
@@ -295,6 +304,7 @@ public class SQLiteIntegration {
         try {
             c.close();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return r;
@@ -327,6 +337,7 @@ public class SQLiteIntegration {
 
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -358,6 +369,7 @@ public class SQLiteIntegration {
 
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -380,6 +392,7 @@ public class SQLiteIntegration {
 
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return false;
@@ -403,5 +416,4 @@ public class SQLiteIntegration {
         if (persistenceFilename != null)
             this.persistenceFilename = persistenceFilename;
     }
-
 }
