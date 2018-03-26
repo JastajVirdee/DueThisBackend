@@ -206,7 +206,6 @@ public class TestDueThisController {
 
     @Test
     public void testCreateAssignmentNoStudent() {
-        Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
         String error = "";
 
@@ -257,9 +256,9 @@ public class TestDueThisController {
     public void testEditAssignmentNoviceStudent() {
         Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
-        String error = "";
 
         Student s = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignment(s, app);
         String id1 = s.getAssignment(0).getId();
 
@@ -283,9 +282,9 @@ public class TestDueThisController {
     public void testEditAssignmentExperiencedStudent() {
         Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
-        String error = "";
 
         Student s = createExperiencedStudent(app);
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignment(s, app);
         String id1 = s.getAssignment(0).getId();
 
@@ -312,7 +311,9 @@ public class TestDueThisController {
         String error = "";
 
         Student s = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignment(s, app);
+        @SuppressWarnings("unused")
         String id1 = s.getAssignment(0).getId();
 
         @SuppressWarnings("deprecation")
@@ -336,7 +337,9 @@ public class TestDueThisController {
         String error = "";
 
         Student s = createExperiencedStudent(app);
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignment(s, app);
+        @SuppressWarnings("unused")
         String id1 = s.getAssignment(0).getId();
 
         @SuppressWarnings("deprecation")
@@ -357,7 +360,6 @@ public class TestDueThisController {
     public void testCompleteAssignmentFalseToTrue() {
         Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
-        String error = "";
 
         Student s = createExperiencedStudent(app);
         Assignment a1 = createAssignment(s, app);
@@ -376,7 +378,6 @@ public class TestDueThisController {
     public void testCompleteAssignmentTrueToFalse() {
         Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
-        String error = "";
 
         Student s = createExperiencedStudent(app);
         Assignment a1 = createAssignment(s, app);
@@ -499,7 +500,6 @@ public class TestDueThisController {
 
     @Test
     public void testCreateEventNoStudent() {
-        Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
         String error = "";
 
@@ -790,6 +790,7 @@ public class TestDueThisController {
     public void testUpdateAvailabilitiesNoStudent() {
         Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
+        @SuppressWarnings("unused")
         Student es = createExperiencedStudent(app);
 
         String error = "";
@@ -1106,6 +1107,7 @@ public class TestDueThisController {
         Event event2 = createEvent(ns, app);
         Event event3 = createEvent(ns, app);
         Event event4 = createEvent(ns, app);
+        @SuppressWarnings("unused")
         Event event5 = createEventDetailed(ns, testDate, app);
 
         List<Event> list = dtc.showEvent(ns, dueDate);
@@ -1131,6 +1133,7 @@ public class TestDueThisController {
         Assignment assignment2 = createAssignment(ns, app);
         Assignment assignment3 = createAssignment(ns, app);
         Assignment assignment4 = createAssignment(ns, app);
+        @SuppressWarnings("unused")
         Assignment assignment5 = createAssignmentDetailed(ns, testDate, app);
 
         List<Assignment> list = dtc.showAssignment(ns, dueDate);
@@ -1159,6 +1162,7 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a = createAssignment(ns, app);
 
         List<String> courses = dtc.showCourses(ns);
@@ -1174,7 +1178,9 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignment(ns, app);
+        @SuppressWarnings("unused")
         Assignment a2 = createAssignment(ns, app);
 
         assertEquals(2, ns.numberOfAssignments());
@@ -1195,8 +1201,11 @@ public class TestDueThisController {
         String course2 = "c2";
         String course3 = "c3";
 
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignmentCourse(ns, course1, app);
+        @SuppressWarnings("unused")
         Assignment a2 = createAssignmentCourse(ns, course2, app);
+        @SuppressWarnings("unused")
         Assignment a3 = createAssignmentCourse(ns, course3, app);
 
         assertEquals(3, ns.numberOfAssignments());
@@ -1206,7 +1215,6 @@ public class TestDueThisController {
         assertEquals(course1, courses.get(0));
         assertEquals(course2, courses.get(1));
         assertEquals(course3, courses.get(2));
-
     }
 
     @Test
@@ -1224,9 +1232,13 @@ public class TestDueThisController {
         String course2 = "c2";
         String course3 = "c3";
 
+        @SuppressWarnings("unused")
         Assignment a1 = createAssignmentCourse(ns2, course1, app);
+        @SuppressWarnings("unused")
         Assignment a2 = createAssignmentCourse(ns2, course2, app);
+        @SuppressWarnings("unused")
         Assignment repeatA2 = createAssignmentCourse(ns2, course2, app);
+        @SuppressWarnings("unused")
         Assignment a3 = createAssignmentCourse(es, course3, app);
 
         List<String> courses1 = dtc.showCourses(ns1);
@@ -1249,6 +1261,7 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a = createAssignmentCourse(ns, course, app);
 
         try {
@@ -1277,6 +1290,7 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a = createAssignmentCourse(ns, course, app);
 
         assertEquals(1, ns.numberOfAssignments());
@@ -1299,6 +1313,7 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment a = createAssignmentCourse(ns, course, app);
 
         assertEquals(1, ns.numberOfAssignments());
@@ -1322,10 +1337,15 @@ public class TestDueThisController {
 
         Student ns = createNoviceStudent(app);
 
+        @SuppressWarnings("unused")
         Assignment a = createAssignmentCourse(ns, course, app);
+        @SuppressWarnings("unused")
         Assignment b = createAssignmentCourse(ns, "randomClass", app);
+        @SuppressWarnings("unused")
         Assignment c = createAssignmentCourse(ns, course, app);
+        @SuppressWarnings("unused")
         Assignment d = createAssignmentCourse(ns, "randomClass", app);
+        @SuppressWarnings("unused")
         Assignment e = createAssignmentCourse(ns, course, app);
 
         assertEquals(5, ns.numberOfAssignments());
@@ -1408,13 +1428,19 @@ public class TestDueThisController {
 
         @SuppressWarnings("deprecation")
         Date testDate = new Date(120, 5, 25);
+        @SuppressWarnings("deprecation")
         Date testDate2 = new Date(121, 4, 25); // Testing if assignments are shown after this date .
 
         Student ns = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment assignment = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 1");
+        @SuppressWarnings("unused")
         Assignment assignment2 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 2");
+        @SuppressWarnings("unused")
         Assignment assignment3 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 3");
+        @SuppressWarnings("unused")
         Assignment assignment4 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 4");
+        @SuppressWarnings("unused")
         Assignment assignment5 = createAssignmentDetailedWithId(ns, testDate, app, "Assgn 5");
 
         List<Assignment> list = dtc.showFilteredByDateAssignment(ns, testDate2);
@@ -1429,6 +1455,7 @@ public class TestDueThisController {
 
         @SuppressWarnings("deprecation")
         Date testDate = new Date(120, 5, 25);
+        @SuppressWarnings("deprecation")
         Date testDate2 = new Date(117, 4, 25); // Testing if assignments are shown after this date .
 
         Student ns = createNoviceStudent(app);
@@ -1492,14 +1519,13 @@ public class TestDueThisController {
     @Test
     public void testShowFilteredByCompletedNullStudent() {
         String error = "";
-        Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
 
         Student student = null;
-        List<Assignment> list = new ArrayList<>();
 
         try {
-            list = dtc.showFilteredByCompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByCompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }
@@ -1516,10 +1542,9 @@ public class TestDueThisController {
 
         Student student = createNoviceStudent(app);
 
-        List<Assignment> list = new ArrayList<>(); // list for filtered stuff
-
         try {
-            list = dtc.showFilteredByCompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByCompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }
@@ -1534,24 +1559,26 @@ public class TestDueThisController {
         DueThisController dtc = new DueThisController();
 
         Student student = createNoviceStudent(app);
+        @SuppressWarnings("unused")
         Assignment assignment1 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 1");
+        @SuppressWarnings("unused")
         Assignment assignment2 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 2");
+        @SuppressWarnings("unused")
         Assignment assignment3 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 3");
+        @SuppressWarnings("unused")
         Assignment assignment4 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 4");
+        @SuppressWarnings("unused")
         Assignment assignment5 = createAssignmentDetailedWithId(student, dueDate, app, "Assgn 5");
-
         // all assignments not completed by default
 
-        List<Assignment> list = new ArrayList<>();
-
         try {
-            list = dtc.showFilteredByCompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByCompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }
 
         assertEquals("No completed assignments", error);
-
     }
 
     @Test
@@ -1590,14 +1617,13 @@ public class TestDueThisController {
     @Test
     public void testShowFilteredByIncompletedNullStudent() {
         String error = "";
-        Application app = Application.getInstance();
         DueThisController dtc = new DueThisController();
 
         Student student = null;
-        List<Assignment> list = new ArrayList<>();
 
         try {
-            list = dtc.showFilteredByIncompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByIncompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }
@@ -1613,10 +1639,9 @@ public class TestDueThisController {
 
         Student student = createNoviceStudent(app);
 
-        List<Assignment> list = new ArrayList<>(); // list for filtered stuff
-
         try {
-            list = dtc.showFilteredByIncompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByIncompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }
@@ -1644,10 +1669,9 @@ public class TestDueThisController {
         assignment4.setIsCompleted(true);
         assignment5.setIsCompleted(true);
 
-        List<Assignment> list = new ArrayList<>();
-
         try {
-            list = dtc.showFilteredByIncompleted(student);
+            @SuppressWarnings("unused")
+            List<Assignment> list = dtc.showFilteredByIncompleted(student);
         } catch (InvalidInputException e) {
             error = e.getMessage();
         }

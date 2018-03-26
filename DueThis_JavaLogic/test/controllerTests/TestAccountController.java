@@ -438,7 +438,6 @@ public class TestAccountController {
     @Test
     public void testLogInSuccessUsername() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
         Student s = null;
 
         try {
@@ -463,7 +462,6 @@ public class TestAccountController {
     @Test
     public void testLogInSuccessEmail() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
         Student s = null;
 
         try {
@@ -488,8 +486,6 @@ public class TestAccountController {
     @Test
     public void testLogInNoUsernameOrEmail() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
-        Student s = null;
 
         try {
             ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail,
@@ -499,13 +495,15 @@ public class TestAccountController {
         }
 
         try {
-            s = ac.logIn("    ", "1234");
+            @SuppressWarnings("unused")
+            Student s = ac.logIn("    ", "1234");
         } catch (InvalidInputException e) {
             assertEquals("Username or email is required to log in! ", e.getMessage());
         }
 
         try {
-            s = ac.logIn(null, "1234");
+            @SuppressWarnings("unused")
+            Student s = ac.logIn(null, "1234");
         } catch (InvalidInputException e) {
             assertEquals("Username or email is required to log in! ", e.getMessage());
             return;
@@ -517,8 +515,6 @@ public class TestAccountController {
     @Test
     public void testLogInNoPassword() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
-        Student s = null;
 
         try {
             ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail,
@@ -528,13 +524,15 @@ public class TestAccountController {
         }
 
         try {
-            s = ac.logIn("Person", "     ");
+            @SuppressWarnings("unused")
+            Student s = ac.logIn("Person", "     ");
         } catch (InvalidInputException e) {
             assertEquals("Password is required to log in! ", e.getMessage());
         }
 
         try {
-            s = ac.logIn("Person", null);
+            @SuppressWarnings("unused")
+            Student s = ac.logIn("Person", null);
         } catch (InvalidInputException e) {
             assertEquals("Password is required to log in! ", e.getMessage());
             return;
@@ -546,8 +544,6 @@ public class TestAccountController {
     @Test
     public void testLogInNoMatch() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
-        Student s = null;
 
         try {
             ac.createAccount("Person", "1234", "email@email.com", experienced, avail, avail, avail,
@@ -557,13 +553,15 @@ public class TestAccountController {
         }
 
         try {
-            s = ac.logIn("NotPerson", "1234");
+            @SuppressWarnings("unused")
+            Student s = ac.logIn("NotPerson", "1234");
         } catch (InvalidInputException e) {
             assertEquals("Invalid Username/Email or Password!", e.getMessage());
         }
 
         try {
-            s = ac.logIn("email@notemail.com", "1234");
+            @SuppressWarnings("unused")
+            Student s = ac.logIn("email@notemail.com", "1234");
         } catch (InvalidInputException e) {
             assertEquals("Invalid Username/Email or Password!", e.getMessage());
             return;
@@ -635,7 +633,6 @@ public class TestAccountController {
     @Test
     public void testSwitchInvalidStudent() {
         AccountController ac = new AccountController();
-        Application manager = Application.getInstance();
 
         try {
             ac.changeRole(null, experienced, avail, avail, avail, avail, avail, avail, avail);
