@@ -254,7 +254,7 @@ public class SQLiteIntegration {
         long countEvents = selectCountFromEvents(c, app);
 
         if (countAssignments == 0 && countStudents == 0 && countEvents == 0)
-            r &= saveDB(fn, app);
+            r &= saveDBKeep(c, fn, app);
 
         app.delete();
 
@@ -276,6 +276,8 @@ public class SQLiteIntegration {
      */
     public static void main(String[] args) {
         Application app = Application.getInstance();
+
+        loadDB("jdbc:sqlite:test.db", app);
 
         Student s = new Student("0", "x", "x", "x", false, 0, 0, 0, 0, 0, 0, 0, app);
         @SuppressWarnings("unused")
@@ -315,6 +317,24 @@ public class SQLiteIntegration {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        return r;
+    }
+
+    public static boolean saveDBKeep(Connection c, String fn, Application app) {
+        if (fn == null || app == null || c == null)
+            return false;
+
+        boolean r = true;
+
+        for (Student s : app.getStudents())
+            r &= insertIntoStudents(c, s);
+
+        for (Assignment a : app.getAssignments())
+            r &= insertIntoAssignments(c, a);
+
+        for (Event e : app.getEvents())
+            r &= insertIntoEvents(c, e);
 
         return r;
     }

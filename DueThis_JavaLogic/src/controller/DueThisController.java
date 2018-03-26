@@ -63,13 +63,21 @@ public class DueThisController {
                     Duration.ZERO, aStudent, app);
             aStudent.addAssignment(a);
 
-            return persistenceSQL.savePersistence();
+            boolean op = persistenceSQL.savePersistence();
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
+            return op;
         } else if (aStudent.getExperienced()) {
             Assignment a = new Assignment(id, name, course, dueDate, false, gradeWeight, compTime,
                     aStudent, app);
             aStudent.addAssignment(a);
 
-            return persistenceSQL.savePersistence();
+            boolean op = persistenceSQL.savePersistence();
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
+            return op;
         }
 
         return false;
@@ -98,7 +106,6 @@ public class DueThisController {
         if (aStudent.getExperienced() == false) {
             if (gradeWeight <= 0)
                 error += "Please enter a positive grade weight! ";
-
         } else {
             if (compTime == null)
                 error += "Please enter an estimated completion time! ";
@@ -114,14 +121,23 @@ public class DueThisController {
             anAssignment.setDueDate(dueDate);
             anAssignment.setGradeWeight(gradeWeight);
 
-            return persistenceSQL.savePersistence();
+            boolean op = persistenceSQL.savePersistence();
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
+            return op;
+
         } else if (aStudent.getExperienced()) {
             anAssignment.setName(name);
             anAssignment.setCourse(course);
             anAssignment.setDueDate(dueDate);
             anAssignment.setCompletionTime(compTime);
 
-            return persistenceSQL.savePersistence();
+            boolean op = persistenceSQL.savePersistence();
+            if (!op)
+                throw new InvalidInputException("Failed to commit to database");
+
+            return op;
         }
 
         return false;
@@ -140,7 +156,11 @@ public class DueThisController {
             throw new InvalidInputException(error);
         }
 
-        return persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return op;
     }
 
     public boolean removeAssignment(Student aStudent, Assignment anAssignment)
@@ -158,7 +178,11 @@ public class DueThisController {
             throw new InvalidInputException(error);
         }
 
-        return legalRemove && persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return legalRemove && op;
     }
 
     public boolean createEvent(Student aStudent, String name, Date date, Time startTime,
@@ -202,7 +226,11 @@ public class DueThisController {
         @SuppressWarnings("unused")
         Event e = new Event(id, name, date, startTime, endTime, repeatWeekly, aStudent, app);
 
-        return persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return op;
     }
 
     public boolean editEvent(Event event, String name, Date date, Time startTime, Time endTime,
@@ -241,7 +269,11 @@ public class DueThisController {
         event.setEndTime(endTime);
         event.setRepeatedWeekly(repeatWeekly);
 
-        return persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return op;
     }
 
     public boolean removeEvent(Student aStudent, Event anEvent) throws InvalidInputException {
@@ -256,7 +288,11 @@ public class DueThisController {
             throw new InvalidInputException(error);
         }
 
-        return legalRemove && persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return legalRemove && op;
     }
 
     // when you click the save button on the availabilities page it runs this
@@ -314,7 +350,11 @@ public class DueThisController {
         aStudent.setFridayAvailability(friday);
         aStudent.setSaturdayAvailability(saturday);
 
-        return persistenceSQL.savePersistence();
+        boolean op = persistenceSQL.savePersistence();
+        if (!op)
+            throw new InvalidInputException("Failed to commit to database");
+
+        return op;
     }
 
     public List<Time> showStudyTimeNovice(Student aStudent, Date dateSelected) { // No values now
