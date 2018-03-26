@@ -57,13 +57,13 @@ public class SQLiteIntegration {
     private static String insertEventPrepared = "INSERT INTO Events Values (?, ?, ?, ?, ?, ?, ?);";
     private static String insertStudentPrepared = "INSERT INTO Students Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static String selectAssignmentPrepared = "SELECT * FROM Assignments;";
-    private static String selectEventPrepared = "SELECT * FROM Events;";
-    private static String selectStudentPrepared = "SELECT * FROM Students;";
-
     private static String selectCountAssignmentPrepared = "SELECT COUNT(*) FROM Assignments;";
     private static String selectCountEventPrepared = "SELECT COUNT(*) FROM Events;";
     private static String selectCountStudentPrepared = "SELECT COUNT(*) FROM Students;";
+
+    private static String selectAssignmentPrepared = "SELECT * FROM Assignments;";
+    private static String selectEventPrepared = "SELECT * FROM Events;";
+    private static String selectStudentPrepared = "SELECT * FROM Students;";
 
     public static Connection connectOrCreate(String fileName) {
         if (fileName == null)
