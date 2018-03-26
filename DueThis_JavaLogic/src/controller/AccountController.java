@@ -95,7 +95,6 @@ public class AccountController {
         }
 
         // Create the student
-        // - TODO Fix this
         @SuppressWarnings("unused")
         Student s = new Student(id, uname, pword, email, experiencedStudent, sun, mon, tues, wed,
                 thurs, fri, sat, manager);
@@ -231,12 +230,11 @@ public class AccountController {
 
         // - TODO Persistence
         // - TODO Consider an instance 'c' instead of making one.
-        Application app = Application.getInstance();
-        app.removeStudent(a);
-        app.addStudent(a);
+        manager.removeStudent(a);
+        manager.addStudent(a);
 
         DueThisController c = new DueThisController();
-        persistence.SQLiteIntegration.saveDB(c.getPersistenceFilename(), app);
+        persistence.SQLiteIntegration.saveDB(c.getPersistenceFilename(), manager);
 
         return a;
     }

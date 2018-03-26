@@ -15,8 +15,6 @@ import model.Assignment;
 import model.Event;
 import model.Student;
 
-// - TODO Remove print statements
-
 public class SQLiteIntegration {
     private static String createTableAssignments = "CREATE TABLE IF NOT EXISTS Assignments(\n"
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
@@ -63,22 +61,23 @@ public class SQLiteIntegration {
     private static String selectStudentPrepared = "SELECT * FROM Students;";
 
     public static Connection connectOrCreate(String fileName) {
-        assert fileName != null;
+        if (fileName == null)
+            return null;
 
         String url = "jdbc:sqlite:" + fileName;
         Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return connection;
     }
 
     public static boolean createTables(Connection connection) {
-        assert connection != null;
+        if (connection == null)
+            return false;
 
         boolean r = executeStatement(connection, createTableStudents);
         r &= executeStatement(connection, createTableAssignments);
@@ -88,7 +87,8 @@ public class SQLiteIntegration {
     }
 
     public static boolean dropTables(Connection connection) {
-        assert connection != null;
+        if (connection == null)
+            return false;
 
         boolean r = executeStatement(connection, dropTableStudents);
         r &= executeStatement(connection, dropTableAssignments);
@@ -98,37 +98,38 @@ public class SQLiteIntegration {
     }
 
     public static boolean executePreparedStatement(PreparedStatement ps) {
-        assert ps != null;
+        if (ps == null)
+            return false;
 
         try {
-            ps.executeUpdate(); // - TODO Return code?
+            ps.executeUpdate(); // - No need to handle
             return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static boolean executeStatement(Connection connection, String statement) {
-        assert connection != null;
-        assert statement != null;
+        if (connection == null || statement == null)
+            return false;
 
         try {
             Statement s = connection.createStatement();
             return s.execute(statement);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static boolean initDB(String fn) {
-        assert fn != null;
+        if (fn == null)
+            return false;
 
         Connection c = connectOrCreate(fn);
-        assert c != null;
+        if (c == null)
+            return false;
 
         boolean r = dropTables(c);
         r &= createTables(c);
@@ -136,18 +137,19 @@ public class SQLiteIntegration {
         try {
             c.close();
             return r;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static Connection initDBKeep(String fn) {
-        assert fn != null;
+        if (fn == null)
+            return null;
 
         Connection c = connectOrCreate(fn);
-        assert c != null;
+        if (c == null)
+            return null;
 
         @SuppressWarnings("unused")
         boolean r = dropTables(c);
@@ -157,8 +159,8 @@ public class SQLiteIntegration {
     }
 
     public static boolean insertIntoAssignments(Connection connection, Assignment a) {
-        assert connection != null;
-        assert a != null;
+        if (connection == null || a == null)
+            return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertAssignmentPrepared);
@@ -172,16 +174,15 @@ public class SQLiteIntegration {
             ps.setString(8, a.getStudent().getId());
 
             return executePreparedStatement(ps);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static boolean insertIntoEvents(Connection connection, Event e) {
-        assert connection != null;
-        assert e != null;
+        if (connection == null || e == null)
+            return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertEventPrepared);
@@ -194,16 +195,15 @@ public class SQLiteIntegration {
             ps.setString(7, e.getStudent().getId());
 
             return executePreparedStatement(ps);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
         }
 
         return false;
     }
 
     public static boolean insertIntoStudents(Connection connection, Student s) {
-        assert connection != null;
-        assert s != null;
+        if (connection == null || s == null)
+            return false;
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertStudentPrepared);
@@ -222,18 +222,18 @@ public class SQLiteIntegration {
 
             return executePreparedStatement(ps);
         } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return false;
     }
 
     public static boolean loadDB(String fn, Application app) {
-        assert fn != null;
-        assert app != null;
+        if (fn == null || app == null)
+            return false;
 
         Connection c = connectOrCreate(fn);
-        assert c != null;
+        if (c == null)
+            return false;
 
         app.delete();
 
@@ -243,8 +243,7 @@ public class SQLiteIntegration {
 
         try {
             c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
         }
 
         return r;
@@ -275,33 +274,35 @@ public class SQLiteIntegration {
     }
 
     public static boolean saveDB(String fn, Application app) {
-        assert fn != null;
-        assert app != null;
+        if (fn == null || app == null)
+            return false;
 
         Connection c = initDBKeep(fn);
-        assert c != null;
+        if (c == null)
+            return false;
+
+        boolean r = true;
 
         for (Student s : app.getStudents())
-            insertIntoStudents(c, s);
+            r &= insertIntoStudents(c, s);
 
         for (Assignment a : app.getAssignments())
-            insertIntoAssignments(c, a);
+            r &= insertIntoAssignments(c, a);
 
         for (Event e : app.getEvents())
-            insertIntoEvents(c, e);
+            r &= insertIntoEvents(c, e);
 
         try {
             c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
         }
 
-        return false;
+        return r;
     }
 
     public static boolean selectFromAssignments(Connection connection, Application app) {
-        assert connection != null;
-        assert app != null;
+        if (connection == null || app == null)
+            return false;
 
         try {
             Statement s = connection.createStatement();
@@ -318,24 +319,22 @@ public class SQLiteIntegration {
                 if (student == null)
                     return false;
 
+                @SuppressWarnings("unused")
                 Assignment a = new Assignment(r.getString(1), r.getString(2), r.getString(3),
                         r.getDate(4), r.getBoolean(5), r.getFloat(6),
                         Duration.ofSeconds(r.getLong(7)), student, app);
-
-                app.addAssignment(a);
             }
 
             return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static boolean selectFromEvents(Connection connection, Application app) {
-        assert connection != null;
-        assert app != null;
+        if (connection == null || app == null)
+            return false;
 
         try {
             Statement s = connection.createStatement();
@@ -352,39 +351,35 @@ public class SQLiteIntegration {
                 if (student == null)
                     return false;
 
+                @SuppressWarnings("unused")
                 Event e = new Event(r.getString(1), r.getString(2), r.getDate(3), r.getTime(4),
                         r.getTime(5), r.getBoolean(6), student, app);
-
-                app.addEvent(e);
             }
 
             return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return false;
     }
 
     public static boolean selectFromStudents(Connection connection, Application app) {
-        assert connection != null;
-        assert app != null;
+        if (connection == null || app == null)
+            return false;
 
         try {
             Statement s = connection.createStatement();
             ResultSet r = s.executeQuery(selectStudentPrepared);
 
             while (r.next()) {
+                @SuppressWarnings("unused")
                 Student student = new Student(r.getString(1), r.getString(2), r.getString(3),
                         r.getString(4), r.getBoolean(5), r.getInt(6), r.getInt(7), r.getInt(8),
                         r.getInt(9), r.getInt(10), r.getInt(11), r.getInt(12), app);
-
-                app.addStudent(student);
             }
 
             return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
         }
 
         return false;
