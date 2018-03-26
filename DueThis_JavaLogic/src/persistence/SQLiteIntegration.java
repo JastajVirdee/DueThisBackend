@@ -57,6 +57,10 @@ public class SQLiteIntegration {
     private static String insertEventPrepared = "INSERT INTO Events Values (?, ?, ?, ?, ?, ?, ?);";
     private static String insertStudentPrepared = "INSERT INTO Students Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+    private static String selectCountAssignmentPrepared = "SELECT COUNT(*) FROM Assignments;";
+    private static String selectCountEventPrepared = "SELECT COUNT(*) FROM Events;";
+    private static String selectCountStudentPrepared = "SELECT COUNT(*) FROM Students;";
+
     private static String selectAssignmentPrepared = "SELECT * FROM Assignments;";
     private static String selectEventPrepared = "SELECT * FROM Events;";
     private static String selectStudentPrepared = "SELECT * FROM Students;";
@@ -65,7 +69,7 @@ public class SQLiteIntegration {
         if (fileName == null)
             return null;
 
-        String url = "jdbc:sqlite:" + fileName;
+        String url = fileName;
         Connection connection = null;
 
         try {
@@ -243,9 +247,18 @@ public class SQLiteIntegration {
         if (c == null)
             return false;
 
+        boolean r = createTables(c);
+
+        long countAssignments = selectCountFromAssignments(c, app);
+        long countStudents = selectCountFromStudents(c, app);
+        long countEvents = selectCountFromEvents(c, app);
+
+        if (countAssignments == 0 && countStudents == 0 && countEvents == 0)
+            r &= saveDB(fn, app);
+
         app.delete();
 
-        boolean r = selectFromStudents(c, app);
+        r &= selectFromStudents(c, app);
         r &= selectFromEvents(c, app);
         r &= selectFromAssignments(c, app);
 
@@ -265,21 +278,17 @@ public class SQLiteIntegration {
         Application app = Application.getInstance();
 
         Student s = new Student("0", "x", "x", "x", false, 0, 0, 0, 0, 0, 0, 0, app);
+        @SuppressWarnings("unused")
         Student s2 = new Student("1", "x", "x", "x", false, 0, 0, 0, 0, 0, 0, 0, app);
+        @SuppressWarnings("unused")
         Assignment a = new Assignment("0", "y", "y", new Date(0), false, 0.3f,
                 Duration.ofSeconds(1), s, app);
+        @SuppressWarnings("unused")
         Event e = new Event("0", "z", new Date(0), new Time(0), new Time(0), false, s, app);
 
-        app.addStudent(s);
-        app.addStudent(s2);
-        app.addAssignment(a);
-        app.addEvent(e);
-
-        saveDB("test.db", app);
-
-        loadDB("test.db", app);
-
-        saveDB("test.db", app);
+        saveDB("jdbc:sqlite:test.db", app);
+        loadDB("jdbc:sqlite:test.db", app);
+        saveDB("jdbc:sqlite:test.db", app);
     }
 
     public static boolean saveDB(String fn, Application app) {
@@ -308,6 +317,57 @@ public class SQLiteIntegration {
         }
 
         return r;
+    }
+
+    public static long selectCountFromAssignments(Connection connection, Application app) {
+        if (connection == null || app == null)
+            return -1;
+
+        try {
+            Statement s = connection.createStatement();
+            ResultSet r = s.executeQuery(selectCountAssignmentPrepared);
+
+            while (r.next())
+                return r.getLong(1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return -1;
+    }
+
+    public static long selectCountFromEvents(Connection connection, Application app) {
+        if (connection == null || app == null)
+            return -1;
+
+        try {
+            Statement s = connection.createStatement();
+            ResultSet r = s.executeQuery(selectCountEventPrepared);
+
+            while (r.next())
+                return r.getLong(1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return -1;
+    }
+
+    public static long selectCountFromStudents(Connection connection, Application app) {
+        if (connection == null || app == null)
+            return -1;
+
+        try {
+            Statement s = connection.createStatement();
+            ResultSet r = s.executeQuery(selectCountStudentPrepared);
+
+            while (r.next())
+                return r.getLong(1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return -1;
     }
 
     public static boolean selectFromAssignments(Connection connection, Application app) {
@@ -398,7 +458,7 @@ public class SQLiteIntegration {
         return false;
     }
 
-    private String persistenceFilename = "duethis.db";
+    private String persistenceFilename = "jdbc:sqlite:duethis.db";
 
     public String getPersistenceFilename() {
         return persistenceFilename;
