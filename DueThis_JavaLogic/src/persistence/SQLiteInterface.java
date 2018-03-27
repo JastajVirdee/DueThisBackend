@@ -15,18 +15,17 @@ import model.Assignment;
 import model.Event;
 import model.Student;
 
-// - TODO Remove sysouts
-
 public class SQLiteInterface {
     private static String createTableAssignments = "CREATE TABLE IF NOT EXISTS Assignments(\n"
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
             + "    name            VARCHAR(40) NOT NULL,\n"
             + "    course          VARCHAR(40) NOT NULL,\n"
-            + "    dueDate         VARCHAR(40) NOT NULL,\n" + "    completionTime  SMALLINT    ,\n"
+            + "    dueDate         VARCHAR(40) NOT NULL,\n"
+            + "    completionTime  SMALLINT            ,\n"
             + "    isCompleted     BOOLEAN     NOT NULL,\n"
             + "    gradeWeight     FLOAT(2)    NOT NULL,\n"
             + "    fk_student_id   VARCHAR(40) NOT NULL,\n"
-            + "    FOREIGN KEY(fk_student_id)  REFERENCES Students\n" + ");";
+            + "    FOREIGN KEY(fk_student_id)  REFERENCES Students\n);";
     private static String createTableEvents = "CREATE TABLE IF NOT EXISTS Events(\n"
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
             + "    name            VARCHAR(40) NOT NULL,\n"
@@ -35,7 +34,7 @@ public class SQLiteInterface {
             + "    endTime         VARCHAR(40) NOT NULL,\n"
             + "    repeatedWeekly  BOOLEAN     NOT NULL,\n"
             + "    fk_student_id   VARCHAR(40) NOT NULL,\n"
-            + "    FOREIGN KEY(fk_student_id)  REFERENCES Students\n" + ");";
+            + "    FOREIGN KEY(fk_student_id)  REFERENCES Students\n);";
     private static String createTableStudents = "CREATE TABLE IF NOT EXISTS Students(\n"
             + "    id                      VARCHAR(40) PRIMARY KEY,\n"
             + "    username                VARCHAR(40) NOT NULL,\n"
@@ -48,7 +47,7 @@ public class SQLiteInterface {
             + "    wednesdayAvailability   SMALLINT    NOT NULL,\n"
             + "    thursdayAvailability    SMALLINT    NOT NULL,\n"
             + "    fridayAvailability      SMALLINT    NOT NULL,\n"
-            + "    saturdayAvailability    SMALLINT    NOT NULL\n" + ");";
+            + "    saturdayAvailability    SMALLINT    NOT NULL \n);";
 
     private static String dropTableAssignments = "DROP TABLE IF EXISTS Assignments;";
     private static String dropTableEvents = "DROP TABLE IF EXISTS Events;";
@@ -57,10 +56,6 @@ public class SQLiteInterface {
     private static String insertAssignmentPrepared = "INSERT INTO Assignments VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     private static String insertEventPrepared = "INSERT INTO Events Values (?, ?, ?, ?, ?, ?, ?);";
     private static String insertStudentPrepared = "INSERT INTO Students Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-    private static String selectCountAssignmentPrepared = "SELECT COUNT(*) FROM Assignments;";
-    private static String selectCountEventPrepared = "SELECT COUNT(*) FROM Events;";
-    private static String selectCountStudentPrepared = "SELECT COUNT(*) FROM Students;";
 
     private static String selectAssignmentPrepared = "SELECT * FROM Assignments;";
     private static String selectEventPrepared = "SELECT * FROM Events;";
@@ -417,77 +412,6 @@ public class SQLiteInterface {
         return false;
     }
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        Application app = Application.getInstance();
-
-        loadDB("jdbc:sqlite:test.db", app);
-
-        Student s = new Student("0", "x", "x", "x", false, 0, 0, 0, 0, 0, 0, 0, app);
-        @SuppressWarnings("unused")
-        Student s2 = new Student("1", "x", "x", "x", false, 0, 0, 0, 0, 0, 0, 0, app);
-        @SuppressWarnings("unused")
-        Assignment a = new Assignment("0", "y", "y", new Date(0), false, 0.3f,
-                Duration.ofSeconds(1), s, app);
-        @SuppressWarnings("unused")
-        Event e = new Event("0", "z", new Date(0), new Time(0), new Time(0), false, s, app);
-
-        loadDB("jdbc:sqlite:test.db", app);
-    }
-
-    public static long selectCountFromAssignments(Connection connection, Application app) {
-        if (connection == null || app == null)
-            return -1;
-
-        try {
-            Statement s = connection.createStatement();
-            ResultSet r = s.executeQuery(selectCountAssignmentPrepared);
-
-            while (r.next())
-                return r.getLong(1);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return -1;
-    }
-
-    public static long selectCountFromEvents(Connection connection, Application app) {
-        if (connection == null || app == null)
-            return -1;
-
-        try {
-            Statement s = connection.createStatement();
-            ResultSet r = s.executeQuery(selectCountEventPrepared);
-
-            while (r.next())
-                return r.getLong(1);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return -1;
-    }
-
-    public static long selectCountFromStudents(Connection connection, Application app) {
-        if (connection == null || app == null)
-            return -1;
-
-        try {
-            Statement s = connection.createStatement();
-            ResultSet r = s.executeQuery(selectCountStudentPrepared);
-
-            while (r.next())
-                return r.getLong(1);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return -1;
-    }
-
     public static boolean selectFromAssignments(Connection connection, Application app) {
         if (connection == null || app == null)
             return false;
@@ -500,7 +424,7 @@ public class SQLiteInterface {
                 Student student = null;
 
                 for (int i = 0; i < app.numberOfStudents(); i++) {
-                    if (app.getStudent(i).getId().compareTo(r.getString(8)) == 0)
+                    if (app.getStudent(i).getId().compareTo(r.getString("fk_student_id")) == 0)
                         student = app.getStudent(i);
                 }
 
@@ -508,9 +432,10 @@ public class SQLiteInterface {
                     return false;
 
                 @SuppressWarnings("unused")
-                Assignment a = new Assignment(r.getString(1), r.getString(2), r.getString(3),
-                        Date.valueOf(r.getString(4)), r.getBoolean(5), r.getFloat(6),
-                        Duration.ofSeconds(r.getLong(7)), student, app);
+                Assignment a = new Assignment(r.getString("id"), r.getString("name"),
+                        r.getString("course"), Date.valueOf(r.getString("dueDate")),
+                        r.getBoolean("isCompleted"), r.getFloat("gradeWeight"),
+                        Duration.ofSeconds(r.getLong("completionTime")), student, app);
             }
 
             return true;
@@ -533,7 +458,7 @@ public class SQLiteInterface {
                 Student student = null;
 
                 for (int i = 0; i < app.numberOfStudents(); i++) {
-                    if (app.getStudent(i).getId().compareTo(r.getString(7)) == 0)
+                    if (app.getStudent(i).getId().compareTo(r.getString("fk_student_id")) == 0)
                         student = app.getStudent(i);
                 }
 
@@ -541,8 +466,9 @@ public class SQLiteInterface {
                     return false;
 
                 @SuppressWarnings("unused")
-                Event e = new Event(r.getString(1), r.getString(2), Date.valueOf(r.getString(3)),
-                        Time.valueOf(r.getString(4)), Time.valueOf(r.getString(5)), r.getBoolean(6),
+                Event e = new Event(r.getString("id"), r.getString("name"),
+                        Date.valueOf(r.getString("date")), Time.valueOf(r.getString("startTime")),
+                        Time.valueOf(r.getString("endTime")), r.getBoolean("repeatedWeekly"),
                         student, app);
             }
 
@@ -564,9 +490,12 @@ public class SQLiteInterface {
 
             while (r.next()) {
                 @SuppressWarnings("unused")
-                Student student = new Student(r.getString(1), r.getString(2), r.getString(3),
-                        r.getString(4), r.getBoolean(5), r.getInt(6), r.getInt(7), r.getInt(8),
-                        r.getInt(9), r.getInt(10), r.getInt(11), r.getInt(12), app);
+                Student student = new Student(r.getString("id"), r.getString("username"),
+                        r.getString("password"), r.getString("email"), r.getBoolean("experienced"),
+                        r.getInt("sundayAvailability"), r.getInt("mondayAvailability"),
+                        r.getInt("tuesdayAvailability"), r.getInt("wednesdayAvailability"),
+                        r.getInt("thursdayAvailability"), r.getInt("fridayAvailability"),
+                        r.getInt("saturdayAvailability"), app);
             }
 
             return true;
@@ -584,7 +513,7 @@ public class SQLiteInterface {
 
     public static Connection getConnection() throws InvalidInputException {
         if (connection == null)
-            throw new InvalidInputException("Invalid connection");
+            ensureConnection();
 
         return connection;
     }
