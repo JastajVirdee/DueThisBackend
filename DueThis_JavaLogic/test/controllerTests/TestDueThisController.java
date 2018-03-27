@@ -1465,14 +1465,10 @@ public class TestDueThisController {
         Assignment assignment4 = createAssignmentDetailedWithId(ns, dueDate, app, "Assgn 4");
         Assignment assignment5 = createAssignmentDetailedWithId(ns, testDate, app, "Assgn 5");
 
-        List<Assignment> list = dtc.showFilteredByDateAssignment(ns, testDate2);
+        List<Assignment> list = dtc.showFilteredByDateAssignment(ns, testDate);
 
-        assertEquals(5, list.size());
-        assertEquals(assignment, list.get(0));
-        assertEquals(assignment2, list.get(1));
-        assertEquals(assignment3, list.get(2));
-        assertEquals(assignment4, list.get(3));
-        assertEquals(assignment5, list.get(4));
+        assertEquals(1, list.size());
+        assertEquals(assignment5, list.get(0));
     }
 
     //// Method used for debugging
