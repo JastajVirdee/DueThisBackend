@@ -24,7 +24,6 @@ class Student
   int thursdayAvailability;
   int fridayAvailability;
   int saturdayAvailability;
- 
 }
 
 class Event
@@ -37,7 +36,6 @@ class Event
   Boolean repeatedWeekly;
   * -- 1 Student;
 }
-
 
 class Application
 {
