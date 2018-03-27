@@ -1,2 +1,4 @@
 /bin/
 /target/
+*.db
+*.DS_Store
