@@ -22,7 +22,7 @@ public class SQLiteInterface {
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
             + "    name            VARCHAR(40) NOT NULL,\n"
             + "    course          VARCHAR(40) NOT NULL,\n"
-            + "    dueDate         DATE        NOT NULL,\n" + "    completionTime  SMALLINT    ,\n"
+            + "    dueDate         VARCHAR(40) NOT NULL,\n" + "    completionTime  SMALLINT    ,\n"
             + "    isCompleted     BOOLEAN     NOT NULL,\n"
             + "    gradeWeight     FLOAT(2)    NOT NULL,\n"
             + "    fk_student_id   VARCHAR(40) NOT NULL,\n"
@@ -30,9 +30,9 @@ public class SQLiteInterface {
     private static String createTableEvents = "CREATE TABLE IF NOT EXISTS Events(\n"
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
             + "    name            VARCHAR(40) NOT NULL,\n"
-            + "    date            DATE        NOT NULL,\n"
-            + "    startTime       TIME        NOT NULL,\n"
-            + "    endTime         TIME        NOT NULL,\n"
+            + "    date            VARCHAR(40) NOT NULL,\n"
+            + "    startTime       VARCHAR(40) NOT NULL,\n"
+            + "    endTime         VARCHAR(40) NOT NULL,\n"
             + "    repeatedWeekly  BOOLEAN     NOT NULL,\n"
             + "    fk_student_id   VARCHAR(40) NOT NULL,\n"
             + "    FOREIGN KEY(fk_student_id)  REFERENCES Students\n" + ");";
@@ -198,7 +198,7 @@ public class SQLiteInterface {
             ps.setString(1, a.getId());
             ps.setString(2, a.getName());
             ps.setString(3, a.getCourse());
-            ps.setDate(4, a.getDueDate());
+            ps.setString(4, a.getDueDate().toString());
             ps.setLong(5, a.getCompletionTime().getSeconds());
             ps.setBoolean(6, a.getIsCompleted());
             ps.setFloat(7, a.getGradeWeight());
@@ -221,7 +221,7 @@ public class SQLiteInterface {
 
             ps.setString(1, a.getName());
             ps.setString(2, a.getCourse());
-            ps.setDate(3, a.getDueDate());
+            ps.setString(3, a.getDueDate().toString());
             ps.setLong(4, a.getCompletionTime().getSeconds());
             ps.setBoolean(5, a.getIsCompleted());
             ps.setFloat(6, a.getGradeWeight());
@@ -261,9 +261,9 @@ public class SQLiteInterface {
 
             ps.setString(1, event.getId());
             ps.setString(2, event.getName());
-            ps.setDate(3, event.getDate());
-            ps.setTime(4, event.getStartTime());
-            ps.setTime(5, event.getEndTime());
+            ps.setString(3, event.getDate().toString());
+            ps.setString(4, event.getStartTime().toString());
+            ps.setString(5, event.getEndTime().toString());
             ps.setBoolean(6, event.getRepeatedWeekly());
             ps.setString(7, event.getStudent().getId());
 
@@ -283,9 +283,9 @@ public class SQLiteInterface {
             PreparedStatement ps = connection.prepareStatement(updateEventPrepared);
 
             ps.setString(1, event.getName());
-            ps.setDate(2, event.getDate());
-            ps.setTime(3, event.getStartTime());
-            ps.setTime(4, event.getEndTime());
+            ps.setString(2, event.getDate().toString());
+            ps.setString(3, event.getStartTime().toString());
+            ps.setString(4, event.getEndTime().toString());
             ps.setBoolean(5, event.getRepeatedWeekly());
             ps.setString(6, event.getStudent().getId());
             ps.setString(7, event.getId());
@@ -509,7 +509,7 @@ public class SQLiteInterface {
 
                 @SuppressWarnings("unused")
                 Assignment a = new Assignment(r.getString(1), r.getString(2), r.getString(3),
-                        r.getDate(4), r.getBoolean(5), r.getFloat(6),
+                        Date.valueOf(r.getString(4)), r.getBoolean(5), r.getFloat(6),
                         Duration.ofSeconds(r.getLong(7)), student, app);
             }
 
@@ -541,8 +541,9 @@ public class SQLiteInterface {
                     return false;
 
                 @SuppressWarnings("unused")
-                Event e = new Event(r.getString(1), r.getString(2), r.getDate(3), r.getTime(4),
-                        r.getTime(5), r.getBoolean(6), student, app);
+                Event e = new Event(r.getString(1), r.getString(2), Date.valueOf(r.getString(3)),
+                        Time.valueOf(r.getString(4)), Time.valueOf(r.getString(5)), r.getBoolean(6),
+                        student, app);
             }
 
             return true;
