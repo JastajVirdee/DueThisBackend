@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.Duration;
 
+import controller.InvalidInputException;
 import model.Application;
 import model.Assignment;
 import model.Event;
@@ -16,7 +17,7 @@ import model.Student;
 
 // - TODO Remove sysouts
 
-public class SQLiteIntegration {
+public class SQLiteInterface {
     private static String createTableAssignments = "CREATE TABLE IF NOT EXISTS Assignments(\n"
             + "    id              VARCHAR(40) PRIMARY KEY,\n"
             + "    name            VARCHAR(40) NOT NULL,\n"
@@ -100,9 +101,9 @@ public class SQLiteIntegration {
         if (connection == null)
             return false;
 
-        boolean r = executeStatement(connection, createTableStudents);
-        r &= executeStatement(connection, createTableAssignments);
-        r &= executeStatement(connection, createTableEvents);
+        boolean r = !executeStatement(connection, createTableStudents);
+        r &= !executeStatement(connection, createTableAssignments);
+        r &= !executeStatement(connection, createTableEvents);
 
         return r;
     }
@@ -575,40 +576,60 @@ public class SQLiteIntegration {
         return false;
     }
 
-    private String persistenceFilename = "jdbc:sqlite:duethis.db";
-    private Connection persistenceConnection = null;
+    // - Persistence singleton
+    // - A bit of a sin but OK.
+    private static SQLiteInterface theInstance = null;
+    private static Connection connection = null;
 
-    public Connection ensureConnection() {
-        if (persistenceConnection == null) {
-            persistenceConnection = connectOrCreate(persistenceFilename);
+    public static Connection getConnection() throws InvalidInputException {
+        if (connection == null)
+            throw new InvalidInputException("Invalid connection");
 
-            if (persistenceConnection != null)
-                SQLiteIntegration.createTables(persistenceConnection);
-        }
-
-        return persistenceConnection;
+        return connection;
     }
 
-    public void closeConnection() {
-        if (persistenceConnection != null) {
+    private SQLiteInterface() throws InvalidInputException {
+        if (connection == null) {
+            connection = connectOrCreate(persistenceFilename);
+
+            if (connection == null)
+                throw new InvalidInputException("Failed to connect to database");
+
+            if (!SQLiteInterface.createTables(connection))
+                throw new InvalidInputException("Failed to conditionally create tables");
+        }
+    }
+
+    public static SQLiteInterface ensureConnection() throws InvalidInputException {
+        if (theInstance == null)
+            theInstance = new SQLiteInterface();
+
+        return theInstance;
+    }
+
+    public static boolean load() {
+        return SQLiteInterface.loadDB(getFilename(), Application.getInstance());
+    }
+
+    public static void deleteConnection() {
+        if (connection != null) {
             try {
-                persistenceConnection.close();
+                connection.close();
+                connection = null;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    public String getFilename() {
+    private static String persistenceFilename = "jdbc:sqlite:duethis.db";
+
+    public static String getFilename() {
         return persistenceFilename;
     }
 
-    public boolean load() {
-        return SQLiteIntegration.loadDB(this.getFilename(), Application.getInstance());
-    }
-
-    public void setFilename(String persistenceFilename) {
-        if (persistenceFilename != null)
-            this.persistenceFilename = persistenceFilename;
+    public static void setFilename(String filename) {
+        if (filename != null)
+            persistenceFilename = filename;
     }
 }
