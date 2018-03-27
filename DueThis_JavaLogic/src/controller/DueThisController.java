@@ -431,7 +431,7 @@ public class DueThisController {
         
         cal1.setTime(filteredDate);
         for (Assignment a : assignments) {
-            cal2.setTime(a.getDueDate();
+            cal2.setTime(a.getDueDate());
             boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                   cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
             if (sameDay) {
