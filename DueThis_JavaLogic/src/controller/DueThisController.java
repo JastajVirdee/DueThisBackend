@@ -424,16 +424,16 @@ public class DueThisController {
     public List<Assignment> showFilteredByDateAssignment(Student aStudent, Date filteredDate) {
         List<Assignment> assignments = new ArrayList<>();
         List<Assignment> filteredAssignments = new ArrayList<>();
-        
+
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         assignments = aStudent.getAssignments();
-        
+
         cal1.setTime(filteredDate);
         for (Assignment a : assignments) {
             cal2.setTime(a.getDueDate());
-            boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+            boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                    && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
             if (sameDay) {
                 filteredAssignments.add(a);
             }

@@ -1,14 +1,15 @@
 package controllerTests;
 
-import static org.junit.Assert.*;
-import model.Application;
-import model.Student;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Test;
 
 import controller.AccountController;
 import controller.InvalidInputException;
+import model.Application;
+import model.Student;
 
 public class TestAccountController {
 
